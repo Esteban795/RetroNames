@@ -1,27 +1,40 @@
 package org.example;
 
+import java.io.IOException;
+import java.net.URL;
+
+import org.example.model.Model;
+import org.example.scenes.ManagedScene;
+import org.example.scenes.MenuScene;
+import org.example.scenes.SceneManager;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.net.URL;
 
 public class Main extends Application {
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        URL fxmlURL = getClass().getResource("/scenes/menu/MenuScene.fxml");
-        if (fxmlURL == null) {
-            System.err.println("Could not find MenuScene.fxml");
-            System.exit(1);
-        }
-        Parent root = FXMLLoader.load(fxmlURL);
 
+    private Model model;
+
+    @Override
+    public void start(Stage primaryStage) throws IOException {
+        this.model = new Model("ça marche hamdullah");
+        SceneManager sm = SceneManager.getInstance(primaryStage, this.model);
+
+        // Fake scene that shouldn't be used. It is used to initialize the SceneManager to correct values
+        URL fxmlURL = getClass().getResource("/Init.fxml");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(fxmlURL);
+
+        Parent root = loader.load();
         Scene scene = new Scene(root, 800, 600);
-        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         primaryStage.setScene(scene);
-        primaryStage.setTitle("JavaFX Bootstrap Project using FXML");
+
+        // Actual Initial Scene
+        ManagedScene MenuScene = new MenuScene(sm);
+        sm.pushScene(MenuScene);
         primaryStage.show();
     }
 

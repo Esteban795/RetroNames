@@ -1,31 +1,31 @@
 package org.example.scenes;
 
-import java.io.IOException;
 import java.net.URL;
 
-import org.example.controllers.MenuSceneController;
+import org.example.controllers.SettingsSceneController;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-public class MenuScene extends ManagedScene {
+public class SettingsScene extends ManagedScene {
 
-    private MenuSceneController controller;
+    private SettingsSceneController controller;
 
-    public MenuScene(SceneManager sm) throws IOException {
+    public SettingsScene(SceneManager sm) {
         super(sm);
-        super.setFXMLPath("/scenes/menu/MenuScene.fxml");
-        controller = new MenuSceneController(sm);
+        super.setFXMLPath("/scenes/settings/SettingsScene.fxml");
+        controller = new SettingsSceneController(sm);
         FXMLLoader loader = new FXMLLoader();
         URL fxmlURL = getClass().getResource(super.getFXMLPath());
+
         loader.setLocation(fxmlURL);
         loader.setController(controller);
         try {
             Parent root = loader.load();
             super.setScene(new Scene(root, 800, 600));
         } catch (Exception e) {
-            System.out.println("Error loading MenuScene.fxml");
+            System.out.println("Error loading Settings.fxml");
             sm.getPrimaryStage().close();
         }
     }

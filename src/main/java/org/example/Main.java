@@ -12,15 +12,12 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         URL fxmlURL = getClass().getResource("/scenes/menu/MenuScene.fxml");
-        System.out.println(fxmlURL);
         if (fxmlURL == null) {
             System.err.println("Could not find MenuScene.fxml");
             System.exit(1);
         }
-        System.out.println("loading root");
         Parent root = FXMLLoader.load(fxmlURL);
 
-        System.out.println("creating scene");
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         primaryStage.setScene(scene);

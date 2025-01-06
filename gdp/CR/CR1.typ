@@ -1,5 +1,10 @@
-= Réunion CodingWeek 1 -- jour 1
-== Objectifs
+= Réunion CodingWeek 1 jour 1
+== Objectifs (fonctionnalités souhaitées)
+- permettre à des joueurs de créer une partie en choisissant différents paramètres (taille de la grille, thématique de la liste de mots, nombre de joueurs, temps de réflexion limité ou non, etc.)
+- permettre de sauvegarder/recharger une partie ;
+- permettre d'éditer de nouvelles listes/thématiques de cartes "Nom de Code", ou de sélectionner/composer des jeux de cartes à partir des cartes existantes.
+
+
 
 == Gestion carte secrète pour les SpyMaster
 Generation d'un QR Code -> il faudrai un site et que le QR Code renvoie a cet URL... \
@@ -8,51 +13,52 @@ On y réfléchit et on prendra une décision plus tard.
 
 == Affichage in game
 - nom de chaque joueur 
-- a chaque tour afficher la couleur de l'equipe dont c'est le tour
+- a chaque tour, afficher la couleur de l'équipe dont c'est le tour
 
 == Gestion des decks
 - Un JSON par deck
 
 
 == Road Map - Début 
-- Mise en place Gradle -- jour 1
-- Diagramme de classes -- jour 1
-- Gestionnaire de Scène -- jour 1
+- Mise en place Gradle — jour 1
+- Diagramme de classes — jour 1
+- Gestionnaire de Scène — jour 1
 - Scénes :
-  - Menu -- jour 1
+  - Menu — jour 1
     - Play
       - New Game
       - Load Game
 
-        - Jeu -- jour 1
-          + Création d'équipe -- jour X
+        - Jeu — jour 1
+          + Création d'équipe — jour X
           + Selection role
-          + Interface jeu -- jour X
-            - Grille principale -- jour 1
+          + Interface jeu — jour X
+            - Grille principale — jour 1
             - Affichage équipe
             - 
           - Top bar
             - Save
             - Quit
 
-    - Settings -- jour X
-    - Edit decks -- jour X
-      - Ajout de cartes -- jour X
-      - Suppression de cartes -- jour X
-      - Création de decks à partir des cartes existantes -- jour X
-    - Quit -- jour 1 
+    - Settings — jour X
+    - Edit decks — jour X
+      - Ajout de cartes — jour X
+      - Suppression de cartes — jour X
+      - Création de decks à partir des cartes existantes — jour X
+    - Quit — jour 1 
 
-  - Fin de partie -- jour 2
-- Carte secrete -- jour 2+
-- CSS -- jour X
+  - Fin de partie — jour 2
+- Carte secrete — jour 2+
+- CSS — jour X
 
 
 == Todo day 1.1
-- RoadMap -- Esteban & Baptiste
-- Mise en place Gradle -- Tom & Maelan
-- Diagramme de classes -- Esteban & Baptiste & Tom & Maelan
-- Reflexion sur le QR Code -- Maelan
-- Gestionnaire de Scène -- Esteban (Déjà fait en partie)
-- Menu principal -- Baptiste
-- Menu Play -- Baptiste
-- Jeu : display de la grille -- Esteban
+- RoadMap — Esteban & Baptiste
+- Mise en place Gradle — Tom
+- Diagramme de classes — Esteban & Baptiste & Tom & Maelan
+- Reflexion sur le QR Code — Maelan
+- Gestionnaire de Scène — Esteban (Déjà fait en partie)
+- Menu principal — Baptiste
+- Menu Play — Baptiste
+- Jeu : display de la grille — Esteban
+- Save & Load game — Tom

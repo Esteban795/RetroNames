@@ -1,0 +1,145 @@
+' visibilite/caractere : private(-), protected(#), public(+)
+
+@startuml
+
+package LinguaCrypt{
+    package LinguaCrypt.Scene{
+        class SceneManager{
+            - Stack<ManagedScene> sceneStack
+            - Model model
+            - SceneManager instance
+
+            - SceneManager(Stage, Model)
+            + void pushScene(ManagedScene)
+            + {static} SceneManager getInstance()
+            + ManagedScene popScene()
+            + void popAllButFirst()
+            + ManagedScene peek()
+            + ManagedScene getSceneAt(int)
+            + int getSceneCount()
+            + Stage getPrimaryStage()
+            + parent getRoot()
+            + void setRoot(Parent)
+            + Model getModel()
+        }
+
+        abstract class ManagedScene extends Scene {
+            - SceneManager sceneManager
+            - String fxmlPath
+            
+            + ManagedScene(SceneManager)
+            + ManagedScene(SceneManager, int, int)
+            + SceneManager getSceneManager()
+            + void setSceneManager(SceneManager)
+            + void setFxmlPath(String)
+            + String getFxmlPath()
+            ' get controller ?
+        }
+
+        class MenuScene extends ManagedScene {
+            - MenuController controller
+
+            + MenuScene(SceneManager)
+            
+    }
+    SceneManager *-- ManagedScene
+
+    }
+
+    package LinguaCrypt.Controller{ 
+        ' un controller par scè1ne 
+    }
+
+    package LinguaCrypt.Model{
+        enum Color{
+            RED, BLUE, BLACK, WHITE
+        }
+
+        class Operative extends Player{}
+
+        class Spy extends Player{}
+
+        class Player{
+            - String nickName
+
+            + Player(String)
+            + String getNickName()
+            + void setNickName(String)
+        }
+        
+
+        class Team{
+            - ArrayList<Player> playersList
+            - String teamName
+            - Color teamColor
+            - int nbSpy
+
+
+            + Team(String, Color)
+            + void addPlayer(Player)
+            + void removePlayer(Player)
+            + void setTeamName(String)
+            + String getTeamName()
+        }
+
+        class Card{
+            - String cardName
+            - Color cardColor
+
+            + Card(String)
+            + Card(String, Color)
+            + String getCardName()
+            + void setCardColor(Color)
+            + Color getCardColor()
+
+        }
+
+        class Deck{
+            - String deckName
+            - ArrayList<Card> cardsList
+
+            + Deck()
+            + void addCard(Card)
+            + void removeCard(Card)
+            + 
+        }
+
+        class GameComfiguration{
+            - int gridSize
+            - int nbPlayers
+            - int maxNbSpy
+            - int maxNbOperative 
+            - int limitedTime /' -1 if time not limited  '/
+            - Deck deck            
+        }
+
+        class Game{
+            - Team blueTeam
+            - Team redTeam
+            - Deck cardsList
+            - ArrayList<ArrayList<Card>> grid
+            - GameComfiguration config
+            
+
+            + Game()
+            + void addTeam(Team)
+            + void removeTeam(Team)
+            + void addCard(Card)
+            + void removeCard(Card)
+
+            + void loadGrid
+        }
+
+
+
+        Team "1"--"*" Player
+        Team "1"--"1" Color
+        Color "1"--"*" Card
+        Card "0,*"--"1,*" Deck
+        GameComfiguration "1"-- Game
+        Game --"2" Team
+
+    }
+}
+
+@enduml

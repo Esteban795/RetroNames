@@ -26,6 +26,7 @@ On y réfléchit et on prendra une décision plus tard.
 
         - Jeu -- jour 1
           + Création d'équipe -- jour X
+          + Selection role
           + Interface jeu -- jour X
             - Grille principale -- jour 1
             - Affichage équipe
@@ -50,6 +51,7 @@ On y réfléchit et on prendra une décision plus tard.
 - RoadMap -- Esteban & Baptiste
 - Mise en place Gradle -- Tom & Maelan
 - Diagramme de classes -- Esteban & Baptiste & Tom & Maelan
+- Reflexion sur le QR Code -- Maelan
 - Gestionnaire de Scène -- Esteban (Déjà fait en partie)
 - Menu principal -- Baptiste
 - Menu Play -- Baptiste

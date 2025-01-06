@@ -1,7 +1,9 @@
 package org.example.controllers;
 
+import java.io.IOException;
+
+import org.example.scenes.LobbyScene;
 import org.example.scenes.SceneManager;
-import org.example.scenes.SettingsScene;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -26,8 +28,8 @@ public class MenuSceneController {
     }
 
     @FXML
-    public void switchScene() {
-        sm.pushScene(new SettingsScene(sm));
+    public void switchScene() throws IOException {
+        sm.pushScene(new LobbyScene(sm));
     }
 
     @FXML

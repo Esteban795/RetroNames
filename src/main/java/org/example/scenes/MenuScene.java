@@ -1,4 +1,4 @@
-package org.example.scene;
+package org.example.scenes;
 
 import org.example.controller.MenuController;
 

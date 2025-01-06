@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
@@ -13,18 +14,23 @@ public class MenuController {
     private Button button3;
     
     @FXML
-    public void button1Action() {
-        // Handle button1 action
+    public void handleButtonPlay() {
+        System.out.println("Play button clicked!");
     }
 
     @FXML
-    public void button2Action() {
-        // Handle button2 action
+    public void handleButtonSettings() {
+        System.out.println("Settings button clicked!");
     }
 
     @FXML
-    public void button3Action() {
-        // Handle button3 action
+    public void handleButtonEditDecks() {
+        System.out.println("Edit Decks button clicked!");
+    }
+
+    @FXML
+    public void handleButtonQuitGame() {
+        Platform.exit();
     }
 
     @FXML

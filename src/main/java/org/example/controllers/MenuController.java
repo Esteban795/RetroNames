@@ -2,7 +2,6 @@ package org.example.controllers;
 
 import java.io.IOException;
 
-import org.example.scenes.LobbyScene;
 import org.example.scenes.SceneManager;
 import org.example.scenes.SettingsScene;
 

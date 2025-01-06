@@ -1,4 +1,4 @@
-= RoadMap
+= Road Map
 
 difficulté : 0-5
 
@@ -19,18 +19,18 @@ difficulté : 0-5
   - Génération de la grille Back — 2 — 1h
   - Génération de la grille Front — 1 — 1h
 
-- Generation QR code Carte secrete — 3 — 2h30 
-- Generation QR code a partir de la grille — 1 — 20min
+- Génération QR code Carte secrète — 3 — 2h30 
+- Génération QR code à partir de la grille — 1 — 20min
 
 == Jour 2
 
 - Scène :
   - Edit Decks (ajout, suppression, création) Front — 1 — 1h
   - Edit Decks (ajout, suppression, création) Back — 2 — 1h
-  - New Game (création d'équipe, selection role, interface jeu) Front — 1 — 1h
-  - New Game (création d'équipe, selection role, interface jeu) Back — 2 — 1h
+  - New Game (création d'équipe, sélection rôle, interface jeu) Front — 1 — 1h
+  - New Game (création d'équipe, sélection rôle, interface jeu) Back — 2 — 1h
   - Interface jeu (grille principale) Back — 1 — 1h
-  - Ecran fin de partie — 1 — 1h
+  - Écran fin de partie — 1 — 1h
 
 == Jour 3
 
@@ -47,14 +47,13 @@ difficulté : 0-5
 - Statistiques
 
 == Jour X
-  - Settings
+- Settings
 - Jeu :
   - Affichage équipe
+- CSS
 
 
 
 
 
-
-- CSS — jour X
 

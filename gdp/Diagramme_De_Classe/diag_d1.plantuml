@@ -5,7 +5,7 @@
 package LinguaCrypt{
     package LinguaCrypt.Scene{
         class SceneManager{
-            - Stack<ManagedScene> sceneStack
+            - Stack<ManagedScene> scenes
             - Model model
             - SceneManager instance
 
@@ -40,8 +40,28 @@ package LinguaCrypt{
             - MenuController controller
 
             + MenuScene(SceneManager)
-            
-    }
+        }
+
+        class EditDecks extends ManagedScene {
+            - EditDecksController controller
+
+            + EditDecks(SceneManager)
+        }
+
+        class Settings extends ManagedScene {
+            - SettingsController controller
+
+            + Settings(SceneManager)
+        }
+
+        class GameScene extends ManagedScene {
+            - GameController controller
+
+            + GameScene(SceneManager)
+        }
+
+    note "objet javaFX" as N1
+    N1 .. Scene
     SceneManager *-- ManagedScene
 
     }
@@ -104,7 +124,7 @@ package LinguaCrypt{
             + 
         }
 
-        class GameComfiguration{
+        class GameConfiguration{
             - int gridSize
             - int nbPlayers
             - int maxNbSpy
@@ -118,16 +138,15 @@ package LinguaCrypt{
             - Team redTeam
             - Deck cardsList
             - ArrayList<ArrayList<Card>> grid
-            - GameComfiguration config
+            - GameConfiguration config
             
-
             + Game()
             + void addTeam(Team)
             + void removeTeam(Team)
             + void addCard(Card)
             + void removeCard(Card)
-
-            + void loadGrid
+            + void initGrid()
+            + void loadGrid()
         }
 
 

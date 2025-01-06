@@ -1,4 +1,4 @@
-package org.example;
+package org.example.scene;
 
 public class Main {
     public static void main(String[] args) {

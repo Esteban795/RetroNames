@@ -165,7 +165,7 @@ package LinguaCrypt{
         Color "1"--"*" Card
         Card "0,*"--"1,*" Deck
         GameConfiguration "1"-- Game
-        Game --"1" Loby
+        Game --"1" Lobby
         Lobby --"2" Team
     }
 }

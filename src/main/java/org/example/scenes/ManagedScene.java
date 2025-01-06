@@ -2,19 +2,26 @@ package org.example.scenes;
 
 import javafx.scene.Scene;
 
-public abstract class ManagedScene extends Scene{
-    
+public abstract class ManagedScene {
+
+    private Scene scene;
     private SceneManager sm;
     private String FXMLPath;
 
     public ManagedScene(SceneManager sm) {
-        super(sm.getRoot());
         this.sm = sm;
     }
 
-    public ManagedScene(SceneManager sm,int width, int height) {
-        super(sm.getRoot(), width, height);
+    public ManagedScene(SceneManager sm, int width, int height) {
         this.sm = sm;
+    }
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
     }
 
     public SceneManager getSceneManager() {
@@ -43,4 +50,3 @@ public abstract class ManagedScene extends Scene{
 
     public abstract void keyReleased(int keyCode);
 }
-

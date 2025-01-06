@@ -4,7 +4,6 @@ import java.util.Stack;
 
 import org.example.model.Model;
 
-import javafx.scene.Parent;
 import javafx.stage.Stage;
 
 public class SceneManager {
@@ -14,23 +13,23 @@ public class SceneManager {
     private final Stage primaryStage;
     private static SceneManager instance;
 
-    private SceneManager(Stage primaryStage,Model model){
+    private SceneManager(Stage primaryStage, Model model) {
         this.primaryStage = primaryStage;
         this.model = model;
         scenes = new Stack<>();
-    } 
+    }
 
-    public static SceneManager getInstance(Stage primaryStage,Model model){
+    public static SceneManager getInstance(Stage primaryStage, Model model) {
         if (instance == null) {
-            instance = new SceneManager(primaryStage,model);
+            instance = new SceneManager(primaryStage, model);
         }
         return instance;
     }
 
-    public ManagedScene pushScene(ManagedScene scene,boolean resize){
+    public ManagedScene pushScene(ManagedScene scene, boolean resize) {
         double width = primaryStage.getScene().getWidth();
         double height = primaryStage.getScene().getHeight();
-        primaryStage.setScene(scene);
+        primaryStage.setScene(scene.getScene());
         scenes.push(scene);
         if (resize) {
             primaryStage.setWidth(width);
@@ -39,19 +38,19 @@ public class SceneManager {
         return scene;
     }
 
-    public ManagedScene pushScene(ManagedScene scene){
-        return pushScene(scene,false);
+    public ManagedScene pushScene(ManagedScene scene) {
+        return pushScene(scene, false);
     }
-    
+
     public ManagedScene popScene(boolean resize) {
         ManagedScene scene = scenes.pop();
         if (scenes.isEmpty()) {
             primaryStage.close();
         } else {
             ManagedScene newScene = scenes.peek();
-            double width = newScene.getWidth();
-            double height = newScene.getHeight();
-            primaryStage.setScene(newScene);
+            double width = newScene.getScene().getWidth();
+            double height = newScene.getScene().getHeight();
+            primaryStage.setScene(newScene.getScene());
             if (resize) {
                 primaryStage.setWidth(width);
                 primaryStage.setHeight(height);
@@ -88,9 +87,5 @@ public class SceneManager {
 
     public Model getModel() {
         return model;
-    }
-
-    public Parent getRoot() {
-        return primaryStage.getScene().getRoot();
     }
 }

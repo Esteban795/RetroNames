@@ -22,6 +22,7 @@ public class Main extends Application {
 
         System.out.println("creating scene");
         Scene scene = new Scene(root, 800, 600);
+        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.setTitle("JavaFX Bootstrap Project using FXML");
         primaryStage.show();

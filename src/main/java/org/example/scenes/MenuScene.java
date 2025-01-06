@@ -1,6 +1,6 @@
 package org.example.scenes;
 
-import org.example.controller.MenuController;
+import org.example.controllers.MenuController;
 
 
 public class MenuScene {

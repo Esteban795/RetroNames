@@ -34,6 +34,16 @@ public class MenuController {
     }
 
     @FXML
+    public void handleSaveGame(){
+        System.out.println("Save Game button clicked!");
+    }
+
+    @FXML
+    public void handleQuit(){
+        Platform.exit();
+    }
+
+    @FXML
     private void initialize() {
         // Called after FXML is loaded
         // Initialize your buttons here

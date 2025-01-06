@@ -1,7 +1,6 @@
 package linguacrypt;
 
-import linguacrypt.model.Game;
-import linguacrypt.model.Player;
+import linguacrypt.model.*;
 import linguacrypt.visitor.SerializationVisitor;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SerializationTest {
@@ -28,15 +28,41 @@ public class SerializationTest {
         game.accept(visitor);
         String json = visitor.getResult();
         assertNotNull(json);
-        assertTrue(json.contains("\"players\":[]"));
+        assertTrue(json.contains("\"blueTeam\""));
+        assertTrue(json.contains("\"redTeam\""));
     }
 
     @Test
-    void testSerializeWithPlayers() {
-        game.addPlayer(new Player("Alice"));
+    void testSerializeWithTeams() {
+        Team blueTeam = new Team("Blue Team", Color.BLUE);
+        blueTeam.addPlayer(new Player("Alice"));
+        game.addTeam(blueTeam);
+
+        Team redTeam = new Team("Red Team", Color.RED);
+        redTeam.addPlayer(new Player("Bob"));
+        game.addTeam(redTeam);
+
         game.accept(visitor);
         String json = visitor.getResult();
         assertTrue(json.contains("Alice"));
+        assertTrue(json.contains("Bob"));
+        assertTrue(json.contains("BLUE"));
+        assertTrue(json.contains("RED"));
+    }
+
+    @Test
+    void testSerializeWithCards() {
+        Card card1 = new Card("Word1", Color.BLUE);
+        Card card2 = new Card("Word2", Color.RED);
+        game.addCard(card1);
+        game.addCard(card2);
+        game.initGrid();
+        game.loadGrid();
+
+        game.accept(visitor);
+        String json = visitor.getResult();
+        assertTrue(json.contains("Word1"));
+        assertTrue(json.contains("Word2"));
     }
 
     @AfterEach

@@ -1,5 +1,7 @@
 package linguacrypt.visitor;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import linguacrypt.model.*;
 import java.io.*;
@@ -12,9 +14,9 @@ import java.time.LocalDateTime;
 public class DeserializationVisitor implements Visitor {
     private final ObjectMapper objectMapper;
     private Game game;
-    private final String savePath;
-    private static final String LOG_FILE_PATH = "logs/deserialization_debug.log";
+    private static final String LOG_FILE_PATH = "logs/deserialization.log";
     private static final String DEFAULT_GAMES_PATH = "src/main/resources/saves/";
+    private final String savePath;
 
     public DeserializationVisitor() {
         this(DEFAULT_GAMES_PATH);
@@ -22,8 +24,9 @@ public class DeserializationVisitor implements Visitor {
 
     public DeserializationVisitor(String savePath) {
         this.objectMapper = new ObjectMapper();
+        // Configurer l'objectMapper pour gérer la visibilité des champs
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         this.savePath = savePath;
-        //log("DeserializationVisitor initialized.");
     }
 
     /**
@@ -57,10 +60,8 @@ public class DeserializationVisitor implements Visitor {
     public Game loadGame(String filePath) {
         try {
             game = objectMapper.readValue(new File(filePath), Game.class);
-            //log("Successfully loaded game from file: " + filePath);
             return game;
         } catch (Exception e) {
-            //log("Error during deserialization: " + e.getMessage());
             return null;
         }
     }

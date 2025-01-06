@@ -9,32 +9,21 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import linguacrypt.model.Game;
-import linguacrypt.model.Player;
+import linguacrypt.model.*;
 import linguacrypt.visitor.SerializationVisitor;
 import linguacrypt.visitor.DeserializationVisitor;
 
-/**
- * Application principale JavaFX pour LinguaCrypt.
- * Gère l'interface utilisateur et les interactions avec le jeu.
- */
 public class GameApp extends Application {
     private Game game;
     private TextArea textArea;
     private static final String RESOURCES_PATH = "src/main/resources/saves/";
 
-    /**
-     * Démarre l'application javaFX
-     */
     @Override
     public void start(Stage primaryStage) {
         initializeUI(primaryStage);
         loadOrCreateNewGame();
     }
 
-    /**
-     * Initialise l'interface utilisateur
-     */
     private void initializeUI(Stage primaryStage) {
         primaryStage.setTitle("LinguaCrypt Game");
         textArea = new TextArea();
@@ -46,18 +35,18 @@ public class GameApp extends Application {
         Button loadButton = new Button("Charger");
         loadButton.setOnAction(e -> loadGame(primaryStage));
         
+        Button initGameButton = new Button("Nouvelle Partie");
+        initGameButton.setOnAction(e -> createNewGame());
+        
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));
-        vbox.getChildren().addAll(textArea, saveButton, loadButton);
+        vbox.getChildren().addAll(textArea, saveButton, loadButton, initGameButton);
         
         Scene scene = new Scene(vbox);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    /**
-     * Charge la dernière partie ou en crée une nouvelle
-     */
     private void loadOrCreateNewGame() {
         DeserializationVisitor deserializationVisitor = new DeserializationVisitor();
         game = deserializationVisitor.loadLatestGame();
@@ -66,32 +55,56 @@ public class GameApp extends Application {
             createNewGame();
             saveGame();
         } else {
-            textArea.appendText("Partie précédente chargée.\n");
+            displayGameState();
         }
     }
 
-    /**
-     * Crée une nouvelle partie avec des joueurs par défaut
-     */
     private void createNewGame() {
         game = new Game();
-        game.addPlayer(new Player("Alice"));
-        game.addPlayer(new Player("Bob"));
-        textArea.appendText("Nouvelle partie créée.\n");
+        
+        Team blueTeam = new Team("Blue Team", Color.BLUE);
+        Team redTeam = new Team("Red Team", Color.RED);
+        
+        game.addTeam(blueTeam);
+        game.addTeam(redTeam);
+        
+        // Add some default cards
+        game.addCard(new Card("Word1", Color.BLUE));
+        game.addCard(new Card("Word2", Color.RED));
+        game.addCard(new Card("Word3", Color.BLACK));
+        
+        game.initGrid();
+        game.loadGrid();
+        
+        displayGameState();
     }
 
-    /**
-     * Sauvegarde la partie actuelle
-     */
+    private void displayGameState() {
+        textArea.clear();
+        textArea.appendText("=== État du Jeu ===\n");
+        
+        Team blueTeam = game.getBlueTeam();
+        Team redTeam = game.getRedTeam();
+        
+        textArea.appendText("\nÉquipe Bleue:\n");
+        for (Player player : blueTeam.getPlayerList()) {
+            textArea.appendText("- " + player.getName() + "\n");
+        }
+        
+        textArea.appendText("\nÉquipe Rouge:\n");
+        for (Player player : redTeam.getPlayerList()) {
+            textArea.appendText("- " + player.getName() + "\n");
+        }
+        
+        textArea.appendText("\nGrille de jeu initialisée.\n");
+    }
+
     private void saveGame() {
         SerializationVisitor serializationVisitor = new SerializationVisitor();
         game.accept(serializationVisitor);
         textArea.appendText("Partie sauvegardée.\n");
     }
 
-    /**
-     * Charge une partie depuis un fichier choisi par l'utilisateur
-     */
     private void loadGame(Stage stage) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(RESOURCES_PATH));
@@ -106,6 +119,7 @@ public class GameApp extends Application {
             
             if (loadedGame != null) {
                 game = loadedGame;
+                displayGameState();
                 textArea.appendText("Partie chargée : " + selectedFile.getName() + "\n");
             } else {
                 textArea.appendText("Erreur lors du chargement.\n");
@@ -115,7 +129,7 @@ public class GameApp extends Application {
 
     @Override
     public void stop() {
-        saveGame(); // Sauvegarde automatique à la fermeture
+        saveGame();
     }
 
     public static void main(String[] args) {

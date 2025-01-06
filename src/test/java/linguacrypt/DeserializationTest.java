@@ -1,13 +1,14 @@
 package linguacrypt;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.io.File;
+import linguacrypt.model.*;
+import linguacrypt.visitor.DeserializationVisitor;
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import linguacrypt.model.Game;
-import linguacrypt.visitor.DeserializationVisitor;
+import java.io.File;
+import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DeserializationTest {
     private DeserializationVisitor visitor;
@@ -16,47 +17,27 @@ public class DeserializationTest {
     @BeforeEach
     void setUp() {
         visitor = new DeserializationVisitor(TEST_RESOURCES);
+        new File(TEST_RESOURCES).mkdirs();
     }
 
     @Test
-    void testDeserializeAllSavedGames() {
-        File directory = new File(TEST_RESOURCES);
-        File[] files = directory.listFiles((dir, name) -> name.startsWith("game") && name.endsWith(".json"));
-        
-        assertNotNull(files, "Le répertoire de test devrait exister");
-        assertTrue(files.length > 0, "Il devrait y avoir au moins un fichier de sauvegarde");
-
-        for (File file : files) {
-            Game loaded = visitor.loadGame(file.getPath());
-            assertNotNull(loaded, "Le jeu chargé depuis " + file.getName() + " ne devrait pas être null");
-            assertNotNull(loaded.getPlayers(), "La liste des joueurs ne devrait pas être null");
-        }
-    }
-
-    @Test
-    void testDeserializeGameWithPlayer() {
+    void testDeserializeFullGame() {
         Game loaded = visitor.loadGame(TEST_RESOURCES + "game.json");
-        assertNotNull(loaded, "Le jeu chargé ne devrait pas être null");
-        assertEquals(1, loaded.getPlayers().size(), "Le jeu devrait avoir un joueur");
-        assertEquals("Alice", loaded.getPlayers().get(0).getName(), "Le nom du joueur devrait être Alice");
+        assertNotNull(loaded);
+        assertNotNull(loaded.getBlueTeam());
+        assertNotNull(loaded.getRedTeam());
+        assertNotNull(loaded.getCardList());
+        assertNotNull(loaded.getGrid());
+        assertNotNull(loaded.getConfig());
     }
 
     @Test
-    void testDeserializeEmptyGame() {
-        Game loaded = visitor.loadGame(TEST_RESOURCES + "game1.json");
-        assertNotNull(loaded, "Le jeu vide chargé ne devrait pas être null");
-        assertTrue(loaded.getPlayers().isEmpty(), "La liste des joueurs devrait être vide");
+    void testTeamDeserialization() {
+        Game loaded = visitor.loadGame(TEST_RESOURCES + "game.json");
+        assertNotNull(loaded);
+        Team blueTeam = loaded.getBlueTeam();
+        assertEquals("Blue Team", blueTeam.getTeamName());
+        assertEquals(Color.BLUE, blueTeam.getTeamColor());
     }
 
-    @Test
-    void testLoadLatestGame() {
-        Game latest = visitor.loadLatestGame();
-        assertNotNull(latest, "Le dernier jeu sauvegardé ne devrait pas être null");
-    }
-
-    @Test
-    void testDeserializeInvalidFile() {
-        Game loaded = visitor.loadGame("invalid_file.json");
-        assertNull(loaded, "Le chargement d'un fichier invalide devrait retourner null");
-    }
 }

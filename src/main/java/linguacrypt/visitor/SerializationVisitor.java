@@ -1,18 +1,18 @@
 package linguacrypt.visitor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+
 import linguacrypt.model.*;
 import java.io.*;
 
-/**
- * Visiteur pour la sérialisation des objets du jeu en JSON.
- * Utilise Jackson pour la conversion en JSON.
- */
+
 public class SerializationVisitor implements Visitor {
     private final ObjectMapper objectMapper;
     private String jsonResult;
     private final String savePath;
-    private static final String LOG_FILE_PATH = "logs/serialization_debug.log";
+    private static final String LOG_FILE_PATH = "logs/serialization.log";
     private static final String DEFAULT_GAMES_PATH = "src/main/resources/saves/";
 
     public SerializationVisitor() {
@@ -21,23 +21,19 @@ public class SerializationVisitor implements Visitor {
 
     public SerializationVisitor(String savePath) {
         this.objectMapper = new ObjectMapper();
+        // Configurer l'objectMapper pour gérer la visibilité des champs
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         this.savePath = savePath;
-        //log("SerializationVisitor initialized with path: " + savePath);
     }
 
     @Override
     public void visit(Game game) {
         try {
             jsonResult = objectMapper.writeValueAsString(game);
-            //log("Serialized Game object to JSON: " + jsonResult);
-            
             String uniqueFilename = getUniqueFilename(savePath, "game", ".json");
             String filePath = savePath + uniqueFilename;
-            
             objectMapper.writeValue(new File(filePath), game);
-            //log("Game saved successfully to " + filePath);
         } catch (Exception e) {
-            //log("Error during serialization: " + e.getMessage());
             e.printStackTrace();
         }
     }

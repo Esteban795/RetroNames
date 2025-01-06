@@ -87,7 +87,6 @@ package LinguaCrypt{
             + void setNickName(String)
         }
         
-
         class Team{
             - ArrayList<Player> playersList
             - String teamName
@@ -105,6 +104,7 @@ package LinguaCrypt{
         class Card{
             - String cardName
             - Color cardColor
+            - boolean found
 
             + Card(String)
             + Card(String, Color)
@@ -139,6 +139,7 @@ package LinguaCrypt{
             - Deck cardsList
             - ArrayList<ArrayList<Card>> grid
             - GameConfiguration config
+            - int nbTurn
             
             + Game()
             + void addTeam(Team)

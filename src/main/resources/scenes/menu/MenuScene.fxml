@@ -59,7 +59,9 @@
                                 text="Quitter"
                                 styleClass="menu-button"
                                 prefWidth="300"
-                                prefHeight="50"/>
+                                prefHeight="50"
+                                onAction="#handleQuit"
+                                />
                 </VBox>
         </center>
 

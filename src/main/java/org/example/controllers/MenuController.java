@@ -29,11 +29,6 @@ public class MenuController {
     }
 
     @FXML
-    public void handleButtonQuitGame() {
-        Platform.exit();
-    }
-
-    @FXML
     public void handleSaveGame(){
         System.out.println("Save Game button clicked!");
     }

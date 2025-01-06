@@ -2,6 +2,7 @@ package org.example.controllers;
 
 import java.io.IOException;
 
+import org.example.scenes.NewLoadScene;
 import org.example.scenes.SceneManager;
 import org.example.scenes.SettingsScene;
 
@@ -25,7 +26,7 @@ public class MenuController {
 
     @FXML
     public void handlePlay() {
-        sm.pushScene(new SettingsScene(sm));
+        sm.pushScene(new NewLoadScene(sm));
     }
 
     @FXML

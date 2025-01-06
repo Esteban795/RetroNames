@@ -1,10 +1,17 @@
 package org.example.controllers;
 
+import java.io.IOException;
+
+import org.example.scenes.LobbyScene;
+import org.example.scenes.SceneManager;
+import org.example.scenes.SettingsScene;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 public class MenuController {
+    private SceneManager sm;
 
     @FXML
     private Button button1;
@@ -13,14 +20,19 @@ public class MenuController {
     @FXML
     private Button button3;
     
-    @FXML
-    public void handleButtonPlay() {
-        System.out.println("Play button clicked!");
+    public MenuController(SceneManager sm) {
+        this.sm = sm;
     }
 
     @FXML
-    public void handleButtonSettings() {
+    public void handlePlay() {
+        sm.pushScene(new SettingsScene(sm));
+    }
+
+    @FXML
+    public void handleSettings() {
         System.out.println("Settings button clicked!");
+        sm.pushScene(new SettingsScene(sm));
     }
 
     @FXML

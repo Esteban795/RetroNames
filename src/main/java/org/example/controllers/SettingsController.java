@@ -1,33 +1,24 @@
 package org.example.controllers;
 
 import org.example.scenes.SceneManager;
-import org.example.scenes.SettingsScene;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class MenuSceneController {
+public class SettingsController {
 
     private SceneManager sm;
 
     @FXML
-    private Button switchButton;
-
-    @FXML
     private Button buttonBack;
 
-    public MenuSceneController(SceneManager sm) {
+    public SettingsController(SceneManager sm) {
         this.sm = sm;
     }
 
     @FXML
     public void initialize() {
 
-    }
-
-    @FXML
-    public void switchScene() {
-        sm.pushScene(new SettingsScene(sm));
     }
 
     @FXML

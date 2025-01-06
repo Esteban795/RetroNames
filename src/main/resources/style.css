@@ -3,12 +3,20 @@
     -fx-background-color: #04AA6D;
     -fx-text-fill: white;
     -fx-background-radius: 5px;
+    -fx-pref-width: 300;
+    -fx-pref-height: 50;
 }
 
 .menu-button:hover {
     -fx-background-color: #038857;
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
+}
+.menu-button:focused {
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }
 
 
@@ -27,6 +35,8 @@
 
 .menu {
     -fx-background-color: #e0e0e0;
+    -fx-pref-width: -1;
+    -fx-pref-height: -1;
 }
 
 .root {

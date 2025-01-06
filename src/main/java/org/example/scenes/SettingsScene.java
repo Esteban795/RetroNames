@@ -2,7 +2,7 @@ package org.example.scenes;
 
 import java.net.URL;
 
-import org.example.controllers.SettingsSceneController;
+import org.example.controllers.SettingsController;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,12 +10,12 @@ import javafx.scene.Scene;
 
 public class SettingsScene extends ManagedScene {
 
-    private SettingsSceneController controller;
+    private SettingsController controller;
 
     public SettingsScene(SceneManager sm) {
         super(sm);
         super.setFXMLPath("/scenes/settings/SettingsScene.fxml");
-        controller = new SettingsSceneController(sm);
+        controller = new SettingsController(sm);
         FXMLLoader loader = new FXMLLoader();
         URL fxmlURL = getClass().getResource(super.getFXMLPath());
 

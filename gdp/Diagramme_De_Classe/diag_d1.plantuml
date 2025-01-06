@@ -133,17 +133,25 @@ package LinguaCrypt{
             - Deck deck            
         }
 
-        class Game{
+        class Lobby{
             - Team blueTeam
             - Team redTeam
+            - ArrayList<Team> teamsList
+
+            + Lobby()
+            + void addTeam(Team)
+            + void removeTeam(Team)
+        
+        }
+
+        class Game{
+            - Lobby lobby
             - Deck cardsList
             - ArrayList<ArrayList<Card>> grid
             - GameConfiguration config
             - int nbTurn
             
             + Game()
-            + void addTeam(Team)
-            + void removeTeam(Team)
             + void addCard(Card)
             + void removeCard(Card)
             + void initGrid()

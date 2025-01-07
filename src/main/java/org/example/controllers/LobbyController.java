@@ -31,6 +31,9 @@ public class LobbyController {
     @FXML
     private VBox pseudoVB;
 
+    @FXML
+    private Label errorLabel;
+
     public LobbyController(SceneManager sm) {
         this.sm = sm;
     }
@@ -118,6 +121,13 @@ public class LobbyController {
 
     @FXML 
     public void lobbyDone() throws IOException {
+        int count = blueTeamVB.getChildren().size() + redTeamVB.getChildren().size();
+        
+        if (count < 4) {
+            errorLabel.setText("Not enough players.");
+            return;
+        }
+
         blueTeamVB.getChildren().forEach(node -> {
             Label label = (Label) node;
             System.out.println("Blue team: " + label.getText());

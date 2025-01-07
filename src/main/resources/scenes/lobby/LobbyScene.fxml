@@ -16,8 +16,9 @@
          <items>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="166.0" prefWidth="278.0">
                <children>
-                  <VBox alignment="CENTER" layoutX="30.0" layoutY="32.0" prefHeight="132.0" prefWidth="218.0" spacing="10.0" style="-fx-alignment: center;">
+                  <VBox alignment="CENTER" layoutX="30.0" layoutY="-2.0" prefHeight="166.0" prefWidth="218.0" spacing="10.0" style="-fx-alignment: center;">
                      <children>
+                        <Label fx:id="errorLabel" textFill="RED" />
                         <Label text="Entrez un nom de joueur" />
                         <Separator prefWidth="200.0" />
                         <TextField fx:id="pseudoTextField" />

@@ -15,7 +15,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 
 
-public class LobbyController {
+public class LobbySceneController {
 
     private final SceneManager sm;
 
@@ -40,7 +40,7 @@ public class LobbyController {
     @FXML
     private Label errorLabel;
 
-    public LobbyController(SceneManager sm) {
+    public LobbySceneController(SceneManager sm) {
         this.sm = sm;
     }
 

@@ -14,7 +14,7 @@ public class SerializationVisitor implements Visitor {
     private final String savePath;
     private static final String LOG_FILE_PATH = "logs/serialization.log";
     private static final String DEFAULT_GAMES_PATH = "src/main/resources/saves/";
-
+    
     public SerializationVisitor() {
         this(DEFAULT_GAMES_PATH);
     }
@@ -70,10 +70,23 @@ public class SerializationVisitor implements Visitor {
         }
     }
 
+    @Override 
+    public void visit(DeckManager deckManager) {
+        try {
+            jsonResult = objectMapper.writeValueAsString(deckManager);
+            // String uniqueFilename = getUniqueFilename(savePath, "deckManager", ".json");
+            String filePath = savePath + "deckManager.json";
+            objectMapper.writeValue(new File(filePath), deckManager);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     // Méthodes visit non utilisées actuellement mais requises par l'interface et potentiellement utiles pour des extensions futures
     @Override public void visit(Player player) {}
     @Override public void visit(Deck deck) {}
-    @Override public void visit(GameConfiguration config) {}
+        @Override public void visit(GameConfiguration config) {}
 
     public String getResult() {
         return jsonResult;

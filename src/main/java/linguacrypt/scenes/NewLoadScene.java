@@ -1,30 +1,32 @@
 package linguacrypt.scenes;
 
-import java.io.IOException;
 import java.net.URL;
 
-import linguacrypt.controllers.LobbySceneController;
+import linguacrypt.controllers.NewLoadSceneController;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-public class LobbyScene extends ManagedScene { 
 
-    private LobbySceneController controller;
+public class NewLoadScene extends ManagedScene {
 
-    public LobbyScene(SceneManager sm) throws IOException {
+    private NewLoadSceneController controller;
+
+    public NewLoadScene(SceneManager sm) {
         super(sm);
-        super.setFXMLPath("/scenes/lobby/LobbyScene.fxml");
-        controller = new LobbySceneController(sm);
+        super.setFXMLPath("/scenes/newLoad/NewLoadScene.fxml");
+        controller = new NewLoadSceneController(sm);
         FXMLLoader loader = new FXMLLoader();
         URL fxmlURL = getClass().getResource(super.getFXMLPath());
+
         loader.setLocation(fxmlURL);
         loader.setController(controller);
         try {
             Parent root = loader.load();
             super.setScene(new Scene(root, 800, 600));
+            super.getScene().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         } catch (Exception e) {
-            System.out.println("Error loading MenuScene.fxml");
+            System.out.println("Error loading NewLoad.fxml");
             sm.getPrimaryStage().close();
         }
     }
@@ -58,5 +60,4 @@ public class LobbyScene extends ManagedScene {
         // TODO Auto-generated method stub
 
     }
-    
 }

@@ -12,7 +12,9 @@ repositories {
 
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
+    testImplementation ('commons-io:commons-io:2.11.0')
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.15.2')
 }
 
 test {
@@ -47,5 +49,5 @@ javafx {
 }
 
 application {
-    mainClass.set("org.example.Main")
+    mainClass.set("linguacrypt.Main")
 }

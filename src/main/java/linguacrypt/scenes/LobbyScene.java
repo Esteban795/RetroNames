@@ -1,31 +1,30 @@
-package org.example.scenes;
+package linguacrypt.scenes;
 
+import java.io.IOException;
 import java.net.URL;
 
-import org.example.controllers.SettingsSceneController;
+import linguacrypt.controllers.LobbySceneController;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+public class LobbyScene extends ManagedScene { 
 
-public class SettingsScene extends ManagedScene {
+    private LobbySceneController controller;
 
-    private SettingsSceneController controller;
-
-    public SettingsScene(SceneManager sm) {
+    public LobbyScene(SceneManager sm) throws IOException {
         super(sm);
-        super.setFXMLPath("/scenes/settings/SettingsScene.fxml");
-        controller = new SettingsSceneController(sm);
+        super.setFXMLPath("/scenes/lobby/LobbyScene.fxml");
+        controller = new LobbySceneController(sm);
         FXMLLoader loader = new FXMLLoader();
         URL fxmlURL = getClass().getResource(super.getFXMLPath());
-
         loader.setLocation(fxmlURL);
         loader.setController(controller);
         try {
             Parent root = loader.load();
             super.setScene(new Scene(root, 800, 600));
         } catch (Exception e) {
-            System.out.println("Error loading Settings.fxml");
+            System.out.println("Error loading MenuScene.fxml");
             sm.getPrimaryStage().close();
         }
     }
@@ -59,4 +58,5 @@ public class SettingsScene extends ManagedScene {
         // TODO Auto-generated method stub
 
     }
+    
 }

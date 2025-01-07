@@ -154,4 +154,15 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
+<<<<<<< HEAD
+*.iml
+*.ipr
+*.iws
+.vscode
+
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,java,gradle,visualstudiocode
+=======
+# End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,java,gradle,visualstudiocode
+>>>>>>> main
+
+out/

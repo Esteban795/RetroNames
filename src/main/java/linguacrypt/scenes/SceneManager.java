@@ -1,8 +1,8 @@
-package org.example.scenes;
+package linguacrypt.scenes;
 
 import java.util.Stack;
 
-import org.example.model.Model;
+import linguacrypt.model.Model;
 
 import javafx.stage.Stage;
 

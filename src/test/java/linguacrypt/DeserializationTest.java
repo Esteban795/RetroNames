@@ -21,8 +21,7 @@ public class DeserializationTest {
     void testDeserializeFullGame() {
         Game loaded = visitor.loadGame(TEST_RESOURCES + "game.json");
         assertNotNull(loaded);
-        assertNotNull(loaded.getBlueTeam());
-        assertNotNull(loaded.getRedTeam());
+        assertNotNull(loaded.getLobby());
         assertNotNull(loaded.getCardList());
         assertNotNull(loaded.getGrid());
         assertNotNull(loaded.getConfig());
@@ -32,7 +31,7 @@ public class DeserializationTest {
     void testTeamDeserialization() {
         Game loaded = visitor.loadGame(TEST_RESOURCES + "game.json");
         assertNotNull(loaded);
-        Team blueTeam = loaded.getBlueTeam();
+        Team blueTeam = loaded.getLobby().getBlueTeam();
         assertEquals("Blue Team", blueTeam.getTeamName());
         assertEquals(Color.BLUE, blueTeam.getTeamColor());
     }

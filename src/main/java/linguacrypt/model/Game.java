@@ -7,11 +7,8 @@ import linguacrypt.visitor.Visitor;
 import java.util.ArrayList;
 
 public class Game implements Visitable {
-    @JsonProperty("blueTeam")
-    private Team blueTeam;
-    
-    @JsonProperty("redTeam")
-    private Team redTeam;
+    @JsonProperty("lobby")
+    private Lobby lobby;
     
     @JsonProperty("cardList")
     private Deck cardList;
@@ -23,8 +20,7 @@ public class Game implements Visitable {
     private GameConfiguration config;
 
     public Game() {
-        this.blueTeam = new Team("Blue Team", Color.BLUE);
-        this.redTeam = new Team("Red Team", Color.RED);
+        this.lobby = new Lobby();
         this.cardList = new Deck();
         this.grid = new ArrayList<>();
         this.config = new GameConfiguration();
@@ -32,32 +28,14 @@ public class Game implements Visitable {
 
     @JsonCreator
     public Game(
-        @JsonProperty("blueTeam") Team blueTeam,
-        @JsonProperty("redTeam") Team redTeam,
+        @JsonProperty("lobby") Lobby lobby,
         @JsonProperty("cardList") Deck cardList,
         @JsonProperty("grid") ArrayList<ArrayList<Card>> grid,
         @JsonProperty("config") GameConfiguration config) {
-        this.blueTeam = blueTeam;
-        this.redTeam = redTeam;
+        this.lobby = lobby != null ? lobby : new Lobby();
         this.cardList = cardList;
         this.grid = grid;
         this.config = config;
-    }
-
-    public void addTeam(Team team) {
-        if (team.getTeamColor() == Color.BLUE) {
-            this.blueTeam = team;
-        } else if (team.getTeamColor() == Color.RED) {
-            this.redTeam = team;
-        }
-    }
-
-    public void removeTeam(Team team) {
-        if (team.getTeamColor() == Color.BLUE) {
-            this.blueTeam = null;
-        } else if (team.getTeamColor() == Color.RED) {
-            this.redTeam = null;
-        }
     }
 
     public void addCard(Card card) {
@@ -99,8 +77,7 @@ public class Game implements Visitable {
     }
 
     // Getters and Setters
-    public Team getBlueTeam() { return blueTeam; }
-    public Team getRedTeam() { return redTeam; }
+    public Lobby getLobby() { return lobby; }
     public Deck getCardList() { return cardList; }
     public ArrayList<ArrayList<Card>> getGrid() { return grid; }
     public GameConfiguration getConfig() { return config; }

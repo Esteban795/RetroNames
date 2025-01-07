@@ -33,13 +33,15 @@ public class SerializationTest {
 
     @Test
     void testSerializeWithTeams() {
+        Lobby lobby = game.getLobby();
+
         Team blueTeam = new Team("Blue Team", Color.BLUE);
         blueTeam.addPlayer(new Player("Alice"));
-        game.addTeam(blueTeam);
+        lobby.addTeam(blueTeam);
 
         Team redTeam = new Team("Red Team", Color.RED);
         redTeam.addPlayer(new Player("Bob"));
-        game.addTeam(redTeam);
+        lobby.addTeam(redTeam);
 
         game.accept(visitor);
         String json = visitor.getResult();

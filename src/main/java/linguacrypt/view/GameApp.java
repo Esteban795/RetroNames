@@ -65,8 +65,8 @@ public class GameApp extends Application {
         Team blueTeam = new Team("Blue Team", Color.BLUE);
         Team redTeam = new Team("Red Team", Color.RED);
         
-        game.addTeam(blueTeam);
-        game.addTeam(redTeam);
+        game.getLobby().addTeam(blueTeam);
+        game.getLobby().addTeam(redTeam);
         
         // Add some default cards
         game.addCard(new Card("Word1", Color.BLUE));
@@ -83,17 +83,24 @@ public class GameApp extends Application {
         textArea.clear();
         textArea.appendText("=== État du Jeu ===\n");
         
-        Team blueTeam = game.getBlueTeam();
-        Team redTeam = game.getRedTeam();
+        Lobby lobby = game.getLobby();
+        Team blueTeam = lobby.getBlueTeam();
+        Team redTeam = lobby.getRedTeam();
+        
+        textArea.appendText("\nÉquipes dans le lobby: " + lobby.getTeamsList().size() + "\n");
         
         textArea.appendText("\nÉquipe Bleue:\n");
-        for (Player player : blueTeam.getPlayerList()) {
-            textArea.appendText("- " + player.getName() + "\n");
+        if (blueTeam != null && blueTeam.getPlayerList() != null) {
+            for (Player player : blueTeam.getPlayerList()) {
+                textArea.appendText("- " + player.getName() + "\n");
+            }
         }
         
         textArea.appendText("\nÉquipe Rouge:\n");
-        for (Player player : redTeam.getPlayerList()) {
-            textArea.appendText("- " + player.getName() + "\n");
+        if (redTeam != null && redTeam.getPlayerList() != null) {
+            for (Player player : redTeam.getPlayerList()) {
+                textArea.appendText("- " + player.getName() + "\n");
+            }
         }
         
         textArea.appendText("\nGrille de jeu initialisée.\n");

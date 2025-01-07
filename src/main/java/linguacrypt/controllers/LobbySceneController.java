@@ -23,10 +23,16 @@ public class LobbySceneController {
     private TextField pseudoTextField;
 
     @FXML 
-    private VBox blueTeamVB;
+    private VBox blueTeamOperative;
 
     @FXML
-    private VBox redTeamVB;
+    private VBox blueTeamSpy;
+
+    @FXML
+    private VBox redTeamSpy;
+
+    @FXML
+    private VBox redTeamOperative;
     
     @FXML
     private VBox pseudoVB;
@@ -41,8 +47,10 @@ public class LobbySceneController {
     @FXML
     public void initialize() {
         setupDragAndDrop(pseudoVB);
-        setupDragAndDrop(blueTeamVB);
-        setupDragAndDrop(redTeamVB);
+        setupDragAndDrop(blueTeamOperative);
+        setupDragAndDrop(blueTeamSpy);
+        setupDragAndDrop(redTeamSpy);
+        setupDragAndDrop(redTeamOperative);
     }
 
     @FXML
@@ -121,23 +129,16 @@ public class LobbySceneController {
 
     @FXML 
     public void lobbyDone() throws IOException {
-        int count = blueTeamVB.getChildren().size() + redTeamVB.getChildren().size();
-        
+        int count = blueTeamOperative.getChildren().size() + blueTeamSpy.getChildren().size() + redTeamOperative.getChildren().size() + redTeamSpy.getChildren().size();
         if (count < 4) {
-            errorLabel.setText("Not enough players.");
+            errorLabel.setText("Pas assez de joueurs.");
             return;
         }
 
-        blueTeamVB.getChildren().forEach(node -> {
-            Label label = (Label) node;
-            System.out.println("Blue team: " + label.getText());
-        });
-
-        redTeamVB.getChildren().forEach(node -> {
-            Label label = (Label) node;
-            System.out.println("Red team: " + label.getText());
-        });
-        
+        if (blueTeamSpy.getChildren().size() != 1 || redTeamSpy.getChildren().size() != 1) {
+            errorLabel.setText("Il doit y avoir exactement un espion par équipe.");
+            return;
+        }
         sm.pushScene(new MenuScene(sm));
     }
 }

@@ -1,1 +1,0 @@
-{"blueTeam":{"teamName":"Blue Team","teamColor":"BLUE","playerList":[{"name":"Alice","role":false}],"nbSpy":0},"redTeam":{"teamName":"Red Team","teamColor":"RED","playerList":[{"name":"Bob","role":false}],"nbSpy":0},"cardList":{"deckName":"Default Deck","cardList":[]},"grid":[],"config":{"gridSize":25,"nbPlayers":4,"maxNbSpy":1,"maxNbOperative":1,"limitedTime":-1}}

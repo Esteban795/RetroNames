@@ -2,19 +2,21 @@ package linguacrypt.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import linguacrypt.visitor.Visitable;
 import linguacrypt.visitor.Visitor;
 import java.util.ArrayList;
 
+
+/**
+ * Représente une partie de LinguaCrypt.
+ * Cette classe est le point central du jeu, gérant :
+ * - Le deck de cartes (Deck)
+ * - La grille de jeu (matrice de cartes)
+ * - La configuration de la partie (GameConfiguration)
+ */
 public class Game implements Visitable {
-    @JsonProperty("blueTeam")
-    private Team blueTeam;
-    
-    @JsonProperty("redTeam")
-    private Team redTeam;
-    
-    @JsonProperty("cardList")
-    private Deck cardList;
     
     @JsonProperty("grid")
     private ArrayList<ArrayList<Card>> grid;
@@ -22,58 +24,44 @@ public class Game implements Visitable {
     @JsonProperty("config")
     private GameConfiguration config;
 
+    @JsonProperty("nbTurn")
+    private int nbTurn;
+
+    /**
+     * Constructeur par défaut.
+     * Initialise une nouvelle partie avec :
+     * - Un deck vide
+     * - Une grille vide
+     * - Une configuration par défaut
+     */
     public Game() {
-        this.blueTeam = new Team("Blue Team", Color.BLUE);
-        this.redTeam = new Team("Red Team", Color.RED);
-        this.cardList = new Deck();
         this.grid = new ArrayList<>();
         this.config = new GameConfiguration();
+        this.nbTurn = 0;
     }
+
+    /**
+     * Constructeur pour la désérialisation JSON.
+     * @param grid La grille de jeu
+     * @param config La configuration
+     * @param nbTurn Le nombre de tours joués
+     */
 
     @JsonCreator
     public Game(
-        @JsonProperty("blueTeam") Team blueTeam,
-        @JsonProperty("redTeam") Team redTeam,
-        @JsonProperty("cardList") Deck cardList,
         @JsonProperty("grid") ArrayList<ArrayList<Card>> grid,
-        @JsonProperty("config") GameConfiguration config) {
-        this.blueTeam = blueTeam;
-        this.redTeam = redTeam;
-        this.cardList = cardList;
+        @JsonProperty("config") GameConfiguration config,
+        @JsonProperty("nbTurn") int nbTurn) {
         this.grid = grid;
         this.config = config;
+        this.nbTurn = nbTurn;
     }
-
-    public void addTeam(Team team) {
-        if (team.getTeamColor() == Color.BLUE) {
-            this.blueTeam = team;
-        } else if (team.getTeamColor() == Color.RED) {
-            this.redTeam = team;
-        }
-    }
-
-    public void removeTeam(Team team) {
-        if (team.getTeamColor() == Color.BLUE) {
-            this.blueTeam = null;
-        } else if (team.getTeamColor() == Color.RED) {
-            this.redTeam = null;
-        }
-    }
-
-    public void addCard(Card card) {
-        if (cardList != null) {
-            cardList.addCard(card);
-        }
-    }
-
-    public void removeCard(Card card) {
-        if (cardList != null) {
-            cardList.removeCard(card);
-        }
-    }
-
+    /**
+     * Initialise une nouvelle grille vide avec la taille définie dans la configuration.
+     * La grille est une matrice carrée (ex: 5x5).
+     */
     public void initGrid() {
-        int size = (int) Math.sqrt(config.getGridSize());
+        int size = config.getGridSize();
         grid = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             ArrayList<Card> row = new ArrayList<>();
@@ -84,11 +72,18 @@ public class Game implements Visitable {
         }
     }
 
+
+    /**
+     * Charge les cartes du deck dans la grille.
+     * Les cartes sont placées séquentiellement dans la grille, de gauche à droite
+     * et de haut en bas. Cette méthode est appelée après initGrid().
+     */
     public void loadGrid() {
-        if (grid == null || cardList == null) return;
+        Deck deck = config.getCurrentDeck();
+        if (grid == null || deck == null) return;
         
-        ArrayList<Card> cards = cardList.getCardList();
-        int size = (int) Math.sqrt(config.getGridSize());
+        ArrayList<Card> cards = deck.getCardList();
+        int size = config.getGridSize();
         int cardIndex = 0;
         
         for (int i = 0; i < size && cardIndex < cards.size(); i++) {
@@ -99,12 +94,10 @@ public class Game implements Visitable {
     }
 
     // Getters and Setters
-    public Team getBlueTeam() { return blueTeam; }
-    public Team getRedTeam() { return redTeam; }
-    public Deck getCardList() { return cardList; }
     public ArrayList<ArrayList<Card>> getGrid() { return grid; }
     public GameConfiguration getConfig() { return config; }
-
+    public int getNbTurn() { return nbTurn; }
+    
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);

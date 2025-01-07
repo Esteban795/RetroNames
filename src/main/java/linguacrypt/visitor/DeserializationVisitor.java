@@ -85,5 +85,6 @@ public class DeserializationVisitor implements Visitor {
     @Override public void visit(Game game) {}
     @Override public void visit(Player player) {}
     @Override public void visit(Deck deck) {}
+    @Override public void visit(DeckManager deckManager) {}
     @Override public void visit(GameConfiguration config) {}
 }

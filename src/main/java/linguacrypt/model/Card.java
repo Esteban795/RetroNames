@@ -13,9 +13,13 @@ public class Card {
     @JsonProperty("cardColor")
     private Color cardColor;
 
+    @JsonProperty("found")
+    private boolean found;
+
     public Card(String cardName) {
         this.cardName = cardName;
-        this.cardColor = Color.WHITE; // Default color, neutral card
+        this.cardColor = Color.WHITE;// Default color, neutral card
+        this.found = false;
     }
 
     @JsonCreator
@@ -34,7 +38,15 @@ public class Card {
         return cardColor;
     }
 
+    public boolean isFound() {
+        return found;
+    }
+
     public void setCardColor(Color cardColor) {
         this.cardColor = cardColor;
+    }
+
+    public void reveal() {
+        this.found = true;
     }
 }

@@ -73,6 +73,7 @@ public class SerializationVisitor implements Visitor {
     // Méthodes visit non utilisées actuellement mais requises par l'interface et potentiellement utiles pour des extensions futures
     @Override public void visit(Player player) {}
     @Override public void visit(Deck deck) {}
+    @Override public void visit(DeckManager deckManager) {}
     @Override public void visit(GameConfiguration config) {}
 
     public String getResult() {

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label alignment="CENTER" prefWidth="599.0" text="Félicitations !">
+         <font>
+            <Font size="25.0" />
+         </font>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </Label>
+      <Label fx:id="labelVictor" alignment="CENTER" prefHeight="16.0" prefWidth="607.0">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <HBox prefHeight="355.0" prefWidth="600.0">
+         <children>
+            <VBox prefHeight="345.0" prefWidth="300.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="16.0" prefWidth="301.0" text="Etat de la grile en fin de partie">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </VBox>
+            <VBox prefHeight="345.0" prefWidth="300.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="16.0" prefWidth="301.0" text="Clé secrète">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

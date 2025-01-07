@@ -1,9 +1,9 @@
-package org.example.scenes;
+package linguacrypt.scenes;
 
 import java.io.IOException;
 import java.net.URL;
 
-import org.example.controllers.LobbyController;
+import linguacrypt.controllers.LobbyController;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

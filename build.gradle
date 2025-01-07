@@ -49,5 +49,5 @@ javafx {
 }
 
 application {
-    mainClass.set("linguacrypt.view.GameApp")
+    mainClass.set("linguacrypt.Main")
 }

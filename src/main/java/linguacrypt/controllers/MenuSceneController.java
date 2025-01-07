@@ -1,9 +1,9 @@
-package org.example.controllers;
+package linguacrypt.controllers;
 
 import java.io.IOException;
 
-import org.example.scenes.LobbyScene;
-import org.example.scenes.SceneManager;
+import linguacrypt.scenes.LobbyScene;
+import linguacrypt.scenes.SceneManager;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

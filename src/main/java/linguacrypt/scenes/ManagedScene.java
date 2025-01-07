@@ -1,4 +1,4 @@
-package org.example.scenes;
+package linguacrypt.scenes;
 
 import javafx.scene.Scene;
 

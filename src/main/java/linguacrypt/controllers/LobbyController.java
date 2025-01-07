@@ -1,10 +1,10 @@
-package org.example.controllers;
+package linguacrypt.controllers;
 
 import java.io.IOException;
 
-import org.example.scenes.MenuScene;
-import org.example.scenes.SceneManager;
-import org.example.scenes.SettingsScene;
+import linguacrypt.scenes.MenuScene;
+import linguacrypt.scenes.SceneManager;
+import linguacrypt.scenes.SettingsScene;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

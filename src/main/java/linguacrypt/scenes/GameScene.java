@@ -3,28 +3,29 @@ package linguacrypt.scenes;
 import java.io.IOException;
 import java.net.URL;
 
-import linguacrypt.controllers.LobbyController;
+import linguacrypt.controllers.GameSceneController;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-public class LobbyScene extends ManagedScene { 
+public class GameScene extends ManagedScene { 
 
-    private LobbyController controller;
+    private GameSceneController controller;
 
-    public LobbyScene(SceneManager sm) throws IOException {
+    public GameScene(SceneManager sm) throws IOException {
         super(sm);
-        super.setFXMLPath("/scenes/lobby/LobbyScene.fxml");
-        controller = new LobbyController(sm);
+        super.setFXMLPath("/scenes/game/GameScene.fxml");
+        controller = new GameSceneController(sm);
         FXMLLoader loader = new FXMLLoader();
         URL fxmlURL = getClass().getResource(super.getFXMLPath());
         loader.setLocation(fxmlURL);
         loader.setController(controller);
+        System.out.println("FXML Path : " + super.getFXMLPath());
         try {
             Parent root = loader.load();
             super.setScene(new Scene(root, 800, 600));
         } catch (Exception e) {
-            System.out.println("Error loading LobbyScene.fxml");
+            System.out.println("Error loading GameScene.fxml");
             sm.getPrimaryStage().close();
         }
     }

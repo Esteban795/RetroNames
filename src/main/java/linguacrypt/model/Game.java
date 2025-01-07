@@ -28,6 +28,9 @@ public class Game implements Visitable {
     @JsonProperty("config")
     private GameConfiguration config;
 
+    @JsonProperty("currentTeam")
+    private boolean currentTeam;
+
 
 
     /**
@@ -43,6 +46,7 @@ public class Game implements Visitable {
         this.deck = new Deck();
         this.grid = new ArrayList<>();
         this.config = new GameConfiguration();
+        this.currentTeam = false;
     }
 
     /**
@@ -58,11 +62,14 @@ public class Game implements Visitable {
         @JsonProperty("lobby") Lobby lobby,
         @JsonProperty("deck") Deck deck,
         @JsonProperty("grid") ArrayList<ArrayList<Card>> grid,
-        @JsonProperty("config") GameConfiguration config) {
+        @JsonProperty("config") GameConfiguration config,
+        @JsonProperty("currentTeam") boolean currentTeam)
+        {
         this.lobby = lobby != null ? lobby : new Lobby();
         this.deck = deck;
         this.grid = grid;
         this.config = config;
+        this.currentTeam = currentTeam;
     }
 
     public void addCard(Card card) {
@@ -118,6 +125,7 @@ public class Game implements Visitable {
     public Deck getDeck() { return deck; }
     public ArrayList<ArrayList<Card>> getGrid() { return grid; }
     public GameConfiguration getConfig() { return config; }
+    public Team getCurrentTeam() { return(currentTeam ? lobby.getRedTeam() : lobby.getBlueTeam()); }
 
     @Override
     public void accept(Visitor visitor) {

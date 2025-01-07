@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import linguacrypt.model.Game;
-import linguacrypt.scenes.ManagedScene;
-import linguacrypt.scenes.MenuScene;
-import linguacrypt.scenes.SceneManager;
+import linguacrypt.scenes.*;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -33,8 +31,8 @@ public class Main extends Application {
         primaryStage.setScene(scene);
 
         // Actual Initial Scene
-        ManagedScene MenuScene = new MenuScene(sm);
-        sm.pushScene(MenuScene);
+        ManagedScene GameScene = new GameScene(sm);
+        sm.pushScene(GameScene);
         primaryStage.show();
     }
 

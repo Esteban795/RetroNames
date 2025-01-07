@@ -43,15 +43,15 @@ public class Team {
         playerList.remove(player);
     }
 
-    public void setTeamName(String teamName) {
+    public void setName(String teamName) {
         this.teamName = teamName;
     }
 
-    public String getTeamName() {
+    public String getName() {
         return teamName;
     }
 
-    public Color getTeamColor() {
+    public Color getColor() {
         return teamColor;
     }
 

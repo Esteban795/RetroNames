@@ -30,11 +30,11 @@ public class Card {
         this.cardColor = cardColor;
     }
 
-    public String getCardName() {
+    public String getName() {
         return cardName;
     }
 
-    public Color getCardColor() {
+    public Color getColor() {
         return cardColor;
     }
 
@@ -42,7 +42,7 @@ public class Card {
         return found;
     }
 
-    public void setCardColor(Color cardColor) {
+    public void setColor(Color cardColor) {
         this.cardColor = cardColor;
     }
 

@@ -49,7 +49,14 @@ public class MenuSceneController {
 
     @FXML
     public void handleQuit(){
+        saveDecks();
         Platform.exit();
+    }
+
+    public void saveDecks() {
+        // Save decks to file
+        System.out.println("Saving decks to file...");
+        this.sm.getModel().getDeckManager().saveDeckManager();
     }
 
     @FXML

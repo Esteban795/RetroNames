@@ -8,8 +8,13 @@ public class Model {
     private DeckManager deckManager;
 
     public Model() {
-        game = new Game();
-        deckManager = new DeckManager();
+        this.game = new Game();
+        this.deckManager = new DeckManager();
+    }
+
+    public Model(Boolean loadDeckManager){
+        this.game = new Game();
+        this.deckManager = DeckManager.loadDeckManager("deckManager.json");
     }
 
     public Game getGame() {

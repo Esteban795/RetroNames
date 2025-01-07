@@ -16,17 +16,17 @@ public class DeserializationVisitor implements Visitor {
     private Game game;
     private static final String LOG_FILE_PATH = "logs/deserialization.log";
     private static final String DEFAULT_GAMES_PATH = "src/main/resources/saves/";
-    private final String savePath;
+    private final String loadPath;
 
     public DeserializationVisitor() {
         this(DEFAULT_GAMES_PATH);
     }
 
-    public DeserializationVisitor(String savePath) {
+    public DeserializationVisitor(String loadPath) {
         this.objectMapper = new ObjectMapper();
         // Configurer l'objectMapper pour gérer la visibilité des champs
         objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        this.savePath = savePath;
+        this.loadPath = loadPath;
     }
 
     /**
@@ -34,7 +34,7 @@ public class DeserializationVisitor implements Visitor {
      * @return La dernière partie sauvegardée ou null si aucune sauvegarde n'existe
      */
     public Game loadLatestGame() {
-        File directory = new File(savePath);
+        File directory = new File(loadPath);
         File[] files = directory.listFiles((dir, name) -> name.startsWith("game") && name.endsWith(".json"));
         
         if (files == null || files.length == 0) {
@@ -78,6 +78,17 @@ public class DeserializationVisitor implements Visitor {
             out.write(logMessage);
         } catch (IOException e) {
             System.err.println("Failed to write to log file: " + e.getMessage());
+        }
+    }
+
+
+    public DeckManager loadDeckManager(String filename) {
+        try {
+            File file = new File(loadPath + filename);
+            return objectMapper.readValue(file, DeckManager.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

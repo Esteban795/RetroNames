@@ -21,7 +21,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        this.model = new Model();
+        this.model = new Model(true);
         SceneManager sm = SceneManager.getInstance(primaryStage, model);
 
         // Fake scene that shouldn't be used. It is used to initialize the SceneManager to correct values

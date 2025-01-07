@@ -2,13 +2,17 @@ package linguacrypt.model;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DeckManager {
+import linguacrypt.visitor.Visitable;
+import linguacrypt.visitor.Visitor;
+
+public class DeckManager implements Visitable {
     @JsonProperty("deckList")
     private ArrayList<Deck> deckList;
 
-
+    @JsonCreator
     public DeckManager() {
         this.deckList = new ArrayList<>();
     }
@@ -39,5 +43,10 @@ public class DeckManager {
             return deckList.get((int) (Math.random() * deckList.size()));
         }
         return null;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
 }

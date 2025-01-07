@@ -47,28 +47,28 @@ public class GameConfiguration implements Visitable {
         @JsonProperty("maxNbSpy") int maxNbSpy,
         @JsonProperty("maxNbOperative") int maxNbOperative,
         @JsonProperty("limitedTime") int limitedTime) {
-        this.gridSize = gridSize;
-        this.nbPlayers = nbPlayers;
-        this.maxNbSpy = maxNbSpy;
-        this.maxNbOperative = maxNbOperative;
-        this.limitedTime = limitedTime;
+        // gridSize = gridSize;
+        // nbPlayers = nbPlayers;
+        // maxNbSpy = maxNbSpy;
+        // maxNbOperative = maxNbOperative;
+        // limitedTime = limitedTime;
     }
 
     // Getters and Setters
-    public int getGridSize() { return gridSize; }
-    public void setGridSize(int gridSize) { this.gridSize = gridSize; }
+    // public int getGridSize() { return gridSize; }
+    // public void setGridSize(int gridSize) { gridSize = gridSize; }
     
-    public int getNbPlayers() { return nbPlayers; }
-    public void setNbPlayers(int nbPlayers) { this.nbPlayers = nbPlayers; }
+    // public int getNbPlayers() { return nbPlayers; }
+    // public void setNbPlayers(int nbPlayers) { nbPlayers = nbPlayers; }
     
-    public int getMaxNbSpy() { return maxNbSpy; }
-    public void setMaxNbSpy(int maxNbSpy) { this.maxNbSpy = maxNbSpy; }
+    // public int getMaxNbSpy() { return maxNbSpy; }
+    // public void setMaxNbSpy(int maxNbSpy) { maxNbSpy = maxNbSpy; }
     
-    public int getMaxNbOperative() { return maxNbOperative; }
-    public void setMaxNbOperative(int maxNbOperative) { this.maxNbOperative = maxNbOperative; }
+    // public int getMaxNbOperative() { return maxNbOperative; }
+    // public void setMaxNbOperative(int maxNbOperative) { maxNbOperative = maxNbOperative; }
     
-    public int getLimitedTime() { return limitedTime; }
-    public void setLimitedTime(int limitedTime) { this.limitedTime = limitedTime; }
+    // public int getLimitedTime() { return limitedTime; }
+    // public void setLimitedTime(int limitedTime) { limitedTime = limitedTime; }
 
     @Override
     public void accept(Visitor visitor) {

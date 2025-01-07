@@ -12,7 +12,6 @@ import java.util.ArrayList;
 /**
  * Représente une partie de LinguaCrypt.
  * Cette classe est le point central du jeu, gérant :
- * - Le lobby et les équipes (Lobby)
  * - Le deck de cartes (Deck)
  * - La grille de jeu (matrice de cartes)
  * - La configuration de la partie (GameConfiguration)
@@ -31,7 +30,6 @@ public class Game implements Visitable {
     /**
      * Constructeur par défaut.
      * Initialise une nouvelle partie avec :
-     * - Un nouveau lobby
      * - Un deck vide
      * - Une grille vide
      * - Une configuration par défaut
@@ -44,18 +42,15 @@ public class Game implements Visitable {
 
     /**
      * Constructeur pour la désérialisation JSON.
-     * @param lobby Le lobby contenant les équipes
-     * @param deck Le deck de cartes
      * @param grid La grille de jeu
      * @param config La configuration
      */
 
     @JsonCreator
     public Game(
-        @JsonProperty("lobby") Lobby lobby,
-        @JsonProperty("deck") Deck deck,
         @JsonProperty("grid") ArrayList<ArrayList<Card>> grid,
-        @JsonProperty("config") GameConfiguration config) {
+        @JsonProperty("config") GameConfiguration config,
+        @JsonProperty("nbTurn") int nbTurn) {
         this.grid = grid;
         this.config = config;
     }

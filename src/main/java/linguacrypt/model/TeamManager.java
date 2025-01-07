@@ -4,20 +4,20 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 
-public class Lobby {
+public class TeamManager {
     @JsonProperty("blueTeam")
     private Team blueTeam;
     
     @JsonProperty("redTeam")
     private Team redTeam;
 
-    public Lobby() {
+    public TeamManager() {
         this.blueTeam = new Team("Blue Team", Color.BLUE);
         this.redTeam = new Team("Red Team", Color.RED);
     }
 
     @JsonCreator
-    public Lobby(
+    public TeamManager(
         @JsonProperty("blueTeam") Team blueTeam,
         @JsonProperty("redTeam") Team redTeam,
         @JsonProperty("teamsList") ArrayList<Team> teamsList) {

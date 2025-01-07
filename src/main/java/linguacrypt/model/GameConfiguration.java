@@ -4,6 +4,7 @@ import linguacrypt.visitor.Visitable;
 import linguacrypt.visitor.Visitor;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * Configuration d'une partie de LinguaCrypt.
@@ -29,6 +30,9 @@ public class GameConfiguration implements Visitable {
     @JsonProperty("currentDeck")
     public static Deck currentDeck;
 
+    @JsonProperty("teamManager")
+    public static TeamManager teamManager;
+
 
 
     public GameConfiguration() {
@@ -38,6 +42,7 @@ public class GameConfiguration implements Visitable {
         maxNbSpy = 1;
         maxNbOperative = 1;
         limitedTime = -1;
+        teamManager = new TeamManager();
     }
 
     @JsonCreator
@@ -46,7 +51,10 @@ public class GameConfiguration implements Visitable {
         @JsonProperty("nbPlayers") int nbPlayers,
         @JsonProperty("maxNbSpy") int maxNbSpy,
         @JsonProperty("maxNbOperative") int maxNbOperative,
-        @JsonProperty("limitedTime") int limitedTime) {
+        @JsonProperty("limitedTime") int limitedTime,
+        @JsonProperty("currentDeck") Deck currentDeck,
+        @JsonProperty("teamManager") TeamManager teamManager
+        ) {
         // gridSize = gridSize;
         // nbPlayers = nbPlayers;
         // maxNbSpy = maxNbSpy;

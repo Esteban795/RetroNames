@@ -16,11 +16,6 @@ import java.util.ArrayList;
  * - La configuration de la partie (GameConfiguration)
  */
 public class Game implements Visitable {
-    @JsonProperty("lobby")
-    private Lobby lobby;
-    
-    @JsonProperty("deck")
-    private Deck deck;
     
     @JsonProperty("grid")
     private ArrayList<ArrayList<Card>> grid;
@@ -28,7 +23,8 @@ public class Game implements Visitable {
     @JsonProperty("config")
     private GameConfiguration config;
 
-
+    @JsonProperty("nbTurn")
+    private int nbTurn;
 
     /**
      * Constructeur par défaut.
@@ -39,10 +35,9 @@ public class Game implements Visitable {
      * - Une configuration par défaut
      */
     public Game() {
-        this.lobby = new Lobby();
-        this.deck = new Deck();
         this.grid = new ArrayList<>();
         this.config = new GameConfiguration();
+        this.nbTurn = 0;
     }
 
     /**
@@ -59,25 +54,10 @@ public class Game implements Visitable {
         @JsonProperty("deck") Deck deck,
         @JsonProperty("grid") ArrayList<ArrayList<Card>> grid,
         @JsonProperty("config") GameConfiguration config) {
-        this.lobby = lobby != null ? lobby : new Lobby();
-        this.deck = deck;
         this.grid = grid;
         this.config = config;
     }
-
-    public void addCard(Card card) {
-        if (deck != null) {
-            deck.addCard(card);
-        }
-    }
-
-    public void removeCard(Card card) {
-        if (deck != null) {
-            deck.removeCard(card);
-        }
-    }
-
-        /**
+    /**
      * Initialise une nouvelle grille vide avec la taille définie dans la configuration.
      * La grille est une matrice carrée (ex: 5x5).
      */
@@ -100,22 +80,20 @@ public class Game implements Visitable {
      * et de haut en bas. Cette méthode est appelée après initGrid().
      */
     public void loadGrid() {
-        if (grid == null || deck == null) return;
+        // if (grid == null || deck == null) return;
         
-        ArrayList<Card> cards = deck.getCardList();
-        int size = config.getGridSize();
-        int cardIndex = 0;
+        // ArrayList<Card> cards = deck.getCardList();
+        // int size = config.getGridSize();
+        // int cardIndex = 0;
         
-        for (int i = 0; i < size && cardIndex < cards.size(); i++) {
-            for (int j = 0; j < size && cardIndex < cards.size(); j++) {
-                grid.get(i).set(j, cards.get(cardIndex++));
-            }
-        }
+        // for (int i = 0; i < size && cardIndex < cards.size(); i++) {
+        //     for (int j = 0; j < size && cardIndex < cards.size(); j++) {
+        //         grid.get(i).set(j, cards.get(cardIndex++));
+        //     }
+        // }
     }
 
     // Getters and Setters
-    public Lobby getLobby() { return lobby; }
-    public Deck getDeck() { return deck; }
     public ArrayList<ArrayList<Card>> getGrid() { return grid; }
     public GameConfiguration getConfig() { return config; }
 

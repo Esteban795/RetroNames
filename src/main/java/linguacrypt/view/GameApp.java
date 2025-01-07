@@ -4,7 +4,9 @@ import java.io.File;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -38,9 +40,15 @@ public class GameApp extends Application {
         Button initGameButton = new Button("Nouvelle Partie");
         initGameButton.setOnAction(e -> createNewGame());
         
+        Button deleteButton = new Button("Supprimer une sauvegarde");
+        deleteButton.setOnAction(e -> deleteSave(primaryStage));
+    
+        Button deleteAllButton = new Button("Supprimer toutes les sauvegardes");
+        deleteAllButton.setOnAction(e -> deleteAllSaves(primaryStage));
+        
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));
-        vbox.getChildren().addAll(textArea, saveButton, loadButton, initGameButton);
+        vbox.getChildren().addAll(textArea, saveButton, loadButton, deleteButton, deleteAllButton, initGameButton);
         
         Scene scene = new Scene(vbox);
         primaryStage.setScene(scene);
@@ -133,6 +141,56 @@ public class GameApp extends Application {
             }
         }
     }
+
+    private void deleteSave(Stage stage) {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setInitialDirectory(new File(RESOURCES_PATH));
+    fileChooser.getExtensionFilters().add(
+        new FileChooser.ExtensionFilter("Fichiers JSON", "*.json")
+    );
+
+    File selectedFile = fileChooser.showOpenDialog(stage);
+    if (selectedFile != null) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Supprimer la sauvegarde");
+        alert.setContentText("Voulez-vous vraiment supprimer " + selectedFile.getName() + " ?");
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                if (selectedFile.delete()) {
+                    textArea.appendText("Sauvegarde supprimée : " + selectedFile.getName() + "\n");
+                } else {
+                    textArea.appendText("Erreur lors de la suppression.\n");
+                }
+            }
+        });
+        }
+    }
+
+    private void deleteAllSaves(Stage stage) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Supprimer toutes les sauvegardes");
+        alert.setContentText("Voulez-vous vraiment supprimer toutes les sauvegardes ?");
+    
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                File directory = new File(RESOURCES_PATH);
+                File[] files = directory.listFiles((dir, name) -> name.endsWith(".json"));
+                if (files != null) {
+                    int count = 0;
+                    for (File file : files) {
+                        if (file.delete()) {
+                            count++;
+                        }
+                    }
+                    textArea.appendText(count + " sauvegardes supprimées.\n");
+                }
+            }
+        });
+    }
+
 
     @Override
     public void stop() {

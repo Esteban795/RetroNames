@@ -41,9 +41,38 @@
       </SplitPane>
    </center>
    <left>
-      <VBox fx:id="blueTeamVB" prefHeight="200.0" prefWidth="160.0" spacing="10.0" style="-fx-background-color: blue;" BorderPane.alignment="CENTER" />
+      <VBox fx:id="blueTeamVB" prefHeight="200.0" prefWidth="160.0" spacing="10.0" style="-fx-background-color: blue;" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="150.0" prefWidth="160.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="167.0" text="Maitre-espion" textFill="WHITE" />
+                  <VBox fx:id="blueTeamSpy" prefHeight="200.0" prefWidth="100.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="16.0" prefWidth="162.0" text="Opérateurs" textFill="WHITE" />
+                  <VBox fx:id="blueTeamOperative" prefHeight="200.0" prefWidth="100.0" />
+               </children>
+            </VBox>
+         </children></VBox>
    </left>
    <right>
-      <VBox fx:id="redTeamVB" prefHeight="200.0" prefWidth="160.0" spacing="10.0" style="-fx-background-color: red;" BorderPane.alignment="CENTER" />
+      <VBox fx:id="blueTeamVB1" prefHeight="200.0" prefWidth="160.0" spacing="10.0" style="-fx-background-color: red;" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="150.0" prefWidth="160.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="167.0" text="Maitre-espion" textFill="WHITE" />
+                  <VBox fx:id="redTeamSpy" prefHeight="200.0" prefWidth="100.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: red;">
+               <children>
+                  <Label alignment="CENTER" prefHeight="16.0" prefWidth="162.0" text="Opérateurs" textFill="WHITE" />
+                  <VBox fx:id="redTeamOperative" prefHeight="200.0" prefWidth="100.0" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
    </right>
 </BorderPane>

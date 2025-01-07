@@ -2,5 +2,16 @@
 **TELECOM Nancy - 06/01 au 10/01**
 
 
-Les instructions sur l'organisation et les attendus de la semaine se trouve dans le fichier [INSTRUCTIONS.md](./INSTRUCTIONS.md).
+## Compiler le jar
+```bash
+$ ./gradlew jar
+```
+Le jar se trouve alors dans build/libs/
 
+\
+Ou bien d'une autre manière.
+
+## Exécuter le jar 
+```bash
+$ java -jar --module-path <path_to_your_javafx_repo>/lib --add-modules=javafx.base,javafx.controls,javafx.fxml <path_to_your_app>.jar
+```

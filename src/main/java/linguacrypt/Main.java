@@ -3,6 +3,7 @@ package linguacrypt;
 import java.io.IOException;
 import java.net.URL;
 
+import linguacrypt.model.Model;
 import linguacrypt.model.Game;
 import linguacrypt.scenes.ManagedScene;
 import linguacrypt.scenes.MenuScene;
@@ -16,12 +17,12 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private Game game;
+    private Model model;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        this.game = new Game();
-        SceneManager sm = SceneManager.getInstance(primaryStage, this.game);
+        this.model = new Model();
+        SceneManager sm = SceneManager.getInstance(primaryStage, model);
 
         // Fake scene that shouldn't be used. It is used to initialize the SceneManager to correct values
         URL fxmlURL = getClass().getResource("/Init.fxml");

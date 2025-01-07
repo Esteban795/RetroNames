@@ -37,9 +37,9 @@ public class MenuSceneController {
     }
 
     @FXML
-    public void handleEditDecks() {
+    public void handleEditDecks() throws IOException {
         System.out.println("Edit Decks button clicked!");
-        sm.pushScene(new EditDecksScene(sm));
+        sm.pushScene(new EditDecksScene(sm)) ;
     }
 
     @FXML
@@ -56,5 +56,6 @@ public class MenuSceneController {
     private void initialize() {
         // Called after FXML is loaded
         // Initialize your buttons here
+        System.out.println(this.sm.getModel());
     }
 }

@@ -1,5 +1,6 @@
 package linguacrypt.scenes;
 
+import java.io.IOException;
 import java.net.URL;
 
 import linguacrypt.controllers.EditDecksSceneController;
@@ -12,7 +13,7 @@ public class EditDecksScene extends ManagedScene {
 
     private EditDecksSceneController controller;
 
-    public EditDecksScene(SceneManager sm) {
+    public EditDecksScene(SceneManager sm) throws IOException {
         super(sm);
         super.setFXMLPath("/scenes/editDecks/EditDecksScene.fxml");
         controller = new EditDecksSceneController(sm);

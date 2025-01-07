@@ -44,6 +44,7 @@ public class Game implements Visitable {
      * Constructeur pour la désérialisation JSON.
      * @param grid La grille de jeu
      * @param config La configuration
+     * @param nbTurn Le nombre de tours joués
      */
 
     @JsonCreator
@@ -53,13 +54,14 @@ public class Game implements Visitable {
         @JsonProperty("nbTurn") int nbTurn) {
         this.grid = grid;
         this.config = config;
+        this.nbTurn = nbTurn;
     }
     /**
      * Initialise une nouvelle grille vide avec la taille définie dans la configuration.
      * La grille est une matrice carrée (ex: 5x5).
      */
     public void initGrid() {
-        int size = GameConfiguration.gridSize;
+        int size = config.getGridSize();
         grid = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             ArrayList<Card> row = new ArrayList<>();
@@ -77,11 +79,11 @@ public class Game implements Visitable {
      * et de haut en bas. Cette méthode est appelée après initGrid().
      */
     public void loadGrid() {
-        Deck deck = GameConfiguration.currentDeck;
+        Deck deck = config.getCurrentDeck();
         if (grid == null || deck == null) return;
         
         ArrayList<Card> cards = deck.getCardList();
-        int size = GameConfiguration.gridSize;
+        int size = config.getGridSize();
         int cardIndex = 0;
         
         for (int i = 0; i < size && cardIndex < cards.size(); i++) {
@@ -94,7 +96,8 @@ public class Game implements Visitable {
     // Getters and Setters
     public ArrayList<ArrayList<Card>> getGrid() { return grid; }
     public GameConfiguration getConfig() { return config; }
-
+    public int getNbTurn() { return nbTurn; }
+    
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);

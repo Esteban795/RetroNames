@@ -13,25 +13,25 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 public class GameConfiguration implements Visitable {
     @JsonProperty("gridSize")
-    public static int gridSize;
+    private  int gridSize;
     
     @JsonProperty("nbPlayers")
-    public static int nbPlayers;
+    private  int nbPlayers;
     
     @JsonProperty("maxNbSpy")
-    public static int maxNbSpy;
+    private  int maxNbSpy;
     
     @JsonProperty("maxNbOperative")
-    public static int maxNbOperative;
+    private  int maxNbOperative;
     
     @JsonProperty("limitedTime")
-    public static int limitedTime; // -1 if time not limited
+    private  int limitedTime; // -1 if time not limited
 
     @JsonProperty("currentDeck")
-    public static Deck currentDeck;
+    private  Deck currentDeck;
 
     @JsonProperty("teamManager")
-    public static TeamManager teamManager;
+    private  TeamManager teamManager;
 
 
 
@@ -42,6 +42,7 @@ public class GameConfiguration implements Visitable {
         maxNbSpy = 1;
         maxNbOperative = 1;
         limitedTime = -1;
+        currentDeck = new Deck();
         teamManager = new TeamManager();
     }
 
@@ -55,28 +56,34 @@ public class GameConfiguration implements Visitable {
         @JsonProperty("currentDeck") Deck currentDeck,
         @JsonProperty("teamManager") TeamManager teamManager
         ) {
-        // gridSize = gridSize;
-        // nbPlayers = nbPlayers;
-        // maxNbSpy = maxNbSpy;
-        // maxNbOperative = maxNbOperative;
-        // limitedTime = limitedTime;
+        this.gridSize = gridSize;
+        this.nbPlayers = nbPlayers;
+        this.maxNbSpy = maxNbSpy;
+        this.maxNbOperative = maxNbOperative;
+        this.limitedTime = limitedTime;
     }
 
     // Getters and Setters
-    // public int getGridSize() { return gridSize; }
-    // public void setGridSize(int gridSize) { gridSize = gridSize; }
+    public int getGridSize() { return gridSize; }
+    public void setGridSize(int gridSize) { this.gridSize = gridSize; }
     
-    // public int getNbPlayers() { return nbPlayers; }
-    // public void setNbPlayers(int nbPlayers) { nbPlayers = nbPlayers; }
+    public int getNbPlayers() { return nbPlayers; }
+    public void setNbPlayers(int nbPlayers) { this.nbPlayers = nbPlayers; }
     
-    // public int getMaxNbSpy() { return maxNbSpy; }
-    // public void setMaxNbSpy(int maxNbSpy) { maxNbSpy = maxNbSpy; }
+    public int getMaxNbSpy() { return maxNbSpy; }
+    public void setMaxNbSpy(int maxNbSpy) { this.maxNbSpy = maxNbSpy; }
     
-    // public int getMaxNbOperative() { return maxNbOperative; }
-    // public void setMaxNbOperative(int maxNbOperative) { maxNbOperative = maxNbOperative; }
+    public int getMaxNbOperative() { return maxNbOperative; }
+    public void setMaxNbOperative(int maxNbOperative) { this.maxNbOperative = maxNbOperative; }
     
-    // public int getLimitedTime() { return limitedTime; }
-    // public void setLimitedTime(int limitedTime) { limitedTime = limitedTime; }
+    public int getLimitedTime() { return limitedTime; }
+    public void setLimitedTime(int limitedTime) { this.limitedTime = limitedTime; }
+
+    public Deck getCurrentDeck() { return currentDeck; }
+    public void setCurrentDeck(Deck currentDeck) { this.currentDeck = currentDeck; }
+
+    public TeamManager getTeamManager() { return teamManager; }
+    public void setTeamManager(TeamManager teamManager) { this.teamManager = teamManager; }
 
     @Override
     public void accept(Visitor visitor) {

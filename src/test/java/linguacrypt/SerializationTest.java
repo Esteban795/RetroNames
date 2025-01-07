@@ -33,7 +33,7 @@ public class SerializationTest {
 
     @Test
     void testSerializeWithTeams() {
-        Lobby lobby = game.getLobby();
+        TeamManager lobby = game.getConfig().getTeamManager();
 
         Team blueTeam = new Team("Blue Team", Color.BLUE);
         blueTeam.addPlayer(new Player("Alice"));
@@ -55,8 +55,8 @@ public class SerializationTest {
     void testSerializeWithCards() {
         Card card1 = new Card("Word1", Color.BLUE);
         Card card2 = new Card("Word2", Color.RED);
-        game.addCard(card1);
-        game.addCard(card2);
+        game.getConfig().getCurrentDeck().addCard(card1);
+        game.getConfig().getCurrentDeck().addCard(card2);
         game.initGrid();
         game.loadGrid();
 

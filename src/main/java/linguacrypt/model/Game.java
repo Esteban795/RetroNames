@@ -2,6 +2,8 @@ package linguacrypt.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import linguacrypt.visitor.Visitable;
 import linguacrypt.visitor.Visitor;
 import java.util.ArrayList;
@@ -62,7 +64,7 @@ public class Game implements Visitable {
      * La grille est une matrice carrée (ex: 5x5).
      */
     public void initGrid() {
-        int size = config.getGridSize();
+        int size = GameConfiguration.gridSize;
         grid = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             ArrayList<Card> row = new ArrayList<>();
@@ -80,17 +82,18 @@ public class Game implements Visitable {
      * et de haut en bas. Cette méthode est appelée après initGrid().
      */
     public void loadGrid() {
-        // if (grid == null || deck == null) return;
+        Deck deck = GameConfiguration.currentDeck;
+        if (grid == null || deck == null) return;
         
-        // ArrayList<Card> cards = deck.getCardList();
-        // int size = config.getGridSize();
-        // int cardIndex = 0;
+        ArrayList<Card> cards = deck.getCardList();
+        int size = GameConfiguration.gridSize;
+        int cardIndex = 0;
         
-        // for (int i = 0; i < size && cardIndex < cards.size(); i++) {
-        //     for (int j = 0; j < size && cardIndex < cards.size(); j++) {
-        //         grid.get(i).set(j, cards.get(cardIndex++));
-        //     }
-        // }
+        for (int i = 0; i < size && cardIndex < cards.size(); i++) {
+            for (int j = 0; j < size && cardIndex < cards.size(); j++) {
+                grid.get(i).set(j, cards.get(cardIndex++));
+            }
+        }
     }
 
     // Getters and Setters

@@ -12,19 +12,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GameConfiguration implements Visitable {
     @JsonProperty("gridSize")
-    private int gridSize;
+    public static int gridSize;
     
     @JsonProperty("nbPlayers")
-    private int nbPlayers;
+    public static int nbPlayers;
     
     @JsonProperty("maxNbSpy")
-    private int maxNbSpy;
+    public static int maxNbSpy;
     
     @JsonProperty("maxNbOperative")
-    private int maxNbOperative;
+    public static int maxNbOperative;
     
     @JsonProperty("limitedTime")
-    private int limitedTime; // -1 if time not limited
+    public static int limitedTime; // -1 if time not limited
+
+    @JsonProperty("currentDeck")
+    public static Deck currentDeck;
+
+    
 
     public GameConfiguration() {
         // Valeurs par défaut

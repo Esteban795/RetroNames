@@ -6,6 +6,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -54,11 +55,12 @@
          </children>
       </VBox>
    </center>
-   <left>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" />
-   </left>
    <right>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <ProgressBar prefHeight="303.0" prefWidth="330.0" progress="0.0" rotate="-90.0" style="-fx-min-width: 275;" />
+         </children>
+      </VBox>
    </right>
    <bottom>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
@@ -75,4 +77,11 @@
          </children>
       </HBox>
    </bottom>
+   <left>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <ProgressBar prefHeight="303.0" prefWidth="330.0" progress="0.0" rotate="-90.0" style="-fx-min-width: 275;" />
+         </children>
+      </VBox>
+   </left>
 </BorderPane>

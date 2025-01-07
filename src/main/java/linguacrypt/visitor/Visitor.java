@@ -1,6 +1,7 @@
 package linguacrypt.visitor;
 
 import linguacrypt.model.Deck;
+import linguacrypt.model.DeckManager;
 import linguacrypt.model.Game;
 import linguacrypt.model.GameConfiguration;
 import linguacrypt.model.Player;
@@ -12,4 +13,5 @@ public interface Visitor {
     void visit(Player player);
     void visit(GameConfiguration gameConfiguration);
     void visit(Deck deck);
+    void visit(DeckManager deckManager);
 }

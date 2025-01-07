@@ -144,7 +144,6 @@ package LinguaCrypt{
 
             + Deck getDeck(String)
             + Deck getRandomDeck()
-            +
             
             
         }
@@ -169,6 +168,11 @@ package LinguaCrypt{
             + void loadGrid()
         }
 
+        class Model{
+            - DeckManager deckManager
+            - Game game
+        }
+
 
 
         Team "1"--"*" Player
@@ -179,7 +183,9 @@ package LinguaCrypt{
         GameConfiguration --"1" TeamManager
         TeamManager --"2" Team
         DeckManager "1"--"*" Deck
-        DeckManager --"1" GameConfiguration
+        Deck --"1" GameConfiguration
+        DeckManager "1"-- Model
+        Game "1"-- Model
     }
 }
 

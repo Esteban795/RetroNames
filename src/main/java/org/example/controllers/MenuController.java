@@ -2,6 +2,7 @@ package org.example.controllers;
 
 import java.io.IOException;
 
+import org.example.scenes.EditDecksScene;
 import org.example.scenes.NewLoadScene;
 import org.example.scenes.SceneManager;
 import org.example.scenes.SettingsScene;
@@ -36,8 +37,9 @@ public class MenuController {
     }
 
     @FXML
-    public void handleButtonEditDecks() {
+    public void handleEditDecks() {
         System.out.println("Edit Decks button clicked!");
+        sm.pushScene(new EditDecksScene(sm));
     }
 
     @FXML

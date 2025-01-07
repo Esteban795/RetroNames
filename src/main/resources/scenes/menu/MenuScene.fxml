@@ -35,6 +35,7 @@
                     <Button fx:id="buttonEditDecks" 
                             text="Modifier les decks"
                             styleClass="menu-button"
+                            onAction="#handleEditDecks"
                     />
 
                     <Button fx:id="buttonQuitGame" 

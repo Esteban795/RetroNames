@@ -1,21 +1,21 @@
-package org.example.scenes;
+package linguacrypt.scenes;
 
 import java.io.IOException;
 import java.net.URL;
 
-import org.example.controllers.EndGameController;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import linguacrypt.controllers.EndGameSceneController;
+
 public class EndGameScene extends ManagedScene { 
 
-    private EndGameController controller;
+    private EndGameSceneController controller;
 
     public EndGameScene(SceneManager sm) throws IOException {
         super(sm);
         super.setFXMLPath("/scenes/end/EndGameScene.fxml");
-        controller = new EndGameController(sm);
+        controller = new EndGameSceneController(sm);
         FXMLLoader loader = new FXMLLoader();
         URL fxmlURL = getClass().getResource(super.getFXMLPath());
         loader.setLocation(fxmlURL);

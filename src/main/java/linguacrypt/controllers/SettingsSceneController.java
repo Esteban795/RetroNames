@@ -1,9 +1,8 @@
 package linguacrypt.controllers;
 
-import linguacrypt.scenes.SceneManager;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import linguacrypt.scenes.SceneManager;
 
 public class SettingsSceneController {
 

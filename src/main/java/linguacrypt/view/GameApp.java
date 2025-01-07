@@ -1,6 +1,7 @@
 package linguacrypt.view;
 
 import java.io.File;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -11,9 +12,13 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import linguacrypt.model.*;
-import linguacrypt.visitor.SerializationVisitor;
+import linguacrypt.model.Color;
+import linguacrypt.model.Game;
+import linguacrypt.model.Lobby;
+import linguacrypt.model.Player;
+import linguacrypt.model.Team;
 import linguacrypt.visitor.DeserializationVisitor;
+import linguacrypt.visitor.SerializationVisitor;
 
 public class GameApp extends Application {
     private Game game;
@@ -77,9 +82,9 @@ public class GameApp extends Application {
         game.getLobby().addTeam(redTeam);
         
         // Add some default cards
-        game.addCard(new Card("Word1", Color.BLUE));
-        game.addCard(new Card("Word2", Color.RED));
-        game.addCard(new Card("Word3", Color.BLACK));
+        // game.addCard(new Card("Word1", Color.BLUE));
+        // game.addCard(new Card("Word2", Color.RED));
+        // game.addCard(new Card("Word3", Color.BLACK));
         
         game.initGrid();
         game.loadGrid();

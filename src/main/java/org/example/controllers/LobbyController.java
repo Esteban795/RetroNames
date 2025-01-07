@@ -4,28 +4,29 @@ import org.example.scenes.SceneManager;
 import org.example.scenes.SettingsScene;
 
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.VBox;
+
 
 public class LobbyController {
 
-    private SceneManager sm;
-    private double startX;
-    private double startY;
+    private final SceneManager sm;
 
     @FXML
     private TextField pseudoTextField;
 
+    @FXML 
+    private VBox blueTeamVB;
+
     @FXML
-    private FlowPane pseudoFlowPane;
+    private VBox redTeamVB;
+    
+    @FXML
+    private VBox pseudoVB;
 
     public LobbyController(SceneManager sm) {
         this.sm = sm;
@@ -33,7 +34,9 @@ public class LobbyController {
 
     @FXML
     public void initialize() {
-        
+        setupDragAndDrop(pseudoVB);
+        setupDragAndDrop(blueTeamVB);
+        setupDragAndDrop(redTeamVB);
     }
 
     @FXML
@@ -46,31 +49,67 @@ public class LobbyController {
         sm.popScene();
     }
 
-    public void makeDraggable(Node node){
-        node.setOnMousePressed((mouse_event) -> {
-            startX = mouse_event.getSceneX() - node.getTranslateX();
-            startY = mouse_event.getSceneY() - node.getTranslateY();
+    private Label createDraggableLabel(String text) {
+        Label label = new Label(text);
+        label.setStyle("-fx-padding: 5; -fx-background-color: white; -fx-border-color: black;");
+        
+        label.setOnDragDetected(event -> {
+            Dragboard db = label.startDragAndDrop(TransferMode.MOVE);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(label.getText());
+            db.setContent(content);
         });
-
-        node.setOnMouseDragged((mouse_event) -> {
-            node.setTranslateX(mouse_event.getSceneX() - startX);
-            node.setTranslateY(mouse_event.getSceneY() - startY);
+        
+        label.setOnDragDone(event -> {
+            if (event.getTransferMode() == TransferMode.MOVE) {
+                VBox parent = (VBox) label.getParent();
+                parent.getChildren().remove(label);
+            }
         });
+        
+        return label;
     }
 
+    private void setupDragAndDrop(VBox vbox) {
+        vbox.setOnDragOver(event -> {
+            if (event.getGestureSource() != vbox &&
+                event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+        });
+        
+        vbox.setOnDragEntered(event -> {
+            if (event.getGestureSource() != vbox &&
+                event.getDragboard().hasString()) {
+            }
+        });
+        
+        
+        vbox.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            
+            if (db.hasString()) {
+                Label newLabel = createDraggableLabel(db.getString());
+                vbox.getChildren().add(newLabel);
+                success = true;
+            }
+            
+            event.setDropCompleted(success);
+            event.consume();
+        });
+    }
+    
     @FXML
     public void validatePseudo() {
         String pseudoString = this.pseudoTextField.getText();
+        // sm.getModel().    check if player already exists
+        if (pseudoString.isEmpty()) {
+            return;
+        }
         pseudoTextField.setText("");
 
-        StackPane pseudoPane = new StackPane();
-        pseudoPane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
-        pseudoPane.setPadding(new Insets(5));
-        Label pseudoLabel = new Label(pseudoString);
-        pseudoPane.getChildren().add(pseudoLabel);
-        pseudoFlowPane.getChildren().add(pseudoPane);
-        
-        makeDraggable(pseudoPane);
-
+        Label pseudoLabel = createDraggableLabel(pseudoString);
+        pseudoVB.getChildren().add(pseudoLabel);
     }
 }

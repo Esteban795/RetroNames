@@ -25,7 +25,7 @@ public class EditDecksScene extends ManagedScene {
             Parent root = loader.load();
             super.setScene(new Scene(root, 800, 600));
         } catch (Exception e) {
-            System.out.println("Error loading EditDecks.fxml");
+            System.out.println("Error loading EditDecksScene.fxml");
             sm.getPrimaryStage().close();
         }
     }

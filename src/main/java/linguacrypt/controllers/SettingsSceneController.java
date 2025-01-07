@@ -1,6 +1,6 @@
-package org.example.controllers;
+package linguacrypt.controllers;
 
-import org.example.scenes.SceneManager;
+import linguacrypt.scenes.SceneManager;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

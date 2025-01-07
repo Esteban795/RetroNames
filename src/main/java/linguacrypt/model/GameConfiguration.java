@@ -29,15 +29,15 @@ public class GameConfiguration implements Visitable {
     @JsonProperty("currentDeck")
     public static Deck currentDeck;
 
-    
+
 
     public GameConfiguration() {
         // Valeurs par défaut
-        this.gridSize = 5; // 5x5 par défaut
-        this.nbPlayers = 4;
-        this.maxNbSpy = 1;
-        this.maxNbOperative = 1;
-        this.limitedTime = -1;
+        gridSize = 5; // 5x5 par défaut
+        nbPlayers = 4;
+        maxNbSpy = 1;
+        maxNbOperative = 1;
+        limitedTime = -1;
     }
 
     @JsonCreator

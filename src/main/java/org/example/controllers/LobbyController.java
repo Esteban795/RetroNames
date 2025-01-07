@@ -1,5 +1,8 @@
 package org.example.controllers;
 
+import java.io.IOException;
+
+import org.example.scenes.MenuScene;
 import org.example.scenes.SceneManager;
 import org.example.scenes.SettingsScene;
 
@@ -111,5 +114,20 @@ public class LobbyController {
 
         Label pseudoLabel = createDraggableLabel(pseudoString);
         pseudoVB.getChildren().add(pseudoLabel);
+    }
+
+    @FXML 
+    public void lobbyDone() throws IOException {
+        blueTeamVB.getChildren().forEach(node -> {
+            Label label = (Label) node;
+            System.out.println("Blue team: " + label.getText());
+        });
+
+        redTeamVB.getChildren().forEach(node -> {
+            Label label = (Label) node;
+            System.out.println("Red team: " + label.getText());
+        });
+        
+        sm.pushScene(new MenuScene(sm));
     }
 }

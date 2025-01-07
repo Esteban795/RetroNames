@@ -87,7 +87,7 @@ public class GameApp extends Application {
         Team blueTeam = lobby.getBlueTeam();
         Team redTeam = lobby.getRedTeam();
         
-        textArea.appendText("\nÉquipes dans le lobby: " + lobby.getTeamsList().size() + "\n");
+        textArea.appendText("\nÉquipes dans le lobby: \n");
         
         textArea.appendText("\nÉquipe Bleue:\n");
         if (blueTeam != null && blueTeam.getPlayerList() != null) {

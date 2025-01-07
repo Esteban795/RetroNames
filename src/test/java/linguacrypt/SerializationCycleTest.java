@@ -65,9 +65,9 @@ public class SerializationCycleTest {
         assertEquals("Bob", loadedLobby.getRedTeam().getPlayerList().get(0).getName(), "Red team player should be Bob");
         
         // Verify cards
-        assertTrue(loadedGame.getCardList().getCardList().size() > 0, "Card list should not be empty");
-        assertEquals("Word1", loadedGame.getCardList().getCardList().get(0).getCardName(), "First card name should match");
-        assertEquals(Color.BLUE, loadedGame.getCardList().getCardList().get(0).getCardColor(), "First card color should match");
+        assertTrue(loadedGame.getDeck().getCardList().size() > 0, "Card list should not be empty");
+        assertEquals("Word1", loadedGame.getDeck().getCardList().get(0).getCardName(), "First card name should match");
+        assertEquals(Color.BLUE, loadedGame.getDeck().getCardList().get(0).getCardColor(), "First card color should match");
     }
 
     @AfterEach

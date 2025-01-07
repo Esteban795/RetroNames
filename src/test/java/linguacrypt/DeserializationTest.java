@@ -22,7 +22,7 @@ public class DeserializationTest {
         Game loaded = visitor.loadGame(TEST_RESOURCES + "game.json");
         assertNotNull(loaded);
         assertNotNull(loaded.getLobby());
-        assertNotNull(loaded.getCardList());
+        assertNotNull(loaded.getDeck());
         assertNotNull(loaded.getGrid());
         assertNotNull(loaded.getConfig());
     }

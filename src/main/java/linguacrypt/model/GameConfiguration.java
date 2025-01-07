@@ -28,7 +28,7 @@ public class GameConfiguration implements Visitable {
 
     public GameConfiguration() {
         // Valeurs par défaut
-        this.gridSize = 25; // 5x5 par défaut
+        this.gridSize = 5; // 5x5 par défaut
         this.nbPlayers = 4;
         this.maxNbSpy = 1;
         this.maxNbOperative = 1;

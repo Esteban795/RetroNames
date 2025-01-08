@@ -1,17 +1,22 @@
 package linguacrypt.controllers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 import linguacrypt.scenes.SceneManager;
+import linguacrypt.model.Card;
 import linguacrypt.model.Deck;
 import linguacrypt.model.Model;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class EditDecksSceneController {
@@ -23,17 +28,39 @@ public class EditDecksSceneController {
     private Button buttonBack;
 
     @FXML
+    private Dialog<ButtonType> newCardDialog;
+
+    @FXML
     private TextField cardNameField;
 
     @FXML
-    private Dialog<ButtonType> newCardDialog;
+    private Dialog<ButtonType> newDeckDialog;
+
+    @FXML
+    private TextField deckNameField;
+
+    private Deck selectedDeck;
+    private Button selectedButton; // To track currently selected button
+
+    @FXML
+    private VBox cardList;
+    @FXML
+    private Deck currentDeck;
 
     @FXML
     private VBox deckList;
 
+    @FXML
+    private boolean cardOrDeckAddedOrRemovesViaUI;
+
+    @FXML
+    private HashMap<Deck, ArrayList<Card>> deletedCards;
+
     public EditDecksSceneController(SceneManager sm) {
         this.sm = sm;
         this.model = sm.getModel();
+        cardOrDeckAddedOrRemovesViaUI = false;
+        this.deletedCards = new HashMap<>();
     }
 
     @FXML
@@ -41,49 +68,189 @@ public class EditDecksSceneController {
         // Initialize your deck list here
         // Add your logic to load decks from DeckManager
         for (Deck deck : model.getDeckManager().getDeckList()) {
-            Button deckButton = new Button(deck.getDeckName());
-            deckList.getChildren().add(deckButton);
+            addDeckToUI(deck);
         }
     }
 
     @FXML
     public void goBack() {
-        // gotta save dekcs before exiting
-        sm.popScene();
+        if (cardOrDeckAddedOrRemovesViaUI) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Save Changes");
+            alert.setHeaderText(null);
+            alert.setContentText("You have made changes to the decks. What would you like to do?");
+
+            ButtonType saveAndLeave = new ButtonType("Save and Leave", ButtonBar.ButtonData.OK_DONE);
+            ButtonType leaveWithoutSave = new ButtonType("Leave without saving", ButtonBar.ButtonData.NO);
+            ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+            alert.getButtonTypes().setAll(saveAndLeave, leaveWithoutSave, cancel);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent()) {
+                if (result.get() == saveAndLeave) {
+                    model.getDeckManager().saveDeckManager();
+                    deletedCards.clear();
+                    sm.popScene();
+                } else if (result.get() == leaveWithoutSave) {
+                    // Restore all deleted cards
+                    deletedCards.forEach((deck, cards) -> cards.forEach(card -> deck.addCard(card)));
+                    deletedCards.clear();
+                    sm.popScene();
+                }
+            }
+        } else {
+            sm.popScene();
+        }
     }
 
     @FXML
-    public void createDeck() {
-        Deck newDeck = new Deck();
-        // Add new deck to the list of decks        
-        model.getDeckManager().addDeck(newDeck);
-        Button but = new Button(newDeck.getDeckName());
-        deckList.getChildren().add(but);
-        System.out.println("Deck created!");
+    public void showNewDeckPopup() {
+        deckNameField.setText("");
+        Optional<ButtonType> result = newDeckDialog.showAndWait();
+
+        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+            String deckName = deckNameField.getText().trim();
+            if (!deckName.isEmpty()) {
+                Deck newDeck = new Deck();
+                newDeck.setDeckName(deckName);
+
+                if (model.getDeckManager().getDeck(deckName) != null) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Duplicate Deck Name");
+                    alert.setHeaderText(null);
+                    alert.setContentText("A deck with name '" + deckName + "' already exists!");
+                    alert.showAndWait();
+                    return;
+                }
+
+                model.getDeckManager().addDeck(newDeck);
+                addDeckToUI(newDeck);
+                cardOrDeckAddedOrRemovesViaUI = true;
+                System.out.println("Deck created: " + deckName);
+            }
+        }
+    }
+
+    private void addDeckToUI(Deck deck) {
+        HBox deckContainer = new HBox(5);
+        Button deckButton = new Button(deck.getName());
+
+        // Style for selected state
+        String defaultStyle = deckButton.getStyle();
+        String selectedStyle = "-fx-background-color: lightblue;";
+
+        deckButton.setOnAction(e -> {
+            // Reset previous selection
+            if (selectedButton != null) {
+                selectedButton.setStyle(defaultStyle);
+            }
+
+            // Update selection
+            selectedDeck = deck;
+            selectedButton = deckButton;
+            deckButton.setStyle(selectedStyle);
+
+            // Show cards
+            showDeckCards(deck);
+        });
+
+        Button deleteButton = new Button("X");
+        deleteButton.setOnAction(e -> deleteDeck(deck, deckContainer));
+
+        deckContainer.getChildren().addAll(deckButton, deleteButton);
+        deckList.getChildren().add(deckContainer);
+    }
+
+    private void deleteDeck(Deck deck, HBox deckContainer) {
+        // Remove from the model
+        model.getDeckManager().removeDeck(deck);
+
+        // Remove from the UI
+        deckList.getChildren().remove(deckContainer);
+
+        cardOrDeckAddedOrRemovesViaUI = true;
+        System.out.println("Deck deleted!");
+    }
+
+    private void showDeckCards(Deck deck) {
+        cardList.getChildren().clear();
+
+        // Display each card in the deck
+        for (Card card : deck.getCardList()) {
+            HBox cardContainer = new HBox(5);
+            Button cardButton = new Button(card.getName());
+
+            Button deleteCardButton = new Button("X");
+            deleteCardButton.setOnAction(e -> deleteCard(card, cardContainer));
+
+            cardContainer.getChildren().addAll(cardButton, deleteCardButton);
+            cardList.getChildren().add(cardContainer);
+        }
+    }
+
+    private void deleteCard(Card card, HBox cardContainer) {
+        if (selectedDeck != null) {
+            selectedDeck.removeCard(card);
+            cardOrDeckAddedOrRemovesViaUI = true;
+            // Store the deleted card in deletedCards
+            if (deletedCards.containsKey(selectedDeck)) {
+                deletedCards.get(selectedDeck).add(card);
+            } else {
+                ArrayList<Card> cards = new ArrayList<>();
+                cards.add(card);
+                deletedCards.put(selectedDeck, cards);
+            }
+
+            cardList.getChildren().remove(cardContainer);
+            System.out.println("Card deleted from deck: " + selectedDeck.getName());
+        } else {
+            System.out.println("No deck selected!");
+        }
     }
 
     @FXML
-    public void createCard(){
+    public void createCard() {
 
     }
 
     @FXML
     private void showNewCardPopup() {
-        // Reset the text field before showing dialog
+        if (selectedDeck == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Deck Selected");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select a deck first!");
+            alert.showAndWait();
+            return;
+        }
+
         cardNameField.setText("");
-        
-        // Show the dialog and wait for user response
         Optional<ButtonType> result = newCardDialog.showAndWait();
-        
-        // Process the result
+
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             String cardName = cardNameField.getText().trim();
             if (!cardName.isEmpty()) {
-                // Process the new card name here
-                // Add your logic to create a new card
+                if (selectedDeck.getCard(cardName) != null) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Duplicate Card Name");
+                    alert.setHeaderText(null);
+                    alert.setContentText("A card with name '" + cardName + "' already exists in this deck!");
+                    alert.showAndWait();
+                    return;
+                }
+
+                Card newCard = new Card(cardName);
+                selectedDeck.addCard(newCard);
+                showDeckCards(selectedDeck);
+                cardOrDeckAddedOrRemovesViaUI = true;
+                System.out.println("Card added: " + cardName);
             }
         }
     }
 
-    
+    @FXML
+    public boolean wasCardOrDeckAddedOrRemovesViaUI() {
+        return cardOrDeckAddedOrRemovesViaUI;
+    }
 }

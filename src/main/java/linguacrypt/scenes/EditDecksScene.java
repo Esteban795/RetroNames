@@ -3,11 +3,10 @@ package linguacrypt.scenes;
 import java.io.IOException;
 import java.net.URL;
 
-import linguacrypt.controllers.EditDecksSceneController;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import linguacrypt.controllers.EditDecksSceneController;
 
 public class EditDecksScene extends ManagedScene {
 
@@ -24,7 +23,7 @@ public class EditDecksScene extends ManagedScene {
         loader.setController(controller);
         try {
             Parent root = loader.load();
-            super.setScene(new Scene(root, 800, 600));
+            super.setScene(new Scene(root, 1600,900));
         } catch (Exception e) {
             System.out.println("Error loading EditDecksScene.fxml");
             sm.getPrimaryStage().close();

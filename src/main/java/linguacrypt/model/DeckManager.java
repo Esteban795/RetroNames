@@ -1,8 +1,6 @@
 package linguacrypt.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,8 +19,13 @@ public class DeckManager implements Visitable {
         this.deckList = new ArrayList<>();
     }
 
-    public void addDeck(Deck deck) {
-        deckList.add(deck);
+    public Boolean addDeck(Deck deck) {
+        if (getDeck(deck.getName()) == null) {
+            deckList.add(deck);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void removeDeck(Deck deck) {
@@ -35,13 +38,13 @@ public class DeckManager implements Visitable {
 
     public Deck getDeck(String deckName) {
         for (Deck deck : deckList) {
-            if (deck.getDeckName().equals(deckName)) {
+            if (deck.getName().equals(deckName)) {
                 return deck;
             }
         }
         return null;
     }
-    
+
     @JsonIgnore
     public Deck getRandomDeck() {
         if (deckList.size() > 0) {
@@ -59,7 +62,7 @@ public class DeckManager implements Visitable {
         String path = "src/main/resources/deckSave/";
         System.out.println("Loading deck manager from file: " + filename);
         DeserializationVisitor visitor = new DeserializationVisitor(path);
-        
+
         return visitor.loadDeckManager(filename);
     }
 
@@ -69,5 +72,5 @@ public class DeckManager implements Visitable {
         SerializationVisitor visitor = new SerializationVisitor(path);
         this.accept(visitor); // This will save the deckManager to a JSON file
     }
-   
+
 }

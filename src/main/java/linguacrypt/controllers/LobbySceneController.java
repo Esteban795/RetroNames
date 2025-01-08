@@ -2,17 +2,18 @@ package linguacrypt.controllers;
 
 import java.io.IOException;
 
-import linguacrypt.scenes.MenuScene;
-import linguacrypt.scenes.SceneManager;
-import linguacrypt.scenes.SettingsScene;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
+import linguacrypt.scenes.MenuScene;
+import linguacrypt.scenes.SceneManager;
+import linguacrypt.scenes.SettingsScene;
 
 
 public class LobbySceneController {
@@ -40,6 +41,9 @@ public class LobbySceneController {
     @FXML
     private Label errorLabel;
 
+    @FXML
+    private MenuButton decksSelector;
+
     public LobbySceneController(SceneManager sm) {
         this.sm = sm;
     }
@@ -51,8 +55,20 @@ public class LobbySceneController {
         setupDragAndDrop(blueTeamSpy);
         setupDragAndDrop(redTeamSpy);
         setupDragAndDrop(redTeamOperative);
+
+        setupDeckChoices();
     }
 
+    private void setupDeckChoices() {
+        sm.getModel().getDeckManager().getDeckList().forEach(deck -> {
+            MenuItem deckItem = new MenuItem(deck.getName());
+            decksSelector.getItems().add(deckItem);
+            deckItem.setOnAction(event -> {
+                decksSelector.setText(deck.getName());
+            });
+        });
+    }
+    
     @FXML
     public void switchScene() {
         sm.pushScene(new SettingsScene(sm));

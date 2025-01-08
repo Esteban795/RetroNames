@@ -1,9 +1,11 @@
 package linguacrypt.controllers;
 
-import linguacrypt.scenes.SceneManager;
+import java.io.IOException;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import linguacrypt.scenes.LobbyScene;
+import linguacrypt.scenes.SceneManager;
 
 public class NewLoadSceneController {
 
@@ -28,8 +30,11 @@ public class NewLoadSceneController {
     }
 
     @FXML
-    public void newGame() {
-        System.out.println("New Game button clicked!");
+    public void newGame() throws IOException {
+        sm.pushScene(new LobbyScene(sm));
+        // try {
+        // } catch (IOException ex) {
+        // }
     }
     
     @FXML

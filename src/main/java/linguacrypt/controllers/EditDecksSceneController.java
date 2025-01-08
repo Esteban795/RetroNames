@@ -1,5 +1,6 @@
 package linguacrypt.controllers;
 
+import javafx.scene.control.Label;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -42,6 +44,8 @@ public class EditDecksSceneController {
 
     private Deck selectedDeck;
     private Button selectedButton; // To track currently selected button
+    private Card selectedCard;
+    private Button addToAnotherDeckButton; // To track currently selected button
 
     @FXML
     private VBox cardList;
@@ -56,9 +60,6 @@ public class EditDecksSceneController {
 
     @FXML
     private Button newCardButton;
-
-    @FXML
-    private TextArea cardInfoArea;
 
     @FXML
     private VBox cardInfoBox;
@@ -76,8 +77,8 @@ public class EditDecksSceneController {
         for (Deck deck : model.getDeckManager().getDeckList()) {
             addDeckToUI(deck);
         }
-        newCardButton.setDisable(true);
-        cardInfoArea.setText("Select a card to view details");
+        newCardButton.setDisable(true); // Disable initially
+        cardInfoBox.setVisible(false); // Hide initially
     }
 
     @FXML
@@ -186,6 +187,7 @@ public class EditDecksSceneController {
 
     private void showDeckCards(Deck deck) {
         cardList.getChildren().clear();
+        cardInfoBox.setVisible(false); // Hide when switching decks
 
         for (Card card : deck.getCardList()) {
             HBox cardContainer = new HBox(5);
@@ -205,10 +207,46 @@ public class EditDecksSceneController {
     }
 
     private void showCardInfo(Card card) {
-        String info = String.format("Card Name: %s\n Deck: %s ",
-                card.getCardName(),
-                model.getCardManager().toString(model.getCardManager().getDecks(card)));
-        cardInfoArea.setText(info);
+        selectedCard = card;
+        cardInfoBox.setVisible(true);
+        cardInfoBox.getChildren().clear();
+
+        Label details = new Label("Card Information");
+        Label nameLabel = new Label("Card Name: " + card.getCardName());
+        String decksString = model.getCardManager().toString(model.getCardManager().getDecks(card));
+        Label deckLabel = new Label("Deck: " + decksString);
+        Button addToAnotherDeckButton = new Button("Add to Another Deck");
+        addToAnotherDeckButton.setOnAction(e -> showAddToAnotherDeckDialog());
+
+        cardInfoBox.getChildren().addAll(details, nameLabel, deckLabel, addToAnotherDeckButton);
+        cardInfoBox.setSpacing(10);
+    }
+
+    @FXML
+    private void showAddToAnotherDeckDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Add to Another Deck");
+
+        ComboBox<String> deckComboBox = new ComboBox<>();
+        for (Deck deck : model.getDeckManager().getDeckList()) {
+            if (deck != selectedDeck) {
+                deckComboBox.getItems().add(deck.getDeckName());
+            }
+        }
+
+        dialog.getDialogPane().setContent(deckComboBox);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK && deckComboBox.getValue() != null) {
+            Deck targetDeck = model.getDeckManager().getDeck(deckComboBox.getValue());
+            if (targetDeck != null && !targetDeck.containsCard(selectedCard)) {
+                model.getCardManager().addCard(selectedCard, targetDeck);
+                targetDeck.addCard(selectedCard);
+                cardOrDeckAddedOrRemovesViaUI = true;
+            }
+        }
+        showCardInfo(selectedCard);
     }
 
     private void deleteCard(Card card, HBox cardContainer) {

@@ -29,10 +29,16 @@
                         </VBox>
                     </ScrollPane>
                     <VBox fx:id="cardInfoBox" spacing="5"
-                        style="-fx-padding: 10; -fx-border-color: lightgray; -fx-border-width: 1 0 0 0;">
-                        <Label text="Card Information:" />
-                        <TextArea fx:id="cardInfoArea" editable="false" wrapText="true"
-                            prefRowCount="3" />
+                        style="-fx-padding: 20; -fx-border-color: lightgray; -fx-border-width: 1 0 0 0;">
+                        <HBox spacing="10">
+                            <VBox spacing="5">
+                                <Label text="Card Information:" />
+                                <Label text="Card Name:" />
+                                <Label text="Deck:" />
+                            </VBox>
+                            <Button fx:id="addToAnotherDeckButton" text="Add to Another Deck"
+                                onAction="#showAddToAnotherDeckDialog" />
+                        </HBox>
                     </VBox>
                     <fx:define>
                         <Dialog fx:id="newCardDialog" title="New Card">

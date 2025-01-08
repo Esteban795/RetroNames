@@ -18,6 +18,7 @@ public class CardManager {
         this.cards.add(card);
         if (this.cardDeckMap.containsKey(card)) {
             this.cardDeckMap.get(card).add(deck);
+            System.out.println("Card already exists");
         } else {
             ArrayList<Deck> decks = new ArrayList<>();
             decks.add(deck);

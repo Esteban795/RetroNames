@@ -106,4 +106,8 @@ public class Deck implements Visitable {
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
+
+    public boolean containsCard(Card selectedCard) {
+        return cardList.contains(selectedCard);
+    }
 }

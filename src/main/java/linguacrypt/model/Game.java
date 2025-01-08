@@ -9,14 +9,12 @@ import linguacrypt.visitor.Visitable;
 import linguacrypt.visitor.Visitor;
 
 /**
- * Représente une partie de LinguaCrypt.
- * Cette classe est le point central du jeu, gérant :
- * - Le deck de cartes (Deck)
- * - La grille de jeu (matrice de cartes)
- * - La configuration de la partie (GameConfiguration)
+ * Représente une partie de LinguaCrypt. Cette classe est le point central du
+ * jeu, gérant : - Le deck de cartes (Deck) - La grille de jeu (matrice de
+ * cartes) - La configuration de la partie (GameConfiguration)
  */
 public class Game implements Visitable {
-    
+
     @JsonProperty("grid")
     private ArrayList<ArrayList<Card>> grid;
 
@@ -24,45 +22,50 @@ public class Game implements Visitable {
     private GameConfiguration config;
 
     @JsonProperty("nbTurn")
-    private int nbTurn;    
-    
-    @JsonProperty("key") 
+    private int nbTurn;
+
+    @JsonProperty("key")
     private ArrayList<ArrayList<Card>> key;
 
+    @JsonProperty("stats")
+    private GameStatistics stats;
+
     /**
-     * Constructeur par défaut.
-     * Initialise une nouvelle partie avec :
-     * - Un deck vide
-     * - Une grille vide
-     * - Une configuration par défaut
+     * Constructeur par défaut. Initialise une nouvelle partie avec : - Un deck
+     * vide - Une grille vide - Une configuration par défaut
      */
     public Game() {
         this.grid = new ArrayList<>();
         this.key = new ArrayList<>();
         this.config = new GameConfiguration();
+        this.stats = new GameStatistics();
         this.nbTurn = 0;
     }
 
     /**
      * Constructeur pour la désérialisation JSON.
+     *
      * @param grid La grille de jeu
      * @param config La configuration
      * @param nbTurn Le nombre de tours joués
      */
     @JsonCreator
     public Game(
-        @JsonProperty("grid") ArrayList<ArrayList<Card>> grid,
-        @JsonProperty("config") GameConfiguration config,
-        @JsonProperty("nbTurn") int nbTurn,
-        @JsonProperty("key") ArrayList<ArrayList<Card>> key) {
+            @JsonProperty("grid") ArrayList<ArrayList<Card>> grid,
+            @JsonProperty("config") GameConfiguration config,
+            @JsonProperty("nbTurn") int nbTurn,
+            @JsonProperty("key") ArrayList<ArrayList<Card>> key,
+            @JsonProperty("stats") GameStatistics stats) {
         this.grid = grid;
         this.config = config;
         this.nbTurn = nbTurn;
         this.key = key;
+        this.stats = stats;
     }
+
     /**
-     * Initialise une nouvelle grille vide avec la taille définie dans la configuration.
-     * La grille est une matrice carrée (ex: 5x5).
+     * Initialise une nouvelle grille vide avec la taille définie dans la
+     * configuration. La grille est une matrice carrée (ex: 5x5).
      */
     public void initGrid() {
         int size = config.getGridSize();
@@ -83,8 +86,10 @@ public class Game implements Visitable {
      */
     public void loadGrid() {
         Deck deck = config.getCurrentDeck();
-        if (grid == null || deck == null) return;
-        
+        if (grid == null || deck == null) {
+            return;
+        }
+
         ArrayList<Card> cards = deck.getCardList();
         int size = config.getGridSize();
         int cardIndex = 0;
@@ -101,10 +106,22 @@ public class Game implements Visitable {
     }
 
     // Getters and Setters
-    public ArrayList<ArrayList<Card>> getGrid() { return grid; }
-    public GameConfiguration getConfig() { return config; }
-    public int getNbTurn() { return nbTurn; }
-    
+    public ArrayList<ArrayList<Card>> getGrid() {
+        return grid;
+    }
+
+    public GameConfiguration getConfig() {
+        return config;
+    }
+
+    public int getNbTurn() {
+        return nbTurn;
+    }
+
+    public GameStatistics getStats() {
+        return stats;
+    }
+
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);

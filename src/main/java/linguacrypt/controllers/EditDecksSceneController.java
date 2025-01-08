@@ -69,8 +69,20 @@ public class EditDecksSceneController {
 
     @FXML
     public void goBack() {
-        // gotta save dekcs before exiting
-        sm.popScene();
+        if (cardAddedViaUI) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Save Changes");
+            alert.setHeaderText(null);
+            alert.setContentText("You have made changes to the decks. Do you want to save before leaving?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                model.getDeckManager().saveDeckManager();
+                sm.popScene();
+            }
+        } else {
+            sm.popScene();
+        }
     }
 
     @FXML

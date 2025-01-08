@@ -20,18 +20,19 @@ public class DeserializationTest {
     @Test
     void testDeserializeFullGame() {
         Game loaded = visitor.loadGame(TEST_RESOURCES + "game.json");
+        GameConfiguration config = loaded.getConfig();
         assertNotNull(loaded);
-        assertNotNull(loaded.getLobby());
-        assertNotNull(loaded.getDeck());
+        assertNotNull(config);
+        assertNotNull(config.getCurrentDeck());
         assertNotNull(loaded.getGrid());
-        assertNotNull(loaded.getConfig());
     }
 
     @Test
     void testTeamDeserialization() {
         Game loaded = visitor.loadGame(TEST_RESOURCES + "game.json");
+        GameConfiguration config = loaded.getConfig();
         assertNotNull(loaded);
-        Team blueTeam = loaded.getLobby().getBlueTeam();
+        Team blueTeam = config.getTeamManager().getBlueTeam();
         assertEquals("Blue Team", blueTeam.getName());
         assertEquals(Color.BLUE, blueTeam.getColor());
     }

@@ -2,11 +2,10 @@ package linguacrypt.scenes;
 
 import java.net.URL;
 
-import linguacrypt.controllers.SettingsSceneController;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import linguacrypt.controllers.SettingsSceneController;
 
 public class SettingsScene extends ManagedScene {
 
@@ -23,7 +22,7 @@ public class SettingsScene extends ManagedScene {
         loader.setController(controller);
         try {
             Parent root = loader.load();
-            super.setScene(new Scene(root, 800, 600));
+            super.setScene(new Scene(root, 1600,900));
         } catch (Exception e) {
             System.out.println("Error loading Settings.fxml");
             sm.getPrimaryStage().close();

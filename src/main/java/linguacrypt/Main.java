@@ -5,7 +5,6 @@ import java.net.URL;
 
 import linguacrypt.model.Card;
 import linguacrypt.model.Deck;
-import linguacrypt.model.Game;
 import linguacrypt.scenes.*;
 
 import javafx.application.Application;
@@ -13,14 +12,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import linguacrypt.model.Model;
+import linguacrypt.scenes.ManagedScene;
+import linguacrypt.scenes.SceneManager;
 
 public class Main extends Application {
 
-    private Game game;
+    private Model model;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        this.game = new Game();
+        this.model = new Model(true);
         // Create test deck with 25 cards
         Deck testDeck = new Deck();
         String[] testWords = {
@@ -35,9 +37,8 @@ public class Main extends Application {
             Card card = new Card(word);
             testDeck.addCard(card);
         }
-        
-        game.setDeck(testDeck);
-        SceneManager sm = SceneManager.getInstance(primaryStage, this.game);
+        model.getDeckManager().addDeck(testDeck);
+        SceneManager sm = SceneManager.getInstance(primaryStage, model);
 
 
 
@@ -47,7 +48,7 @@ public class Main extends Application {
         loader.setLocation(fxmlURL);
 
         Parent root = loader.load();
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 1600,900);
         primaryStage.setScene(scene);
 
         // Actual Initial Scene

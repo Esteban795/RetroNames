@@ -12,19 +12,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GameConfiguration implements Visitable {
     @JsonProperty("gridSize")
-    private int gridSize;
+    private  int gridSize;
     
     @JsonProperty("nbPlayers")
-    private int nbPlayers;
+    private  int nbPlayers;
     
     @JsonProperty("maxNbSpy")
-    private int maxNbSpy;
+    private  int maxNbSpy;
     
     @JsonProperty("maxNbOperative")
-    private int maxNbOperative;
+    private  int maxNbOperative;
     
     @JsonProperty("limitedTime")
-    private int limitedTime; // -1 if time not limited
+    private  int limitedTime; // -1 if time not limited
 
     @JsonProperty("nbCardsGoal")
     private int nbCardsGoal;
@@ -32,15 +32,25 @@ public class GameConfiguration implements Visitable {
     @JsonProperty("firstTeam")
     private boolean firstTeam; //Utile pour savoir quelle équipe commence, et donc le nombre de carte à deviner
 
+    @JsonProperty("currentDeck")
+    private  Deck currentDeck;
+
+    @JsonProperty("teamManager")
+    private  TeamManager teamManager;
+
+
+
     public GameConfiguration() {
         // Valeurs par défaut
-        this.gridSize = 5; // 5x5 par défaut
-        this.nbPlayers = 4;
-        this.maxNbSpy = 1;
-        this.maxNbOperative = 1;
-        this.limitedTime = -1;
+        gridSize = 5; // 5x5 par défaut
+        nbPlayers = 4;
+        maxNbSpy = 1;
+        maxNbOperative = 1;
+        limitedTime = -1;
         this.nbCardsGoal = 9;
         this.firstTeam = true;
+        currentDeck = new Deck();
+        teamManager = new TeamManager();
     }
 
     @JsonCreator
@@ -50,8 +60,11 @@ public class GameConfiguration implements Visitable {
         @JsonProperty("maxNbSpy") int maxNbSpy,
         @JsonProperty("maxNbOperative") int maxNbOperative,
         @JsonProperty("limitedTime") int limitedTime,
+        @JsonProperty("currentDeck") Deck currentDeck,
+        @JsonProperty("teamManager") TeamManager teamManager,
         @JsonProperty("nbCardsGoal") int nbCardsGoal,
-        @JsonProperty("firstTeam") boolean firstTeam) {
+        @JsonProperty("firstTeam") boolean firstTeam) 
+        {
         this.gridSize = gridSize;
         this.nbPlayers = nbPlayers;
         this.maxNbSpy = maxNbSpy;
@@ -59,6 +72,8 @@ public class GameConfiguration implements Visitable {
         this.limitedTime = limitedTime;
         this.nbCardsGoal = nbCardsGoal;
         this.firstTeam = firstTeam;
+        this.currentDeck = currentDeck;
+        this.teamManager = teamManager;
     }
 
     // Getters and Setters
@@ -82,6 +97,12 @@ public class GameConfiguration implements Visitable {
 
     public boolean isFirstTeam() { return firstTeam; }
     public void setFirstTeam(boolean firstTeam) { this.firstTeam = firstTeam; }
+
+    public Deck getCurrentDeck() { return currentDeck; }
+    public void setCurrentDeck(Deck currentDeck) { this.currentDeck = currentDeck; }
+
+    public TeamManager getTeamManager() { return teamManager; }
+    public void setTeamManager(TeamManager teamManager) { this.teamManager = teamManager; }
 
     @Override
     public void accept(Visitor visitor) {

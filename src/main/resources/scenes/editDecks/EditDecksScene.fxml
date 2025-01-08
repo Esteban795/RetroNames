@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+    prefHeight="600.0" prefWidth="800.0">
+    <children>
+        <SplitPane dividerPositions="0.5" orientation="HORIZONTAL" VBox.vgrow="ALWAYS">
+            <items>
+                <VBox>
+                    <!-- Left side content -->
+                    <Button text="New Deck" onAction="#showNewDeckPopup" />
+
+                    <ScrollPane VBox.vgrow="ALWAYS">
+                        <VBox fx:id="deckList">
+                            <!-- Deck list -->
+
+                        </VBox>
+                    </ScrollPane>
+                </VBox>
+                <VBox>
+                    <!-- Right side content -->
+                    <Button text="New Card" onAction="#showNewCardPopup" />
+                    <ScrollPane VBox.vgrow="ALWAYS">
+                        <VBox fx:id="cardList">
+                            <!-- Card list -->
+                        </VBox>
+                    </ScrollPane>
+                    <fx:define>
+                        <Dialog fx:id="newCardDialog" title="New Card">
+                            <dialogPane>
+                                <DialogPane>
+                                    <content>
+                                        <VBox spacing="10">
+                                            <Label text="Card Name:" />
+                                            <TextField fx:id="cardNameField" />
+                                        </VBox>
+                                    </content>
+                                    <buttonTypes>
+                                        <ButtonType text="OK" buttonData="OK_DONE" />
+                                        <ButtonType text="Cancel" buttonData="CANCEL_CLOSE" />
+                                    </buttonTypes>
+                                </DialogPane>
+                            </dialogPane>
+                        </Dialog>
+
+                        <Dialog fx:id="newDeckDialog" title="New Deck">
+                            <dialogPane>
+                                <DialogPane>
+                                    <content>
+                                        <VBox spacing="10">
+                                            <Label text="Deck Name:" />
+                                            <TextField fx:id="deckNameField" />
+                                        </VBox>
+                                    </content>
+                                    <buttonTypes>
+                                        <ButtonType text="OK" buttonData="OK_DONE" />
+                                        <ButtonType text="Cancel" buttonData="CANCEL_CLOSE" />
+                                    </buttonTypes>
+                                </DialogPane>
+                            </dialogPane>
+                        </Dialog>
+                    </fx:define>
+                </VBox>
+            </items>
+        </SplitPane>
+        <VBox>
+            <!-- Bottom content -->
+            <Button text="back" onAction="#goBack" />
+        </VBox>
+    </children>
+</VBox>

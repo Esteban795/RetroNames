@@ -121,7 +121,6 @@ package LinguaCrypt{
             + Deck()
             + void addCard(Card)
             + void removeCard(Card)
-            + 
         }
 
         class GameConfiguration{
@@ -129,33 +128,49 @@ package LinguaCrypt{
             - int nbPlayers
             - int maxNbSpy
             - int maxNbOperative 
+            - TeamManager teamManager
             - int limitedTime /' -1 if time not limited  '/
-            - Deck deck            
+            - Deck currentDeck
+
+            
         }
 
-        class Lobby{
+        class DeckManager{
+            - ArrayList<Deck> decksList
+
+            + DeckManager()
+            + void addDeck(Deck)
+            + void removeDeck(Deck)
+
+            + Deck getDeck(String)
+            + Deck getRandomDeck()
+            
+            
+        }
+
+        class TeamManager{
             - Team blueTeam
             - Team redTeam
-            - ArrayList<Team> teamsList
 
-            + Lobby()
+            + TeamManager()
             + void addTeam(Team)
             + void removeTeam(Team)
         
         }
 
         class Game{
-            - Lobby lobby
-            - Deck cardsList
             - ArrayList<ArrayList<Card>> grid
             - GameConfiguration config
             - int nbTurn
             
             + Game()
-            + void addCard(Card)
-            + void removeCard(Card)
             + void initGrid()
             + void loadGrid()
+        }
+
+        class Model{
+            - DeckManager deckManager
+            - Game game
         }
 
 
@@ -165,8 +180,12 @@ package LinguaCrypt{
         Color "1"--"*" Card
         Card "0,*"--"1,*" Deck
         GameConfiguration "1"-- Game
-        Game --"1" Lobby
-        Lobby --"2" Team
+        GameConfiguration --"1" TeamManager
+        TeamManager --"2" Team
+        DeckManager "1"--"*" Deck
+        Deck --"1" GameConfiguration
+        DeckManager "1"-- Model
+        Game "1"-- Model
     }
 }
 

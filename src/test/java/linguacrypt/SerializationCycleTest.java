@@ -31,7 +31,8 @@ public class SerializationCycleTest {
     void testFullCycle() {
         // Setup game
 
-        Lobby lobby = game.getLobby();
+        TeamManager lobby = game.getConfig().getTeamManager();
+        GameConfiguration config = game.getConfig();
 
         Team blueTeam = new Team("Blue Team", Color.BLUE);
         blueTeam.addPlayer(new Player("Alice"));
@@ -42,7 +43,7 @@ public class SerializationCycleTest {
         lobby.addTeam(redTeam);
 
         Card card1 = new Card("Word1", Color.BLUE);
-        game.addCard(card1);
+        config.getCurrentDeck().addCard(card1);
         game.initGrid();
         game.loadGrid();
 
@@ -51,10 +52,11 @@ public class SerializationCycleTest {
 
         // Deserialize
         Game loadedGame = deserializationVisitor.loadLatestGame();
+        GameConfiguration loadedConfig = loadedGame.getConfig();
         
         // Verify game state
         assertNotNull(loadedGame, "Loaded game should not be null");
-        Lobby loadedLobby = loadedGame.getLobby();
+        TeamManager loadedLobby = loadedConfig.getTeamManager();
         assertEquals("Blue Team", loadedLobby.getBlueTeam().getName(), "Blue team name should match");
         assertEquals("Red Team", loadedLobby.getRedTeam().getName(), "Red team name should match");
         assertEquals(Color.BLUE, loadedLobby.getBlueTeam().getColor(), "Blue team color should match");
@@ -65,9 +67,9 @@ public class SerializationCycleTest {
         assertEquals("Bob", loadedLobby.getRedTeam().getPlayerList().get(0).getName(), "Red team player should be Bob");
         
         // Verify cards
-        assertTrue(loadedGame.getDeck().getCardList().size() > 0, "Card list should not be empty");
-        assertEquals("Word1", loadedGame.getDeck().getCardList().get(0).getName(), "First card name should match");
-        assertEquals(Color.BLUE, loadedGame.getDeck().getCardList().get(0).getColor(), "First card color should match");
+        assertTrue(loadedConfig.getCurrentDeck().getCardList().size() > 0, "Card list should not be empty");
+        assertEquals("Word1", loadedConfig.getCurrentDeck().getCardList().get(0).getName(), "First card name should match");
+        assertEquals(Color.BLUE, loadedConfig.getCurrentDeck().getCardList().get(0).getColor(), "First card color should match");
     }
 
     @AfterEach

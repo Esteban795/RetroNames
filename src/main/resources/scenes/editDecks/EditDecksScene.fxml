@@ -23,7 +23,11 @@
                 <VBox>
                     <!-- Right side content -->
                     <Button text="New Card" onAction="#showNewCardPopup" />
-
+                    <ScrollPane VBox.vgrow="ALWAYS">
+                        <VBox fx:id="cardList">
+                            <!-- Card list -->
+                        </VBox>
+                    </ScrollPane>
                     <fx:define>
                         <Dialog fx:id="newCardDialog" title="New Card">
                             <dialogPane>

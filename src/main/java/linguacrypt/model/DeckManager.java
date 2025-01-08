@@ -22,7 +22,12 @@ public class DeckManager implements Visitable {
     }
 
     public void addDeck(Deck deck) {
-        deckList.add(deck);
+        if (getDeck(deck.getDeckName()) != null) {
+            deckList.add(deck);
+        }else {
+            System.out.println("Deck with name " + deck.getDeckName() + " already exists.");
+        }
+
     }
 
     public void removeDeck(Deck deck) {

@@ -1,1 +1,1 @@
-{"deckList":[{"deckName":"test1","cardList":[]},{"deckName":"test2","cardList":[]}]}
+{"deckList":[{"deckName":"test1","cardList":[{"cardName":"asd","cardColor":"WHITE","found":false}]},{"deckName":"test2","cardList":[]}]}

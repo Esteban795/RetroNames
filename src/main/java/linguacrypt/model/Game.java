@@ -24,7 +24,9 @@ public class Game implements Visitable {
     private GameConfiguration config;
 
     @JsonProperty("nbTurn")
-    private int nbTurn;    @JsonProperty
+    private int nbTurn;    
+    
+    @JsonProperty("key") 
     private ArrayList<ArrayList<Card>> key;
 
     /**
@@ -51,10 +53,12 @@ public class Game implements Visitable {
     public Game(
         @JsonProperty("grid") ArrayList<ArrayList<Card>> grid,
         @JsonProperty("config") GameConfiguration config,
-        @JsonProperty("nbTurn") int nbTurn) {
+        @JsonProperty("nbTurn") int nbTurn,
+        @JsonProperty("key") ArrayList<ArrayList<Card>> key) {
         this.grid = grid;
         this.config = config;
         this.nbTurn = nbTurn;
+        this.key = key;
     }
     /**
      * Initialise une nouvelle grille vide avec la taille définie dans la configuration.

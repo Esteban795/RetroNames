@@ -33,13 +33,12 @@ public class EditDecksSceneController {
 
     @FXML
     private Dialog<ButtonType> newDeckDialog;
-    
+
     @FXML
     private TextField deckNameField;
-    
+
     private Deck selectedDeck;
     private Button selectedButton; // To track currently selected button
-
 
     @FXML
     private VBox cardList;
@@ -73,12 +72,22 @@ public class EditDecksSceneController {
     public void showNewDeckPopup() {
         deckNameField.setText("");
         Optional<ButtonType> result = newDeckDialog.showAndWait();
-        
+
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             String deckName = deckNameField.getText().trim();
             if (!deckName.isEmpty()) {
                 Deck newDeck = new Deck();
                 newDeck.setDeckName(deckName);
+
+                if (model.getDeckManager().getDeck(deckName) != null) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Duplicate Deck Name");
+                    alert.setHeaderText(null);
+                    alert.setContentText("A deck with name '" + deckName + "' already exists!");
+                    alert.showAndWait();
+                    return;
+                }
+
                 model.getDeckManager().addDeck(newDeck);
                 addDeckToUI(newDeck);
                 System.out.println("Deck created: " + deckName);
@@ -89,29 +98,29 @@ public class EditDecksSceneController {
     private void addDeckToUI(Deck deck) {
         HBox deckContainer = new HBox(5);
         Button deckButton = new Button(deck.getDeckName());
-        
+
         // Style for selected state
         String defaultStyle = deckButton.getStyle();
         String selectedStyle = "-fx-background-color: lightblue;";
-        
+
         deckButton.setOnAction(e -> {
             // Reset previous selection
             if (selectedButton != null) {
                 selectedButton.setStyle(defaultStyle);
             }
-            
+
             // Update selection
             selectedDeck = deck;
             selectedButton = deckButton;
             deckButton.setStyle(selectedStyle);
-            
+
             // Show cards
             showDeckCards(deck);
         });
-        
+
         Button deleteButton = new Button("X");
         deleteButton.setOnAction(e -> deleteDeck(deck, deckContainer));
-        
+
         deckContainer.getChildren().addAll(deckButton, deleteButton);
         deckList.getChildren().add(deckContainer);
     }
@@ -128,15 +137,15 @@ public class EditDecksSceneController {
 
     private void showDeckCards(Deck deck) {
         cardList.getChildren().clear();
-        
+
         // Display each card in the deck
         for (Card card : deck.getCardList()) {
             HBox cardContainer = new HBox(5);
-            Button cardButton = new Button(card.getCardName()); 
-            
+            Button cardButton = new Button(card.getCardName());
+
             Button deleteCardButton = new Button("X");
             deleteCardButton.setOnAction(e -> deleteCard(card, cardContainer));
-            
+
             cardContainer.getChildren().addAll(cardButton, deleteCardButton);
             cardList.getChildren().add(cardContainer);
         }
@@ -147,7 +156,7 @@ public class EditDecksSceneController {
             selectedDeck.removeCard(card);
             cardList.getChildren().remove(cardContainer);
             System.out.println("Card deleted from deck: " + selectedDeck.getDeckName());
-        }else {
+        } else {
             System.out.println("No deck selected!");
         }
     }
@@ -158,29 +167,29 @@ public class EditDecksSceneController {
     }
 
     @FXML
-private void showNewCardPopup() {
-    // Check if a deck is selected
-    if (selectedDeck == null) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("No Deck Selected");
-        alert.setHeaderText(null);
-        alert.setContentText("Please select a deck first!");
-        alert.showAndWait();
-        return;
-    }
+    private void showNewCardPopup() {
+        // Check if a deck is selected
+        if (selectedDeck == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Deck Selected");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select a deck first!");
+            alert.showAndWait();
+            return;
+        }
 
-    cardNameField.setText("");
-    Optional<ButtonType> result = newCardDialog.showAndWait();
-    
-    if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
-        String cardName = cardNameField.getText().trim();
-        if (!cardName.isEmpty()) {
-            Card newCard = new Card(cardName);
-            selectedDeck.addCard(newCard);
-            showDeckCards(selectedDeck);
-            System.out.println("Card added: " + cardName);
+        cardNameField.setText("");
+        Optional<ButtonType> result = newCardDialog.showAndWait();
+
+        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+            String cardName = cardNameField.getText().trim();
+            if (!cardName.isEmpty()) {
+                Card newCard = new Card(cardName);
+                selectedDeck.addCard(newCard);
+                showDeckCards(selectedDeck);
+                System.out.println("Card added: " + cardName);
+            }
         }
     }
-}
 
 }

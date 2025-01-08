@@ -21,13 +21,13 @@ public class DeckManager implements Visitable {
         this.deckList = new ArrayList<>();
     }
 
-    public void addDeck(Deck deck) {
-        if (getDeck(deck.getDeckName()) != null) {
+    public Boolean addDeck(Deck deck) {
+        if (getDeck(deck.getDeckName()) == null) {
             deckList.add(deck);
-        }else {
-            System.out.println("Deck with name " + deck.getDeckName() + " already exists.");
+            return true;
+        } else {
+            return false;
         }
-
     }
 
     public void removeDeck(Deck deck) {

@@ -64,8 +64,15 @@
    <right>
       <StackPane prefWidth="150" BorderPane.alignment="CENTER">
          <padding><Insets bottom="10" left="5" right="10" top="10" /></padding>
-         <children>
-            <ProgressBar fx:id="blueTeamProgress" maxHeight="Infinity" maxWidth="Infinity" prefHeight="Infinity" prefWidth="200" style="-fx-accent: blue;" VBox.vgrow="ALWAYS" scaleX="-1" />
+      <children>
+         <ProgressBar fx:id="blueTeamProgress" 
+                     maxHeight="Infinity" 
+                     maxWidth="Infinity" 
+                     prefHeight="Infinity" 
+                     prefWidth="200" 
+                     style="-fx-accent: #0000cc; -fx-control-inner-background: #ccccff;"
+                     VBox.vgrow="ALWAYS"
+                     scaleX="-1" />
             <VBox alignment="CENTER" scaleX="-1.0" spacing="10">
                <Label scaleX="-1.0" style="-fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
                          -fx-padding: 5;" text="Équipe Bleue" />
@@ -97,7 +104,13 @@
       <StackPane prefWidth="150" BorderPane.alignment="CENTER">
          <padding><Insets bottom="10" left="10" right="5" top="10" /></padding>
          <children>
-            <ProgressBar fx:id="redTeamProgress" maxHeight="Infinity" maxWidth="Infinity" prefHeight="Infinity" prefWidth="200" style="-fx-accent: red;" VBox.vgrow="ALWAYS" />
+            <ProgressBar fx:id="redTeamProgress" 
+                     maxHeight="Infinity" 
+                     maxWidth="Infinity" 
+                     prefHeight="Infinity" 
+                     prefWidth="200" 
+                     style="-fx-accent: #cc0000; -fx-control-inner-background: #ffcccc;"
+                     VBox.vgrow="ALWAYS" />
             <VBox alignment="CENTER" spacing="10">
                <Label style="-fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
                          -fx-padding: 5;" text="Équipe Rouge" />

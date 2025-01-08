@@ -63,7 +63,8 @@ public class Deck implements Visitable {
      * 
      * @param card Card to add
      */
-    public void addCard(Card card) { // Add a card to the deck (the deck is supposed to be sorted) at the correct position
+    public void addCard(Card card) { // Add a card to the deck (the deck is supposed to be sorted) at the correct
+                                     // position
         int index = 0;
         for (Card c : cardList) {
             if (c.getCardName().compareTo(card.getCardName()) > 0) {
@@ -96,8 +97,7 @@ public class Deck implements Visitable {
                 break;
             }
         }
-        if (isSorted) {
-        } else {
+        if (!isSorted) {
             Collections.sort(cardList, (c1, c2) -> c1.getCardName().compareTo(c2.getCardName()));
         }
     }

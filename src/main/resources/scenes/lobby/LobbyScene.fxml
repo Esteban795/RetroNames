@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
@@ -87,7 +87,7 @@
                   </Label>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <MenuButton fx:id="decksSelector" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="4.0" prefWidth="200.0" text="Decks :" />
+                        <ComboBox fx:id="decksSelector" prefWidth="150.0" promptText="Decks" />
                      </children>
                   </VBox>
                </children>

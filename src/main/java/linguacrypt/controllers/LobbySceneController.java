@@ -5,9 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -20,7 +19,7 @@ import linguacrypt.model.DeckManager;
 import linguacrypt.model.GameConfiguration;
 import linguacrypt.model.Player;
 import linguacrypt.model.Team;
-import linguacrypt.scenes.MenuScene;
+import linguacrypt.scenes.GameScene;
 import linguacrypt.scenes.SceneManager;
 import linguacrypt.scenes.SettingsScene;
 
@@ -50,7 +49,7 @@ public class LobbySceneController {
     private Label errorLabel;
 
     @FXML
-    private MenuButton decksSelector;
+    private ComboBox<String> decksSelector;
 
     public LobbySceneController(SceneManager sm) {
         this.sm = sm;
@@ -69,11 +68,8 @@ public class LobbySceneController {
 
     private void setupDeckChoices() {
         sm.getModel().getDeckManager().getDeckList().forEach(deck -> {
-            MenuItem deckItem = new MenuItem(deck.getName());
-            decksSelector.getItems().add(deckItem);
-            deckItem.setOnAction(event -> {
-                decksSelector.setText(deck.getName());
-            });
+            Label deckItem = new Label(deck.getName());
+            decksSelector.getItems().add(deckItem.getText());
         });
     }
 
@@ -153,13 +149,9 @@ public class LobbySceneController {
     @FXML
     public void lobbyDone() throws IOException {
         int count = blueTeamOperative.getChildren().size() + blueTeamSpy.getChildren().size() + redTeamOperative.getChildren().size() + redTeamSpy.getChildren().size();
-        String deckName = decksSelector.getText();
-        System.out.println("Deckname : " + deckName);
-        if (deckName == null || deckName.isEmpty()) {
-            System.out.println("Label vide");
-            errorLabel.setText("Il est nécessaire de sélectionner un deck avant de pouvoir démarrer la partie.");
-            return;
-        }
+        String deckName = decksSelector.getValue();
+
+
         if (count < 4) {
             errorLabel.setText("Pas assez de joueurs.");
             return;
@@ -170,6 +162,10 @@ public class LobbySceneController {
             return;
         }
 
+        if (deckName == null) {
+            errorLabel.setText("Il est nécessaire de sélectionner un deck avant de pouvoir démarrer la partie.");
+            return;
+        }
 
 
         addPlayersToTeams();
@@ -177,7 +173,7 @@ public class LobbySceneController {
         
         setupCards(deckName);
 
-        sm.pushScene(new MenuScene(sm));
+        sm.pushScene(new GameScene(sm));
     }
 
     private void addPlayersToTeams() {

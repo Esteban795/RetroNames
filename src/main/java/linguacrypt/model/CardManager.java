@@ -70,6 +70,9 @@ public class CardManager {
             System.out.println(d.getDeckName());
             deckNames += d.getDeckName() + ", ";
         }
+        if (!deckNames.isEmpty()) {
+            deckNames = deckNames.substring(0, deckNames.length() - 2);
+        }
         return deckNames;
     }
 

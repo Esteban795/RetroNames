@@ -1,9 +1,6 @@
 package linguacrypt.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,8 +19,8 @@ public class DeckManager implements Visitable {
         this.deckList = new ArrayList<>();
     }
 
-    public Boolean addDeck(Deck deck) { 
-        if (getDeck(deck.getDeckName()) == null) {
+    public Boolean addDeck(Deck deck) {
+        if (getDeck(deck.getName()) == null) {
             deckList.add(deck);
             return true;
         } else {
@@ -41,7 +38,7 @@ public class DeckManager implements Visitable {
 
     public Deck getDeck(String deckName) {
         for (Deck deck : deckList) {
-            if (deck.getDeckName().equals(deckName)) {
+            if (deck.getName().equals(deckName)) {
                 return deck;
             }
         }

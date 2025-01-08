@@ -9,9 +9,10 @@ import linguacrypt.visitor.Visitable;
 import linguacrypt.visitor.Visitor;
 
 /**
- * Représente une partie de LinguaCrypt. Cette classe est le point central du
- * jeu, gérant : - Le deck de cartes (Deck) - La grille de jeu (matrice de
- * cartes) - La configuration de la partie (GameConfiguration)
+ * Représente une partie de LinguaCrypt.
+ * Cette classe est le point central du jeu, gérant :
+ * - La grille de jeu (matrice de cartes)
+ * - La configuration de la partie (GameConfiguration)
  */
 public class Game implements Visitable {
 
@@ -23,6 +24,8 @@ public class Game implements Visitable {
 
     @JsonProperty("nbTurn")
     private int nbTurn;
+    @JsonProperty("currentTeam")
+    private boolean currentTeam;
 
     @JsonProperty("key")
     private ArrayList<ArrayList<Card>> key;
@@ -30,9 +33,14 @@ public class Game implements Visitable {
     @JsonProperty("stats")
     private GameStatistics stats;
 
+    @JsonProperty("hasStarted")
+    private boolean hasStarted;
+
     /**
-     * Constructeur par défaut. Initialise une nouvelle partie avec : - Un deck
-     * vide - Une grille vide - Une configuration par défaut
+     * Constructeur par défaut.
+     * Initialise une nouvelle partie avec :
+     * - Une grille vide
+     * - Une configuration par défaut
      */
     public Game() {
         this.grid = new ArrayList<>();
@@ -40,12 +48,14 @@ public class Game implements Visitable {
         this.config = new GameConfiguration();
         this.stats = new GameStatistics();
         this.nbTurn = 0;
+        this.currentTeam = true;
+        this.hasStarted = false;
     }
 
     /**
      * Constructeur pour la désérialisation JSON.
      *
-     * @param grid La grille de jeu
+     * @param grid   La grille de jeu
      * @param config La configuration
      * @param nbTurn Le nombre de tours joués
      */
@@ -54,13 +64,17 @@ public class Game implements Visitable {
             @JsonProperty("grid") ArrayList<ArrayList<Card>> grid,
             @JsonProperty("config") GameConfiguration config,
             @JsonProperty("nbTurn") int nbTurn,
+            @JsonProperty("currentTeam") boolean currentTeam,
             @JsonProperty("key") ArrayList<ArrayList<Card>> key,
-            @JsonProperty("stats") GameStatistics stats) {
+            @JsonProperty("stats") GameStatistics stats,
+            @JsonProperty("hasStarted") boolean hasStarted) {
         this.grid = grid;
         this.config = config;
         this.nbTurn = nbTurn;
+        this.currentTeam = currentTeam;
         this.key = key;
         this.stats = stats;
+        this.hasStarted = hasStarted;
     }
 
     /**
@@ -70,12 +84,16 @@ public class Game implements Visitable {
     public void initGrid() {
         int size = config.getGridSize();
         grid = new ArrayList<>();
+
         for (int i = 0; i < size; i++) {
             ArrayList<Card> row = new ArrayList<>();
             for (int j = 0; j < size; j++) {
                 row.add(null);
             }
             grid.add(row);
+        }
+        if (this.config.getCurrentDeck() != null) {
+            loadGrid();
         }
     }
 
@@ -87,6 +105,7 @@ public class Game implements Visitable {
     public void loadGrid() {
         Deck deck = config.getCurrentDeck();
         if (grid == null || deck == null) {
+            System.err.println("Grid or deck is null");
             return;
         }
 
@@ -99,6 +118,11 @@ public class Game implements Visitable {
                 grid.get(i).set(j, cards.get(cardIndex++));
             }
         }
+        hasStarted = true;
+    }
+
+    public void switchTeam() {
+        currentTeam = !currentTeam;
     }
 
     public ArrayList<ArrayList<Card>> getKey() {
@@ -114,12 +138,44 @@ public class Game implements Visitable {
         return config;
     }
 
+    public Team getCurrentTeam() {
+        return (currentTeam ? config.getTeamManager().getRedTeam() : config.getTeamManager().getBlueTeam());
+    }
+
+    public int getBlueTeamFoundCards() {
+        return config.getTeamManager().getBlueTeam().getNbFoundCards();
+    }
+
+    public int getRedTeamFoundCards() {
+        return config.getTeamManager().getRedTeam().getNbFoundCards();
+    }
+
     public int getNbTurn() {
         return nbTurn;
     }
 
     public GameStatistics getStats() {
         return stats;
+    }
+
+    public int revealCard(Card card) {
+        card.reveal();
+        Team redTeam = config.getTeamManager().getRedTeam();
+        Team blueTeam = config.getTeamManager().getBlueTeam();
+        if (card.getColor() == Color.RED) {
+            redTeam.setNbFoundCards(redTeam.getNbFoundCards() + 1);
+            // System.out.println("Red card");
+            return 0;
+        } else if (card.getColor() == Color.BLUE) {
+            blueTeam.setNbFoundCards(blueTeam.getNbFoundCards() + 1);
+            // System.out.println("Blue card");
+            return 0;
+        } else if (card.getColor() == Color.WHITE) {
+            // System.out.println("White card");
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     @Override

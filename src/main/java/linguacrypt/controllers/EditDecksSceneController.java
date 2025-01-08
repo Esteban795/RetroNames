@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -56,6 +57,12 @@ public class EditDecksSceneController {
     @FXML
     private Button newCardButton;
 
+    @FXML
+    private TextArea cardInfoArea;
+
+    @FXML
+    private VBox cardInfoBox;
+
     public EditDecksSceneController(SceneManager sm) {
         this.sm = sm;
         this.model = sm.getModel();
@@ -70,6 +77,7 @@ public class EditDecksSceneController {
             addDeckToUI(deck);
         }
         newCardButton.setDisable(true);
+        cardInfoArea.setText("Select a card to view details");
     }
 
     @FXML
@@ -77,7 +85,7 @@ public class EditDecksSceneController {
         if (cardOrDeckAddedOrRemovesViaUI) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Save Changes");
-            alert.setHeaderTexaddCardt(null);
+            alert.setHeaderText(null);
             alert.setContentText("You have made changes to the decks. What would you like to do?");
 
             ButtonType saveAndLeave = new ButtonType("Save and Leave", ButtonBar.ButtonData.OK_DONE);
@@ -179,10 +187,14 @@ public class EditDecksSceneController {
     private void showDeckCards(Deck deck) {
         cardList.getChildren().clear();
 
-        // Display each card in the deck
         for (Card card : deck.getCardList()) {
             HBox cardContainer = new HBox(5);
             Button cardButton = new Button(card.getCardName());
+
+            // Add click handler for card info
+            cardButton.setOnAction(e -> {
+                showCardInfo(card);
+            });
 
             Button deleteCardButton = new Button("X");
             deleteCardButton.setOnAction(e -> deleteCard(card, cardContainer));
@@ -190,6 +202,13 @@ public class EditDecksSceneController {
             cardContainer.getChildren().addAll(cardButton, deleteCardButton);
             cardList.getChildren().add(cardContainer);
         }
+    }
+
+    private void showCardInfo(Card card) {
+        String info = String.format("Card Name: %s\n Deck: %s ",
+                card.getCardName(),
+                model.getCardManager().toString(model.getCardManager().getDecks(card)));
+        cardInfoArea.setText(info);
     }
 
     private void deleteCard(Card card, HBox cardContainer) {
@@ -226,12 +245,24 @@ public class EditDecksSceneController {
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             String cardName = cardNameField.getText().trim();
             if (!cardName.isEmpty()) {
+                // Check if card exists in current deck
                 if (selectedDeck.getCard(cardName) != null) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Duplicate Card Name");
                     alert.setHeaderText(null);
                     alert.setContentText("A card with name '" + cardName + "' already exists in this deck!");
                     alert.showAndWait();
+                    return;
+                }
+
+                // Check if card exists in CardManager
+                Card existingCard = model.getCardManager().getCard(cardName);
+                if (existingCard != null) {
+                    selectedDeck.addCard(existingCard);
+                    model.getCardManager().addCard(existingCard, selectedDeck);
+                    showDeckCards(selectedDeck);
+                    cardOrDeckAddedOrRemovesViaUI = true;
+                    System.out.println("Existing card added to deck: " + cardName);
                     return;
                 }
 

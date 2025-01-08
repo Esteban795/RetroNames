@@ -28,7 +28,12 @@
                             <!-- Card list -->
                         </VBox>
                     </ScrollPane>
-                    
+                    <VBox fx:id="cardInfoBox" spacing="5"
+                        style="-fx-padding: 10; -fx-border-color: lightgray; -fx-border-width: 1 0 0 0;">
+                        <Label text="Card Information:" />
+                        <TextArea fx:id="cardInfoArea" editable="false" wrapText="true"
+                            prefRowCount="3" />
+                    </VBox>
                     <fx:define>
                         <Dialog fx:id="newCardDialog" title="New Card">
                             <dialogPane>

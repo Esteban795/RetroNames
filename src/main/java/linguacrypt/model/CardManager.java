@@ -52,4 +52,38 @@ public class CardManager {
     public ArrayList<Deck> getDecks(Card card) {
         return this.cardDeckMap.get(card);
     }
+
+    public ArrayList<Deck> getDecks(String cardName) {
+        for (Card card : this.cards) {
+            if (card.getCardName().equals(cardName)) {
+                return this.cardDeckMap.get(card);
+            }
+        }
+        return null;
+    }
+
+    public String toString(ArrayList<Deck> deck){
+        System.out.println("toString");
+        String deckNames = "";
+        for (Deck d : deck) {
+            System.out.println(d.getDeckName());
+            deckNames += d.getDeckName() + ", ";
+        }
+        return deckNames;
+    }
+
+	public Card getCard(String cardName) {
+        for (Card card : this.cards) {
+            if (card.getCardName().equals(cardName)) {
+                return card;
+            }
+        }
+        for (Card card : this.deletedCards) {
+            if (card.getCardName().equals(cardName)) {
+                return card;
+            }
+        }
+        return null;
+	}
+
 }

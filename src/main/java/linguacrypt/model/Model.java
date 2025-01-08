@@ -1,11 +1,13 @@
 package linguacrypt.model;
 
 import linguacrypt.model.DeckManager;
+import linguacrypt.model.CardManager;
 import linguacrypt.model.Game;
 
 public class Model {
     private Game game;
     private DeckManager deckManager;
+    private CardManager cardManager;
 
     public Model() {
         this.game = new Game();
@@ -28,4 +30,7 @@ public class Model {
         return deckManager;
     }
     
+    public CardManager getCardManager() {
+        return cardManager;
+    }
 }

@@ -1,6 +1,7 @@
 package linguacrypt.controllers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 import linguacrypt.scenes.SceneManager;
@@ -50,12 +51,16 @@ public class EditDecksSceneController {
     private VBox deckList;
 
     @FXML
-    private boolean cardAddedViaUI;
+    private boolean cardOrDeckAddedOrRemovesViaUI;
+
+    @FXML
+    private HashMap<Deck, ArrayList<Card>> deletedCards;
 
     public EditDecksSceneController(SceneManager sm) {
         this.sm = sm;
         this.model = sm.getModel();
-        cardAddedViaUI = false;
+        cardOrDeckAddedOrRemovesViaUI = false;
+        this.deletedCards = new HashMap<>();
     }
 
     @FXML
@@ -69,16 +74,31 @@ public class EditDecksSceneController {
 
     @FXML
     public void goBack() {
-        if (cardAddedViaUI) {
+        if (cardOrDeckAddedOrRemovesViaUI) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Save Changes");
             alert.setHeaderText(null);
-            alert.setContentText("You have made changes to the decks. Do you want to save before leaving?");
+            alert.setContentText("You have made changes to the decks. What would you like to do?");
+
+            ButtonType saveAndLeave = new ButtonType("Save and Leave", ButtonBar.ButtonData.OK_DONE);
+            ButtonType leaveWithoutSave = new ButtonType("Leave without saving", ButtonBar.ButtonData.NO);
+            ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+            alert.getButtonTypes().setAll(saveAndLeave, leaveWithoutSave, cancel);
 
             Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                model.getDeckManager().saveDeckManager();
-                sm.popScene();
+            if (result.isPresent()) {
+                if (result.get() == saveAndLeave) {
+                    model.getDeckManager().saveDeckManager();
+                    deletedCards.clear();
+                    sm.popScene();
+                } else if (result.get() == leaveWithoutSave) {
+                    // Restore all deleted cards
+                    deletedCards.forEach((deck, cards) -> 
+                        cards.forEach(card -> deck.addCard(card)));
+                    deletedCards.clear();
+                    sm.popScene();
+                }
             }
         } else {
             sm.popScene();
@@ -107,6 +127,7 @@ public class EditDecksSceneController {
 
                 model.getDeckManager().addDeck(newDeck);
                 addDeckToUI(newDeck);
+                cardOrDeckAddedOrRemovesViaUI = true;
                 System.out.println("Deck created: " + deckName);
             }
         }
@@ -149,6 +170,7 @@ public class EditDecksSceneController {
         // Remove from the UI
         deckList.getChildren().remove(deckContainer);
 
+        cardOrDeckAddedOrRemovesViaUI = true;
         System.out.println("Deck deleted!");
     }
 
@@ -171,6 +193,16 @@ public class EditDecksSceneController {
     private void deleteCard(Card card, HBox cardContainer) {
         if (selectedDeck != null) {
             selectedDeck.removeCard(card);
+            cardOrDeckAddedOrRemovesViaUI = true;
+            // Store the deleted card in deletedCards
+            if (deletedCards.containsKey(selectedDeck)) {
+                deletedCards.get(selectedDeck).add(card);
+            } else {
+                ArrayList<Card> cards = new ArrayList<>();
+                cards.add(card);
+                deletedCards.put(selectedDeck, cards);
+            }
+            
             cardList.getChildren().remove(cardContainer);
             System.out.println("Card deleted from deck: " + selectedDeck.getDeckName());
         } else {
@@ -212,14 +244,14 @@ public class EditDecksSceneController {
                 Card newCard = new Card(cardName);
                 selectedDeck.addCard(newCard);
                 showDeckCards(selectedDeck);
-                cardAddedViaUI = true;
+                cardOrDeckAddedOrRemovesViaUI = true;
                 System.out.println("Card added: " + cardName);
             }
         }
     }
 
     @FXML
-    public boolean wasCardAddedViaUI() {
-        return cardAddedViaUI;
+    public boolean wasCardOrDeckAddedOrRemovesViaUI() {
+        return cardOrDeckAddedOrRemovesViaUI;
     }
 }

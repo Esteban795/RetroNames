@@ -11,6 +11,7 @@ public class CardManager {
     public CardManager() {
         this.cards = new ArrayList<>();
         this.deletedCards = new ArrayList<>();
+        this.cardDeckMap = new HashMap<>();
     }
 
     public void addCard(Card card, Deck deck) {

@@ -53,14 +53,10 @@ public class EditDecksSceneController {
     @FXML
     private boolean cardOrDeckAddedOrRemovesViaUI;
 
-    @FXML
-    private HashMap<Deck, ArrayList<Card>> deletedCards;
-
     public EditDecksSceneController(SceneManager sm) {
         this.sm = sm;
         this.model = sm.getModel();
         cardOrDeckAddedOrRemovesViaUI = false;
-        this.deletedCards = new HashMap<>();
     }
 
     @FXML
@@ -90,13 +86,15 @@ public class EditDecksSceneController {
             if (result.isPresent()) {
                 if (result.get() == saveAndLeave) {
                     model.getDeckManager().saveDeckManager();
-                    deletedCards.clear();
                     sm.popScene();
                 } else if (result.get() == leaveWithoutSave) {
-                    // Restore all deleted cards
-                    deletedCards.forEach((deck, cards) -> 
-                        cards.forEach(card -> deck.addCard(card)));
-                    deletedCards.clear();
+                    // Restore all deleted cards using CardManager
+                    for (Card card : model.getCardManager().getDeletedCards()) {
+                        ArrayList<Deck> decks = model.getCardManager().getDecks(card);
+                        for (Deck deck : decks) {
+                            model.getCardManager().restoreCard(card, deck);
+                        }
+                    }
                     sm.popScene();
                 }
             }
@@ -193,16 +191,8 @@ public class EditDecksSceneController {
     private void deleteCard(Card card, HBox cardContainer) {
         if (selectedDeck != null) {
             selectedDeck.removeCard(card);
+            model.getCardManager().deleteCard(card, selectedDeck);
             cardOrDeckAddedOrRemovesViaUI = true;
-            // Store the deleted card in deletedCards
-            if (deletedCards.containsKey(selectedDeck)) {
-                deletedCards.get(selectedDeck).add(card);
-            } else {
-                ArrayList<Card> cards = new ArrayList<>();
-                cards.add(card);
-                deletedCards.put(selectedDeck, cards);
-            }
-            
             cardList.getChildren().remove(cardContainer);
             System.out.println("Card deleted from deck: " + selectedDeck.getDeckName());
         } else {
@@ -243,6 +233,7 @@ public class EditDecksSceneController {
 
                 Card newCard = new Card(cardName);
                 selectedDeck.addCard(newCard);
+                model.getCardManager().addCard(newCard, selectedDeck);
                 showDeckCards(selectedDeck);
                 cardOrDeckAddedOrRemovesViaUI = true;
                 System.out.println("Card added: " + cardName);

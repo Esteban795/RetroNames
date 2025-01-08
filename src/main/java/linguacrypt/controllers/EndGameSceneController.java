@@ -26,11 +26,11 @@ public class EndGameSceneController {
 
     @FXML
     void initialize() {
-        int size = sm.getModel().getGrid().size();
+        int size = sm.getModel().getGame().getGrid().size();
         GridPane expectedMapGrid = new GridPane();
         GridPane keyGrid = new GridPane();
-        ArrayList<ArrayList<Card>> expectedMap = sm.getModel().getGrid();
-        ArrayList<ArrayList<Card>> key = sm.getModel().getKey();
+        ArrayList<ArrayList<Card>> expectedMap = sm.getModel().getGame().getGrid();
+        ArrayList<ArrayList<Card>> key = sm.getModel().getGame().getKey();
     
         // Set grid properties
         expectedMapGrid.setHgap(5);

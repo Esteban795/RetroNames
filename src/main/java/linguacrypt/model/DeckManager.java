@@ -24,7 +24,18 @@ public class DeckManager implements Visitable {
 
     public Boolean addDeck(Deck deck) { 
         if (getDeck(deck.getDeckName()) == null) {
-            deckList.add(deck);
+            int index = 0;
+            for (Deck d : deckList) {
+                if (d.getDeckName().compareTo(deck.getDeckName()) > 0) {
+                    break;
+                }
+                index++;
+            }
+            deckList.add(index, deck);
+            
+            // int index = Collections.binarySearch(deckList, deck, (d1, d2) -> d1.getDeckName().compareTo(d2.getDeckName()));
+            // if (index < 0) index = -index - 1;
+            // deckList.add(deck);
             return true;
         } else {
             return false;
@@ -76,4 +87,15 @@ public class DeckManager implements Visitable {
         this.accept(visitor); // This will save the deckManager to a JSON file
     }
 
+
+    public void sortDecks() {
+        boolean isSorted = true;
+        for (int i = 0; i < deckList.size() - 1; i++) {
+            if (deckList.get(i).getDeckName().compareTo(deckList.get(i + 1).getDeckName()) > 0) {
+                isSorted = false;
+                break;
+            }
+        }
+        Collections.sort(deckList, (d1, d2) -> d1.getDeckName().compareTo(d2.getDeckName()));
+    }
 }

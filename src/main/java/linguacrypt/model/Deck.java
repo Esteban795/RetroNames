@@ -90,6 +90,7 @@ public class Deck implements Visitable {
     // Methods
     @JsonIgnore
     public void sortCards() { // Sort the cards in the deck
+        // Used when the deck is loaded from a file (it is possible that the cards are not sorted if the file was created or edited manually)
         boolean isSorted = true;
         for (int i = 0; i < cardList.size() - 1; i++) {
             if (cardList.get(i).getCardName().compareTo(cardList.get(i + 1).getCardName()) > 0) {

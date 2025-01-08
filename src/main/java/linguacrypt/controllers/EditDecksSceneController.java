@@ -11,6 +11,7 @@ import linguacrypt.model.Deck;
 import linguacrypt.model.Model;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -137,31 +138,38 @@ public class EditDecksSceneController {
                 }
 
                 model.getDeckManager().addDeck(newDeck);
-                addDeckToUI(newDeck);
+                reloadDeckList();
                 cardOrDeckAddedOrRemovesViaUI = true;
                 System.out.println("Deck created: " + deckName);
             }
         }
     }
 
+    private void reloadDeckList() {
+        deckList.getChildren().clear();
+        for (Deck deck : model.getDeckManager().getDeckList()) {
+            addDeckToUI(deck);
+        }
+    }
+
     private void addDeckToUI(Deck deck) {
-        HBox deckContainer = new HBox(5);
+        HBox deckContainer = new HBox(10);
+        deckContainer.setPadding(new Insets(5)); // Add padding around container
         Button deckButton = new Button(deck.getDeckName());
+        deckButton.getStyleClass().add("deck-button");
 
         // Style for selected state
-        String defaultStyle = deckButton.getStyle();
-        String selectedStyle = "-fx-background-color: lightblue;";
 
         deckButton.setOnAction(e -> {
             // Reset previous selection
             if (selectedButton != null) {
-                selectedButton.setStyle(defaultStyle);
+                selectedButton.getStyleClass().remove("selected");
             }
 
             // Update selection
             selectedDeck = deck;
             selectedButton = deckButton;
-            deckButton.setStyle(selectedStyle);
+            deckButton.getStyleClass().add("selected");
             newCardButton.setDisable(false);
 
             // Show cards
@@ -169,6 +177,7 @@ public class EditDecksSceneController {
         });
 
         Button deleteButton = new Button("X");
+        deleteButton.getStyleClass().add("delete-button");
         deleteButton.setOnAction(e -> deleteDeck(deck, deckContainer));
 
         deckContainer.getChildren().addAll(deckButton, deleteButton);
@@ -190,8 +199,10 @@ public class EditDecksSceneController {
         cardInfoBox.setVisible(false); // Hide when switching decks
 
         for (Card card : deck.getCardList()) {
-            HBox cardContainer = new HBox(5);
+            HBox cardContainer = new HBox(10);
+            cardContainer.setPadding(new Insets(5)); // Add padding around container
             Button cardButton = new Button(card.getCardName());
+            cardButton.getStyleClass().add("card-button");
 
             // Add click handler for card info
             cardButton.setOnAction(e -> {
@@ -199,6 +210,7 @@ public class EditDecksSceneController {
             });
 
             Button deleteCardButton = new Button("X");
+            deleteCardButton.getStyleClass().add("delete-button");
             deleteCardButton.setOnAction(e -> deleteCard(card, cardContainer));
 
             cardContainer.getChildren().addAll(cardButton, deleteCardButton);

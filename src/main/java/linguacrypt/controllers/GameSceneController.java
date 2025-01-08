@@ -23,7 +23,7 @@ import linguacrypt.scenes.SceneManager;
 
 public class GameSceneController {
 
-    //Necessary attributes to display the game
+    // Necessary attributes to display the game
     private final SceneManager sm;
     private Game game;
     private final int size;
@@ -31,7 +31,7 @@ public class GameSceneController {
     private int remainingGuesses = 0;
     private int bonusGuess = 1;
 
-    //FXML attributes for the game grid
+    // FXML attributes for the game grid
     @FXML
     private GridPane gameGrid;
     @FXML
@@ -41,26 +41,30 @@ public class GameSceneController {
     @FXML
     private ProgressBar blueTeamProgress;
 
-    //FXML attributes for the hints
-    @FXML private HBox hintInputBox;
-    @FXML private HBox hintDisplayBox;
-    @FXML private TextField hintField;
-    @FXML private MenuButton numberChoice;
-    @FXML private Label hintLabel;
-    @FXML private Label remainingGuessesLabel;
-    
-
+    // FXML attributes for the hints
+    @FXML
+    private HBox hintInputBox;
+    @FXML
+    private HBox hintDisplayBox;
+    @FXML
+    private TextField hintField;
+    @FXML
+    private MenuButton numberChoice;
+    @FXML
+    private Label hintLabel;
+    @FXML
+    private Label remainingGuessesLabel;
 
     public GameSceneController(SceneManager sm) {
         this.sm = sm;
         this.game = sm.getModel().getGame();
 
-            // Make sure a deck is set
+        // Make sure a deck is set
         if (game.getConfig().getCurrentDeck() == null) {
             game.getConfig().setCurrentDeck(sm.getModel().getDeckManager().getRandomDeck());
         }
 
-        //Create the grid for the scene
+        // Create the grid for the scene
         game.initGrid();
         this.size = game.getGrid().size();
         System.out.println("GameSceneController initialized with grid size: " + size);
@@ -78,7 +82,7 @@ public class GameSceneController {
             e.printStackTrace();
         }
     }
-    
+
     /*
      * Initialize the grid with the cards of the game's deck.
      */
@@ -87,14 +91,14 @@ public class GameSceneController {
             System.err.println("Game or grid is null");
             return;
         }
-        
+
         game.getGrid().clear();
         game.initGrid();
         System.out.println("Game grid loaded with cards");
         updateGrid();
         updateTurnLabel();
     }
-    
+
     /*
      * Update the grid with the current state of the game.
      */
@@ -117,10 +121,10 @@ public class GameSceneController {
                 Button cardButton = new Button();
                 cardButton.setPrefSize(100, 100);
                 cardButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                
+
                 Card card = game.getGrid().get(i).get(j);
                 cardButton.setText(card.getName());
-                
+
                 // Set button style based on card state
                 if (card.isFound()) {
                     switch (card.getColor()) {
@@ -138,12 +142,12 @@ public class GameSceneController {
                             break;
                     }
                 }
-            
-            // Handle card click
-            final int row = i;
-            final int col = j;
-            cardButton.setOnAction(e -> handleCardClick(row, col));
-            gameGrid.add(cardButton, j, i);
+
+                // Handle card click
+                final int row = i;
+                final int col = j;
+                cardButton.setOnAction(e -> handleCardClick(row, col));
+                gameGrid.add(cardButton, j, i);
             }
         }
     }
@@ -158,14 +162,13 @@ public class GameSceneController {
             game.revealCard(card);
             remainingGuesses--;
             remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
-            
+
             if (remainingGuesses == 0) {
-                if(bonusGuess > 0){
+                if (bonusGuess > 0) {
                     remainingGuesses = bonusGuess;
                     bonusGuess = 0;
                     remainingGuessesLabel.setText("Essais Bonus : " + remainingGuesses);
-                }
-                else {
+                } else {
                     game.switchTeam();
                     bonusGuess = 1;
                     hintLabel.setText("");
@@ -174,7 +177,7 @@ public class GameSceneController {
                     hintDisplayBox.setVisible(false);
                 }
             }
-            
+
             updateGrid();
             updateTurnLabel();
             updateProgress();
@@ -187,19 +190,17 @@ public class GameSceneController {
         String teamName = isRedTeam ? "ÉQUIPE ROUGE" : "ÉQUIPE BLEUE";
         String color = isRedTeam ? "#cc0000" : "#0000cc";
         String bgColor = isRedTeam ? "#ffcccc" : "#ccccff";
-        
+
         teamTurnLabel.setText(teamName);
         teamTurnLabel.setStyle(String.format(
-            "-fx-font-size: 24px; " +
-            "-fx-font-weight: bold; " +
-            "-fx-background-color: %s; " +
-            "-fx-text-fill: %s; " +
-            "-fx-padding: 5px 15px; " +
-            "-fx-background-radius: 5px;",
-            bgColor, color
-        ));
+                "-fx-font-size: 24px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: %s; " +
+                        "-fx-text-fill: %s; " +
+                        "-fx-padding: 5px 15px; " +
+                        "-fx-background-radius: 5px;",
+                bgColor, color));
     }
-
 
     private void setupHintControls() {
         // Setup number choices
@@ -212,20 +213,21 @@ public class GameSceneController {
             });
             numberChoice.getItems().add(item);
         }
-        
+
         hintDisplayBox.setVisible(false);
     }
-    
+
     @FXML
     public void submitHint() {
-        if (hintField == null || numberChoice == null) return;
-        
+        if (hintField == null || numberChoice == null)
+            return;
+
         currentHint = hintField.getText();
         try {
             remainingGuesses = Integer.parseInt(numberChoice.getText());
             hintLabel.setText("Indice : " + currentHint);
             remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
-            
+
             hintInputBox.setVisible(false);
             hintDisplayBox.setVisible(true);
         } catch (NumberFormatException e) {
@@ -233,7 +235,6 @@ public class GameSceneController {
         }
     }
 
-    
     private void initializeProgress() {
         if (redTeamProgress != null && blueTeamProgress != null) {
             updateProgress();
@@ -242,27 +243,27 @@ public class GameSceneController {
 
     private void updateProgress() {
         int redFound = (int) game.getGrid().stream()
-            .flatMap(ArrayList::stream)
-            .filter(c -> c.isFound() && c.getColor() == Color.RED)
-            .count();
-        
+                .flatMap(ArrayList::stream)
+                .filter(c -> c.isFound() && c.getColor() == Color.RED)
+                .count();
+
         int blueFound = (int) game.getGrid().stream()
-            .flatMap(ArrayList::stream)
-            .filter(c -> c.isFound() && c.getColor() == Color.BLUE)
-            .count();
-        
+                .flatMap(ArrayList::stream)
+                .filter(c -> c.isFound() && c.getColor() == Color.BLUE)
+                .count();
+
         int redTotal = (int) game.getGrid().stream()
-            .flatMap(ArrayList::stream)
-            .filter(c -> c.getColor() == Color.RED)
-            .count();
-        
+                .flatMap(ArrayList::stream)
+                .filter(c -> c.getColor() == Color.RED)
+                .count();
+
         int blueTotal = (int) game.getGrid().stream()
-            .flatMap(ArrayList::stream)
-            .filter(c -> c.getColor() == Color.BLUE)
-            .count();
-        
-        redTeamProgress.setProgress((double)redFound / redTotal);
-        blueTeamProgress.setProgress((double)blueFound / blueTotal);
+                .flatMap(ArrayList::stream)
+                .filter(c -> c.getColor() == Color.BLUE)
+                .count();
+
+        redTeamProgress.setProgress((double) redFound / redTotal);
+        blueTeamProgress.setProgress((double) blueFound / blueTotal);
     }
 
     @FXML

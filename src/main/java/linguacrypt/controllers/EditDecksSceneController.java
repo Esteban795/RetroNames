@@ -94,8 +94,7 @@ public class EditDecksSceneController {
                     sm.popScene();
                 } else if (result.get() == leaveWithoutSave) {
                     // Restore all deleted cards
-                    deletedCards.forEach((deck, cards) -> 
-                        cards.forEach(card -> deck.addCard(card)));
+                    deletedCards.forEach((deck, cards) -> cards.forEach(card -> deck.addCard(card)));
                     deletedCards.clear();
                     sm.popScene();
                 }
@@ -202,7 +201,7 @@ public class EditDecksSceneController {
                 cards.add(card);
                 deletedCards.put(selectedDeck, cards);
             }
-            
+
             cardList.getChildren().remove(cardContainer);
             System.out.println("Card deleted from deck: " + selectedDeck.getName());
         } else {

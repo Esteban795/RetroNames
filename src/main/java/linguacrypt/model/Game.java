@@ -23,7 +23,7 @@ public class Game implements Visitable {
     private GameConfiguration config;
 
     @JsonProperty("nbTurn")
-    private int nbTurn;    
+    private int nbTurn;
     @JsonProperty("currentTeam")
     private boolean currentTeam;
 
@@ -51,18 +51,18 @@ public class Game implements Visitable {
     /**
      * Constructeur pour la désérialisation JSON.
      *
-     * @param grid La grille de jeu
+     * @param grid   La grille de jeu
      * @param config La configuration
      * @param nbTurn Le nombre de tours joués
      */
     @JsonCreator
     public Game(
-        @JsonProperty("grid") ArrayList<ArrayList<Card>> grid,
-        @JsonProperty("config") GameConfiguration config,
-        @JsonProperty("nbTurn") int nbTurn,
-        @JsonProperty("currentTeam") boolean currentTeam,
-        @JsonProperty("key") ArrayList<ArrayList<Card>> key,
-        @JsonProperty("stats") GameStatistics stats) {
+            @JsonProperty("grid") ArrayList<ArrayList<Card>> grid,
+            @JsonProperty("config") GameConfiguration config,
+            @JsonProperty("nbTurn") int nbTurn,
+            @JsonProperty("currentTeam") boolean currentTeam,
+            @JsonProperty("key") ArrayList<ArrayList<Card>> key,
+            @JsonProperty("stats") GameStatistics stats) {
         this.grid = grid;
         this.config = config;
         this.nbTurn = nbTurn;
@@ -86,11 +86,10 @@ public class Game implements Visitable {
             }
             grid.add(row);
         }
-        if(this.config.getCurrentDeck() != null) {
+        if (this.config.getCurrentDeck() != null) {
             loadGrid();
         }
     }
-
 
     /**
      * Charge les cartes du deck dans la grille. Les cartes sont placées
@@ -111,9 +110,9 @@ public class Game implements Visitable {
         for (int i = 0; i < size && cardIndex < cards.size(); i++) {
             for (int j = 0; j < size && cardIndex < cards.size(); j++) {
                 grid.get(i).set(j, cards.get(cardIndex++));
+            }
         }
     }
-}
 
     public void switchTeam() {
         currentTeam = !currentTeam;
@@ -132,10 +131,14 @@ public class Game implements Visitable {
         return config;
     }
 
-    public Team getCurrentTeam() { return(currentTeam ? config.getTeamManager().getRedTeam() : config.getTeamManager().getBlueTeam()); }
+    public Team getCurrentTeam() {
+        return (currentTeam ? config.getTeamManager().getRedTeam() : config.getTeamManager().getBlueTeam());
+    }
+
     public int getBlueTeamFoundCards() {
         return config.getTeamManager().getBlueTeam().getNbFoundCards();
     }
+
     public int getRedTeamFoundCards() {
         return config.getTeamManager().getRedTeam().getNbFoundCards();
     }
@@ -148,26 +151,26 @@ public class Game implements Visitable {
         return stats;
     }
 
-
     public int revealCard(Card card) {
         card.reveal();
         Team redTeam = config.getTeamManager().getRedTeam();
         Team blueTeam = config.getTeamManager().getBlueTeam();
-        if(card.getColor() == Color.RED) {
+        if (card.getColor() == Color.RED) {
             redTeam.setNbFoundCards(redTeam.getNbFoundCards() + 1);
-            //System.out.println("Red card");
+            // System.out.println("Red card");
             return 0;
         } else if (card.getColor() == Color.BLUE) {
             blueTeam.setNbFoundCards(blueTeam.getNbFoundCards() + 1);
-            //System.out.println("Blue card");
+            // System.out.println("Blue card");
             return 0;
         } else if (card.getColor() == Color.WHITE) {
-            //System.out.println("White card");
+            // System.out.println("White card");
             return 0;
         } else {
             return 1;
         }
     }
+
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);

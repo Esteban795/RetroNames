@@ -26,13 +26,13 @@ public class SerializationTest {
     private void setupTestData() {
         // Setup test deck
         String[] testWords = {
-            "CHAT", "CHIEN", "OISEAU", "POISSON", "LAPIN",
-            "VOITURE", "VELO", "MOTO", "AVION", "TRAIN",
-            "POMME", "POIRE", "ORANGE", "BANANE", "FRAISE",
-            "MAISON", "JARDIN", "ROUTE", "ARBRE", "FLEUR",
-            "SOLEIL", "LUNE", "ETOILE", "NUAGE", "PLUIE"
+                "CHAT", "CHIEN", "OISEAU", "POISSON", "LAPIN",
+                "VOITURE", "VELO", "MOTO", "AVION", "TRAIN",
+                "POMME", "POIRE", "ORANGE", "BANANE", "FRAISE",
+                "MAISON", "JARDIN", "ROUTE", "ARBRE", "FLEUR",
+                "SOLEIL", "LUNE", "ETOILE", "NUAGE", "PLUIE"
         };
-        
+
         Deck testDeck = new Deck("Test Deck");
         for (String word : testWords) {
             testDeck.addCard(new Card(word));
@@ -43,7 +43,7 @@ public class SerializationTest {
         Team redTeam = new Team("Red Team", Color.RED);
         redTeam.addPlayer(new Player("Alice"));
         redTeam.addPlayer(new Player("Bob"));
-        
+
         Team blueTeam = new Team("Blue Team", Color.BLUE);
         blueTeam.addPlayer(new Player("Charlie"));
         blueTeam.addPlayer(new Player("David"));

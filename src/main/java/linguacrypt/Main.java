@@ -26,13 +26,13 @@ public class Main extends Application {
         // Create test deck with 25 cards
         Deck testDeck = new Deck();
         String[] testWords = {
-            "CHAT", "CHIEN", "OISEAU", "POISSON", "LAPIN",
-            "VOITURE", "VELO", "MOTO", "AVION", "TRAIN",
-            "POMME", "POIRE", "ORANGE", "BANANE", "FRAISE",
-            "MAISON", "JARDIN", "ROUTE", "ARBRE", "FLEUR",
-            "SOLEIL", "LUNE", "ETOILE", "NUAGE", "PLUIE"
+                "CHAT", "CHIEN", "OISEAU", "POISSON", "LAPIN",
+                "VOITURE", "VELO", "MOTO", "AVION", "TRAIN",
+                "POMME", "POIRE", "ORANGE", "BANANE", "FRAISE",
+                "MAISON", "JARDIN", "ROUTE", "ARBRE", "FLEUR",
+                "SOLEIL", "LUNE", "ETOILE", "NUAGE", "PLUIE"
         };
-        
+
         for (String word : testWords) {
             Card card = new Card(word);
             testDeck.addCard(card);
@@ -41,15 +41,14 @@ public class Main extends Application {
         model.getGame().getConfig().setCurrentDeck(testDeck);
         SceneManager sm = SceneManager.getInstance(primaryStage, model);
 
-
-
-        // Fake scene that shouldn't be used. It is used to initialize the SceneManager to correct values
+        // Fake scene that shouldn't be used. It is used to initialize the SceneManager
+        // to correct values
         URL fxmlURL = getClass().getResource("/Init.fxml");
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(fxmlURL);
 
         Parent root = loader.load();
-        Scene scene = new Scene(root, 1600,900);
+        Scene scene = new Scene(root, 1600, 900);
         primaryStage.setScene(scene);
 
         // Actual Initial Scene

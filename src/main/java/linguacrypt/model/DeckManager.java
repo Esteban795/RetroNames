@@ -19,7 +19,7 @@ public class DeckManager implements Visitable {
         this.deckList = new ArrayList<>();
     }
 
-    public Boolean addDeck(Deck deck) { 
+    public Boolean addDeck(Deck deck) {
         if (getDeck(deck.getName()) == null) {
             deckList.add(deck);
             return true;

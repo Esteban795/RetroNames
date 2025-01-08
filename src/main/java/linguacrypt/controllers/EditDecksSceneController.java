@@ -228,6 +228,7 @@ public class EditDecksSceneController {
         dialog.setTitle("Add to Another Deck");
 
         ComboBox<String> deckComboBox = new ComboBox<>();
+        deckComboBox.setPromptText("Select a deck");
         for (Deck deck : model.getDeckManager().getDeckList()) {
             model.getCardManager().getDecks(selectedCard);
             if (deck != selectedDeck && !model.getCardManager().getDecks(selectedCard).contains(deck)) {

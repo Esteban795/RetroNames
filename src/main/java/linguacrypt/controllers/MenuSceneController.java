@@ -49,7 +49,7 @@ public class MenuSceneController {
 
     @FXML
     public void handleQuit(){
-        saveDecks();
+        // saveDecks();
         Platform.exit();
     }
 

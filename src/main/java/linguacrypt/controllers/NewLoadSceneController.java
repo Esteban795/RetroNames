@@ -1,6 +1,11 @@
 package linguacrypt.controllers;
 
+import linguacrypt.scenes.LoadMenuScene;
+import linguacrypt.scenes.LobbyScene;
 import linguacrypt.scenes.SceneManager;
+import linguacrypt.scenes.SettingsScene;
+
+import java.io.IOException;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -28,12 +33,14 @@ public class NewLoadSceneController {
     }
 
     @FXML
-    public void newGame() {
+    public void newGame() throws IOException {
         System.out.println("New Game button clicked!");
+        sm.pushScene(new LobbyScene(sm));
     }
     
     @FXML
-    public void loadGame() {
+    public void loadGame() throws IOException {
         System.out.println("Load Game button clicked!");
+        sm.pushScene(new LoadMenuScene(sm));
     }
 }

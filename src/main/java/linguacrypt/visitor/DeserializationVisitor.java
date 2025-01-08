@@ -38,17 +38,22 @@ public class DeserializationVisitor implements Visitor {
         File[] files = directory.listFiles((dir, name) -> name.startsWith("game") && name.endsWith(".json"));
         
         if (files == null || files.length == 0) {
-            //log("No saved games found");
+            log("No saved games found");
             return null;
         }
 
         File latestGame = files[0];
         for (File file : files) {
             if (file.lastModified() > latestGame.lastModified()) {
+                log("Found a newer saved game: " + file.getName());
                 latestGame = file;
             }
         }
-
+        if( latestGame == null) {
+            log("No saved games found");
+            return null;
+        }
+        System.out.println("Chemin du fichier trouvé : " + latestGame.getPath());
         return loadGame(latestGame.getPath());
     }
 
@@ -59,9 +64,15 @@ public class DeserializationVisitor implements Visitor {
      */
     public Game loadGame(String filePath) {
         try {
+            System.out.println("On charge : " + filePath);
             game = objectMapper.readValue(new File(filePath), Game.class);
+            if(game == null) {
+                log("Failed to load game from file: " + filePath);
+                return null;
+            }
             return game;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

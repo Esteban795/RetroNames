@@ -23,22 +23,23 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         this.model = new Model(true);
-        // Create test deck with 25 cards
-        Deck testDeck = new Deck();
-        String[] testWords = {
-                "CHAT", "CHIEN", "OISEAU", "POISSON", "LAPIN",
-                "VOITURE", "VELO", "MOTO", "AVION", "TRAIN",
-                "POMME", "POIRE", "ORANGE", "BANANE", "FRAISE",
-                "MAISON", "JARDIN", "ROUTE", "ARBRE", "FLEUR",
-                "SOLEIL", "LUNE", "ETOILE", "NUAGE", "PLUIE"
-        };
+        // // Create test deck with 25 cards
+        // Deck testDeck = new Deck();
+        // String[] testWords = {
+        //         "CHAT", "CHIEN", "OISEAU", "POISSON", "LAPIN",
+        //         "VOITURE", "VELO", "MOTO", "AVION", "TRAIN",
+        //         "POMME", "POIRE", "ORANGE", "BANANE", "FRAISE",
+        //         "MAISON", "JARDIN", "ROUTE", "ARBRE", "FLEUR",
+        //         "SOLEIL", "LUNE", "ETOILE", "NUAGE", "PLUIE"
+        // };
 
-        for (String word : testWords) {
-            Card card = new Card(word);
-            testDeck.addCard(card);
-        }
-        model.getDeckManager().addDeck(testDeck);
-        model.getGame().getConfig().setCurrentDeck(testDeck);
+        // for (String word : testWords) {
+        //     Card card = new Card(word);
+        //     testDeck.addCard(card);
+        // }
+        // model.getDeckManager().addDeck(testDeck);
+        // model.getGame().getConfig().setCurrentDeck(testDeck);
+        
         SceneManager sm = SceneManager.getInstance(primaryStage, model);
 
         // Fake scene that shouldn't be used. It is used to initialize the SceneManager
@@ -52,8 +53,8 @@ public class Main extends Application {
         primaryStage.setScene(scene);
 
         // Actual Initial Scene
-        ManagedScene GameScene = new GameScene(sm);
-        sm.pushScene(GameScene);
+        ManagedScene LoadMenuScene = new LoadMenuScene(sm);
+        sm.pushScene(LoadMenuScene);
         primaryStage.show();
     }
 

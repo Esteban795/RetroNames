@@ -53,6 +53,9 @@ public class EditDecksSceneController {
     @FXML
     private boolean cardOrDeckAddedOrRemovesViaUI;
 
+    @FXML
+    private Button newCardButton;
+
     public EditDecksSceneController(SceneManager sm) {
         this.sm = sm;
         this.model = sm.getModel();
@@ -66,6 +69,7 @@ public class EditDecksSceneController {
         for (Deck deck : model.getDeckManager().getDeckList()) {
             addDeckToUI(deck);
         }
+        newCardButton.setDisable(true);
     }
 
     @FXML
@@ -73,7 +77,7 @@ public class EditDecksSceneController {
         if (cardOrDeckAddedOrRemovesViaUI) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Save Changes");
-            alert.setHeaderText(null);
+            alert.setHeaderTexaddCardt(null);
             alert.setContentText("You have made changes to the decks. What would you like to do?");
 
             ButtonType saveAndLeave = new ButtonType("Save and Leave", ButtonBar.ButtonData.OK_DONE);
@@ -149,6 +153,7 @@ public class EditDecksSceneController {
             selectedDeck = deck;
             selectedButton = deckButton;
             deckButton.setStyle(selectedStyle);
+            newCardButton.setDisable(false);
 
             // Show cards
             showDeckCards(deck);
@@ -162,14 +167,13 @@ public class EditDecksSceneController {
     }
 
     private void deleteDeck(Deck deck, HBox deckContainer) {
-        // Remove from the model
         model.getDeckManager().removeDeck(deck);
-
-        // Remove from the UI
         deckList.getChildren().remove(deckContainer);
-
+        if (selectedDeck == deck) {
+            selectedDeck = null;
+            newCardButton.setDisable(true);
+        }
         cardOrDeckAddedOrRemovesViaUI = true;
-        System.out.println("Deck deleted!");
     }
 
     private void showDeckCards(Deck deck) {

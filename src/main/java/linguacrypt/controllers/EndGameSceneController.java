@@ -32,7 +32,7 @@ public class EndGameSceneController {
     @FXML
     private VBox expectedMapBox;
 
-    @FXML 
+    @FXML
     private VBox keyBox;
 
     public EndGameSceneController(SceneManager sm) {
@@ -51,25 +51,29 @@ public class EndGameSceneController {
         ArrayList<ArrayList<Card>> key = sm.getModel().getGame().getKey();
 
         int cellSize = 75 - 5 * (size - 3);
-        expectedMapGrid.setStyle("-fx-max-width:" + (cellSize) * (size + 1) + "; -fx-max-height:" + (cellSize) * (size + 1) + ";");
-        keyGrid.setStyle("-fx-max-width:" + (cellSize) * (size + 1) + "; -fx-max-height:" + (cellSize) * (size + 1) + ";");
+        expectedMapGrid.setStyle(
+                "-fx-max-width:" + (cellSize) * (size + 1) + "; -fx-max-height:" + (cellSize) * (size + 1) + ";");
+        keyGrid.setStyle(
+                "-fx-max-width:" + (cellSize) * (size + 1) + "; -fx-max-height:" + (cellSize) * (size + 1) + ";");
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 Pane pane = new Pane();
                 pane.setPrefSize(cellSize, cellSize); // Set fixed size
-                pane.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: " + expectedMap.get(i).get(j).getCardColor().toString().toLowerCase() + "; -fx-border-color: black;");
+                pane.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: "
+                        + expectedMap.get(i).get(j).getColor().toString().toLowerCase() + "; -fx-border-color: black;");
                 expectedMapGrid.add(pane, i, j);
 
                 Pane paneExpected = new Pane();
                 paneExpected.setPrefSize(cellSize, cellSize); // Set fixed size
-                paneExpected.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: " + key.get(i).get(j).getCardColor().toString().toLowerCase() + "; -fx-border-color: black;");
+                paneExpected.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: "
+                        + key.get(i).get(j).getColor().toString().toLowerCase() + "; -fx-border-color: black;");
                 keyGrid.add(paneExpected, i, j);
             }
         }
 
         expectedMapBox.setAlignment(Pos.BASELINE_CENTER);
         keyBox.setAlignment(Pos.BASELINE_CENTER);
-        
+
     }
 
     public void displayStats() {
@@ -82,14 +86,16 @@ public class EndGameSceneController {
                 + "   - Carte rouges découvertes : " + blueTeamStats[1] + "\n"
                 + "   - Carte noires découvertes : " + blueTeamStats[2] + "\n"
                 + "   - Carte blanches découvertes : " + blueTeamStats[3] + "\n"
-                + "   - Temps moyen pour répondre : " + sm.getModel().getGame().getStats().getBlueTeamAvgTimeToAnswer() + "s");
+                + "   - Temps moyen pour répondre : " + sm.getModel().getGame().getStats().getBlueTeamAvgTimeToAnswer()
+                + "s");
 
         redTeamStatsLabel.setText("Statistiques de l'équipe rouge :\n"
                 + "   - Carte bleues découvertes : " + redTeamStats[0] + "\n"
                 + "   - Carte rouges découvertes : " + redTeamStats[1] + "\n"
                 + "   - Carte noires découvertes : " + redTeamStats[2] + "\n"
                 + "   - Carte blanches découvertes : " + redTeamStats[3] + "\n"
-                + "   - Temps moyen pour répondre : " + sm.getModel().getGame().getStats().getRedTeamAvgTimeToAnswer() + "s");
+                + "   - Temps moyen pour répondre : " + sm.getModel().getGame().getStats().getRedTeamAvgTimeToAnswer()
+                + "s");
     }
 
     @FXML

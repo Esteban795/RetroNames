@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Random;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -27,7 +28,10 @@ public class Card {
 
     public Card(String cardName) {
         this.cardName = cardName;
-        this.cardColor = Color.WHITE;// Default color, neutral card
+        //TEMPORAIRE POUR TESTER L'AFFICHAGE
+        Random random = new Random();
+        Color[] colors = Color.values();
+        this.cardColor = colors[random.nextInt(colors.length)];// Default color, neutral card
         this.found = false;
         this.cardUrl = null;
     }
@@ -51,11 +55,11 @@ public class Card {
         this.cardUrl = cardUrl;
     }
 
-    public String getCardName() {
+    public String getName() {
         return cardName;
     }
 
-    public Color getCardColor() {
+    public Color getColor() {
         return cardColor;
     }
 
@@ -63,7 +67,7 @@ public class Card {
         return found;
     }
 
-    public void setCardColor(Color cardColor) {
+    public void setColor(Color cardColor) {
         this.cardColor = cardColor;
     }
 

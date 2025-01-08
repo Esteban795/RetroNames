@@ -24,6 +24,11 @@ public class Deck implements Visitable {
         this.cardList = new ArrayList<>();
     }
 
+    public Deck(String deckName) {
+        this.deckName = deckName;
+        this.cardList = new ArrayList<>();
+    }
+
     @JsonCreator
     public Deck(
             @JsonProperty("deckName") String deckName,
@@ -33,7 +38,7 @@ public class Deck implements Visitable {
     }
 
     // Getters and Setters
-    public String getDeckName() {
+    public String getName() {
         return deckName;
     }
 
@@ -51,7 +56,7 @@ public class Deck implements Visitable {
 
     public Card getCard(String cardName) {
         for (Card card : cardList) {
-            if (card.getCardName().equals(cardName)) {
+            if (card.getName().equals(cardName)) {
                 return card;
             }
         }
@@ -67,7 +72,7 @@ public class Deck implements Visitable {
                                      // position
         int index = 0;
         for (Card c : cardList) {
-            if (c.getCardName().compareTo(card.getCardName()) > 0) {
+            if (c.getName().compareTo(card.getName()) > 0) {
                 break;
             }
             index++;
@@ -92,13 +97,13 @@ public class Deck implements Visitable {
     public void sortCards() { // Sort the cards in the deck
         boolean isSorted = true;
         for (int i = 0; i < cardList.size() - 1; i++) {
-            if (cardList.get(i).getCardName().compareTo(cardList.get(i + 1).getCardName()) > 0) {
+            if (cardList.get(i).getName().compareTo(cardList.get(i + 1).getName()) > 0) {
                 isSorted = false;
                 break;
             }
         }
         if (!isSorted) {
-            Collections.sort(cardList, (c1, c2) -> c1.getCardName().compareTo(c2.getCardName()));
+            Collections.sort(cardList, (c1, c2) -> c1.getName().compareTo(c2.getName()));
         }
     }
 

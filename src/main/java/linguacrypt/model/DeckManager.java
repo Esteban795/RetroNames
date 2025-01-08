@@ -22,20 +22,13 @@ public class DeckManager implements Visitable {
         this.deckList = new ArrayList<>();
     }
 
-    public Boolean addDeck(Deck deck) {
+    public Boolean addDeck(Deck deck) { 
         if (getDeck(deck.getDeckName()) == null) {
             deckList.add(deck);
             return true;
         } else {
             return false;
         }
-    }
-
-    @JsonIgnore
-    public ArrayList<Card> getSortedCards(Deck deck) {
-        ArrayList<Card> cards = new ArrayList<>(deck.getCardList());
-        Collections.sort(cards, (c1, c2) -> c1.getCardName().compareTo(c2.getCardName()));
-        return cards;
     }
 
     public void removeDeck(Deck deck) {

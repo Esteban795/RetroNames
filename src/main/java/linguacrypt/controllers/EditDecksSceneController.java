@@ -139,11 +139,8 @@ public class EditDecksSceneController {
     private void showDeckCards(Deck deck) {
         cardList.getChildren().clear();
 
-        //Get sorted cards
-        ArrayList<Card> sortedCards = model.getDeckManager().getSortedCards(deck);
-
         // Display each card in the deck
-        for (Card card : sortedCards) {
+        for (Card card : deck.getCardList()) {
             HBox cardContainer = new HBox(5);
             Button cardButton = new Button(card.getCardName());
 

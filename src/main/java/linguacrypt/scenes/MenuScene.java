@@ -3,11 +3,10 @@ package linguacrypt.scenes;
 import java.io.IOException;
 import java.net.URL;
 
-import linguacrypt.controllers.MenuSceneController;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import linguacrypt.controllers.MenuSceneController;
 
 public class MenuScene extends ManagedScene {
 
@@ -19,15 +18,18 @@ public class MenuScene extends ManagedScene {
         controller = new MenuSceneController(sm);
         FXMLLoader loader = new FXMLLoader();
         URL fxmlURL = getClass().getResource(super.getFXMLPath());
+        System.err.println(fxmlURL);
         loader.setLocation(fxmlURL);
         loader.setController(controller);
         try {
             Parent root = loader.load();
-            super.setScene(new Scene(root, 800, 600));
+            super.setScene(new Scene(root, 1600,900));
+            super.getScene().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         } catch (Exception e) {
             System.out.println("Error loading MenuScene.fxml");
             sm.getPrimaryStage().close();
         }
+
     }
 
     @Override

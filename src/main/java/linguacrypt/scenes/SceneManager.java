@@ -2,26 +2,26 @@ package linguacrypt.scenes;
 
 import java.util.Stack;
 
-import linguacrypt.model.Game;
+import linguacrypt.model.Model;
 
 import javafx.stage.Stage;
 
 public class SceneManager {
 
-    private final Game game;
+    private final Model model;
     private final Stack<ManagedScene> scenes;
     private final Stage primaryStage;
     private static SceneManager instance;
 
-    private SceneManager(Stage primaryStage, Game game) {
+    private SceneManager(Stage primaryStage, Model model) {
         this.primaryStage = primaryStage;
-        this.game = game;
+        this.model = model;
         scenes = new Stack<>();
     }
 
-    public static SceneManager getInstance(Stage primaryStage, Game game) {
+    public static SceneManager getInstance(Stage primaryStage, Model model) {
         if (instance == null) {
-            instance = new SceneManager(primaryStage, game);
+            instance = new SceneManager(primaryStage, model);
         }
         return instance;
     }
@@ -85,7 +85,7 @@ public class SceneManager {
         return primaryStage;
     }
 
-    public Game getModel() {
-        return game;
+    public Model getModel() {
+        return model;
     }
 }

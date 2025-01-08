@@ -229,7 +229,8 @@ public class EditDecksSceneController {
 
         ComboBox<String> deckComboBox = new ComboBox<>();
         for (Deck deck : model.getDeckManager().getDeckList()) {
-            if (deck != selectedDeck) {
+            model.getCardManager().getDecks(selectedCard);
+            if (deck != selectedDeck && !model.getCardManager().getDecks(selectedCard).contains(deck)) {
                 deckComboBox.getItems().add(deck.getDeckName());
             }
         }

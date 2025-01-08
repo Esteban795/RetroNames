@@ -19,6 +19,7 @@ public class Card {
 
     public Card(String cardName) {
         this.cardName = cardName;
+        //TEMPORAIRE POUR TESTER L'AFFICHAGE
         Random random = new Random();
         Color[] colors = Color.values();
         this.cardColor = colors[random.nextInt(colors.length)];// Default color, neutral card

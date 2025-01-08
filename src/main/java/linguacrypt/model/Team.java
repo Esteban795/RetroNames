@@ -31,7 +31,7 @@ public class Team {
         this.teamColor = teamColor;
         this.playerList = new ArrayList<>();
         this.nbSpy = 0;
-        this.nbFoundCards = 3;
+        this.nbFoundCards = 0;
     }
 
     public void addPlayer(Player player) {

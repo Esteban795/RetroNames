@@ -46,7 +46,7 @@ public class Game implements Visitable {
         this.deck = new Deck();
         this.grid = new ArrayList<>();
         this.config = new GameConfiguration();
-        this.currentTeam = false;
+        this.currentTeam = true;
     }
 
     /**
@@ -90,11 +90,14 @@ public class Game implements Visitable {
         Team blueTeam = lobby.getBlueTeam();
         if(card.getColor() == Color.RED) {
             redTeam.setNbFoundCards(redTeam.getNbFoundCards() + 1);
+            System.out.println("Red card");
             return 0;
         } else if (card.getColor() == Color.BLUE) {
             blueTeam.setNbFoundCards(blueTeam.getNbFoundCards() + 1);
+            System.out.println("Blue card");
             return 0;
         } else if (card.getColor() == Color.WHITE) {
+            System.out.println("White card");
             return 0;
         } else {
             return 1;
@@ -149,8 +152,8 @@ public class Game implements Visitable {
     }
 
     public int getRedTeamFoundCards() {
-            return lobby.getRedTeam().getNbFoundCards();
-        }
+        return lobby.getRedTeam().getNbFoundCards();
+    }
 
 
     @Override

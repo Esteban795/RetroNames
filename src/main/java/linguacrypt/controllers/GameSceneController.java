@@ -1,6 +1,7 @@
 package linguacrypt.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -80,41 +81,53 @@ public class GameSceneController {
             gameGrid.getColumnConstraints().add(column);
         }
 
-        // Set fixed row constraints
-        gameGrid.getRowConstraints().clear();
-        for (int i = 0; i < size; i++) {
-            RowConstraints row = new RowConstraints();
-            row.setPrefHeight(100); // Fixed height for each row
-            row.setVgrow(Priority.ALWAYS); // Allow growth if needed
-            gameGrid.getRowConstraints().add(row);
-        }
-
-        // Pour chaque carte dans la grille du jeu
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 Button cardButton = new Button();
-                cardButton.setPrefSize(100, 100); // Fixed button size
-                cardButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Allow button to fill cell
-
+                cardButton.setPrefSize(100, 100);
+                cardButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                
                 Card card = game.getGrid().get(i).get(j);
                 cardButton.setText(card.getName());
-
-                //cardButton.setOnAction(e -> handleCardClick(row, col));
-                gameGrid.add(cardButton, j, i);
-            }
+                
+                // Set button style based on card state
+                if (card.isFound()) {
+                    switch (card.getColor()) {
+                        case RED:
+                            cardButton.setStyle("-fx-background-color: #ffcccc; -fx-text-fill: #cc0000;");
+                            break;
+                        case BLUE:
+                            cardButton.setStyle("-fx-background-color: #ccccff; -fx-text-fill: #0000cc;");
+                            break;
+                        case WHITE:
+                            cardButton.setStyle("-fx-background-color: #e6e6e6; -fx-text-fill: #666666;");
+                            break;
+                        case BLACK:
+                            cardButton.setStyle("-fx-background-color: #000000; -fx-text-fill: #ffffff;");
+                            break;
+                    }
+                }
+            
+            final int row = i;
+            final int col = j;
+            cardButton.setOnAction(e -> handleCardClick(row, col));
+            gameGrid.add(cardButton, j, i);
         }
     }
+}
 
     private void updateTurnLabel() {
         teamTurnLabel.setText(game.getCurrentTeam().getName());
     }
 
-    // private void handleCardClick(int row, int col) {
-    //     // Gérer le clic sur une carte
-    //     game.playCard(row, col);
-    //     updateGrid();
-    //     updateTurnLabel();
-    // }
+    private void handleCardClick(int row, int col) {
+        Card card = game.getGrid().get(row).get(col);
+        game.revealCard(card);
+        updateGrid();
+        updateTurnLabel();
+        updateProgress();
+    }
+
     @FXML
     public void switchScene() throws IOException {
         sm.pushScene(new LobbyScene(sm));

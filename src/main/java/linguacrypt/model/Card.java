@@ -2,6 +2,7 @@ package linguacrypt.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Random;
 
 /**
  * Represents a card in the game with a name and a color.
@@ -18,7 +19,9 @@ public class Card {
 
     public Card(String cardName) {
         this.cardName = cardName;
-        this.cardColor = Color.WHITE;// Default color, neutral card
+        Random random = new Random();
+        Color[] colors = Color.values();
+        this.cardColor = colors[random.nextInt(colors.length)];// Default color, neutral card
         this.found = false;
     }
 

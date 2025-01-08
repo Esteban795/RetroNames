@@ -26,6 +26,12 @@ public class GameConfiguration implements Visitable {
     @JsonProperty("limitedTime")
     private int limitedTime; // -1 if time not limited
 
+    @JsonProperty("nbCardsGoal")
+    private int nbCardsGoal;
+
+    @JsonProperty("firstTeam")
+    private boolean firstTeam; //Utile pour savoir quelle équipe commence, et donc le nombre de carte à deviner
+
     public GameConfiguration() {
         // Valeurs par défaut
         this.gridSize = 5; // 5x5 par défaut
@@ -33,6 +39,8 @@ public class GameConfiguration implements Visitable {
         this.maxNbSpy = 1;
         this.maxNbOperative = 1;
         this.limitedTime = -1;
+        this.nbCardsGoal = 9;
+        this.firstTeam = true;
     }
 
     @JsonCreator
@@ -41,12 +49,16 @@ public class GameConfiguration implements Visitable {
         @JsonProperty("nbPlayers") int nbPlayers,
         @JsonProperty("maxNbSpy") int maxNbSpy,
         @JsonProperty("maxNbOperative") int maxNbOperative,
-        @JsonProperty("limitedTime") int limitedTime) {
+        @JsonProperty("limitedTime") int limitedTime,
+        @JsonProperty("nbCardsGoal") int nbCardsGoal,
+        @JsonProperty("firstTeam") boolean firstTeam) {
         this.gridSize = gridSize;
         this.nbPlayers = nbPlayers;
         this.maxNbSpy = maxNbSpy;
         this.maxNbOperative = maxNbOperative;
         this.limitedTime = limitedTime;
+        this.nbCardsGoal = nbCardsGoal;
+        this.firstTeam = firstTeam;
     }
 
     // Getters and Setters
@@ -64,6 +76,12 @@ public class GameConfiguration implements Visitable {
     
     public int getLimitedTime() { return limitedTime; }
     public void setLimitedTime(int limitedTime) { this.limitedTime = limitedTime; }
+
+    public int getNbCardsGoal() { return nbCardsGoal; }
+    public void setNbCardsGoal(int nbCardsGoal) { this.nbCardsGoal = nbCardsGoal; }
+
+    public boolean isFirstTeam() { return firstTeam; }
+    public void setFirstTeam(boolean firstTeam) { this.firstTeam = firstTeam; }
 
     @Override
     public void accept(Visitor visitor) {

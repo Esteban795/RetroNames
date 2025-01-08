@@ -84,6 +84,23 @@ public class Game implements Visitable {
         }
     }
 
+    public int revealCard(Card card) {
+        card.reveal();
+        Team redTeam = lobby.getRedTeam();
+        Team blueTeam = lobby.getBlueTeam();
+        if(card.getColor() == Color.RED) {
+            redTeam.setNbFoundCards(redTeam.getNbFoundCards() + 1);
+            return 0;
+        } else if (card.getColor() == Color.BLUE) {
+            blueTeam.setNbFoundCards(blueTeam.getNbFoundCards() + 1);
+            return 0;
+        } else if (card.getColor() == Color.WHITE) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
         /**
      * Initialise une nouvelle grille vide avec la taille définie dans la configuration.
      * La grille est une matrice carrée (ex: 5x5).
@@ -126,6 +143,15 @@ public class Game implements Visitable {
     public ArrayList<ArrayList<Card>> getGrid() { return grid; }
     public GameConfiguration getConfig() { return config; }
     public Team getCurrentTeam() { return(currentTeam ? lobby.getRedTeam() : lobby.getBlueTeam()); }
+
+    public int getBlueTeamFoundCards() {
+        return lobby.getBlueTeam().getNbFoundCards();
+    }
+
+    public int getRedTeamFoundCards() {
+            return lobby.getRedTeam().getNbFoundCards();
+        }
+
 
     @Override
     public void accept(Visitor visitor) {

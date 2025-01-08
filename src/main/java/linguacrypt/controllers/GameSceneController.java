@@ -5,12 +5,14 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import linguacrypt.model.Card;
 import linguacrypt.model.Game;
+import linguacrypt.model.GameConfiguration;
 import linguacrypt.scenes.LobbyScene;
 import linguacrypt.scenes.SceneManager;
 
@@ -26,27 +28,44 @@ public class GameSceneController {
     @FXML
     private Label teamTurnLabel;
 
+    @FXML
+    private ProgressBar redTeamProgress;
+
+    @FXML
+    private ProgressBar blueTeamProgress;
+
+
     public GameSceneController(SceneManager sm) {
         this.sm = sm;
         this.game = sm.getModel();
+        game.initGrid();
         this.size = game.getGrid().size();
+        System.out.println("GameSceneController initialized with grid size: " + size);
     }
 
     @FXML
     public void initialize() {
         // First initialize the model's grid if needed
-        if (game.getGrid() == null || game.getGrid().isEmpty()) {
-            game.initGrid();
-            // Add some test cards for now
-            for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
                     Card card = new Card("Test " + i + "," + j);
                     game.getGrid().get(i).set(j, card);
                 }
             }
-        }
         updateGrid();
         updateTurnLabel();
+        updateProgress();
+    }
+
+    private void updateProgress() {
+        GameConfiguration config = game.getConfig();
+        int redFound = game.getRedTeamFoundCards();
+        int blueFound = game.getBlueTeamFoundCards();
+        int redTotal = config.isFirstTeam() ? config.getNbCardsGoal() : config.getNbCardsGoal() - 1;
+        int blueTotal = config.isFirstTeam() ? config.getNbCardsGoal() - 1 : config.getNbCardsGoal();
+
+        redTeamProgress.setProgress((double)redFound / redTotal);
+        blueTeamProgress.setProgress((double)blueFound / blueTotal);
     }
 
     private void updateGrid() {

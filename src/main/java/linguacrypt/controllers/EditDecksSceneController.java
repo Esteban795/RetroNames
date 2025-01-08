@@ -12,6 +12,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class EditDecksSceneController {
@@ -23,10 +24,17 @@ public class EditDecksSceneController {
     private Button buttonBack;
 
     @FXML
+    private Dialog<ButtonType> newCardDialog;
+
+    @FXML
     private TextField cardNameField;
 
     @FXML
-    private Dialog<ButtonType> newCardDialog;
+    private Dialog<ButtonType> newDeckDialog;
+    
+    @FXML
+    private TextField deckNameField;
+    
 
     @FXML
     private VBox deckList;
@@ -41,8 +49,7 @@ public class EditDecksSceneController {
         // Initialize your deck list here
         // Add your logic to load decks from DeckManager
         for (Deck deck : model.getDeckManager().getDeckList()) {
-            Button deckButton = new Button(deck.getDeckName());
-            deckList.getChildren().add(deckButton);
+            addDeckToUI(deck);
         }
     }
 
@@ -53,17 +60,52 @@ public class EditDecksSceneController {
     }
 
     @FXML
-    public void createDeck() {
-        Deck newDeck = new Deck();
-        // Add new deck to the list of decks        
-        model.getDeckManager().addDeck(newDeck);
-        Button but = new Button(newDeck.getDeckName());
-        deckList.getChildren().add(but);
-        System.out.println("Deck created!");
+    public void showNewDeckPopup() {
+        deckNameField.setText("");
+        Optional<ButtonType> result = newDeckDialog.showAndWait();
+        
+        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+            String deckName = deckNameField.getText().trim();
+            if (!deckName.isEmpty()) {
+                Deck newDeck = new Deck();
+                newDeck.setDeckName(deckName);
+                model.getDeckManager().addDeck(newDeck);
+                addDeckToUI(newDeck);
+                System.out.println("Deck created: " + deckName);
+            }
+        }
+    }
+
+    private void addDeckToUI(Deck deck) {
+        // Create an HBox to hold the deck button and delete button
+        HBox deckContainer = new HBox(5); // 5 is the spacing between elements
+
+        // Create the deck button
+        Button deckButton = new Button(deck.getDeckName());
+
+        // Create the delete button
+        Button deleteButton = new Button("X");
+        deleteButton.setOnAction(e -> deleteDeck(deck, deckContainer));
+
+        // Add both buttons to the container
+        deckContainer.getChildren().addAll(deckButton, deleteButton);
+
+        // Add the container to the deck list
+        deckList.getChildren().add(deckContainer);
+    }
+
+    private void deleteDeck(Deck deck, HBox deckContainer) {
+        // Remove from the model
+        model.getDeckManager().removeDeck(deck);
+
+        // Remove from the UI
+        deckList.getChildren().remove(deckContainer);
+
+        System.out.println("Deck deleted!");
     }
 
     @FXML
-    public void createCard(){
+    public void createCard() {
 
     }
 
@@ -71,10 +113,10 @@ public class EditDecksSceneController {
     private void showNewCardPopup() {
         // Reset the text field before showing dialog
         cardNameField.setText("");
-        
+
         // Show the dialog and wait for user response
         Optional<ButtonType> result = newCardDialog.showAndWait();
-        
+
         // Process the result
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             String cardName = cardNameField.getText().trim();
@@ -85,5 +127,4 @@ public class EditDecksSceneController {
         }
     }
 
-    
 }

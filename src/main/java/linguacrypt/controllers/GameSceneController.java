@@ -91,7 +91,6 @@ public class GameSceneController {
             System.err.println("Game or grid is null");
             return;
         }
-
         game.getGrid().clear();
         game.initGrid();
         System.out.println("Game grid loaded with cards");
@@ -157,7 +156,7 @@ public class GameSceneController {
      * Reveals the card and updates the game state.
      */
     private void handleCardClick(int row, int col) {
-        if (remainingGuesses > 0) {
+        if (remainingGuesses > 0 && !game.getGrid().get(row).get(col).isFound()) {
             Card card = game.getGrid().get(row).get(col);
             game.revealCard(card);
             remainingGuesses--;

@@ -33,6 +33,9 @@ public class Game implements Visitable {
     @JsonProperty("stats")
     private GameStatistics stats;
 
+    @JsonProperty("hasStarted")
+    private boolean hasStarted;
+
     /**
      * Constructeur par défaut.
      * Initialise une nouvelle partie avec :
@@ -46,6 +49,7 @@ public class Game implements Visitable {
         this.stats = new GameStatistics();
         this.nbTurn = 0;
         this.currentTeam = true;
+        this.hasStarted = false;
     }
 
     /**
@@ -62,13 +66,15 @@ public class Game implements Visitable {
             @JsonProperty("nbTurn") int nbTurn,
             @JsonProperty("currentTeam") boolean currentTeam,
             @JsonProperty("key") ArrayList<ArrayList<Card>> key,
-            @JsonProperty("stats") GameStatistics stats) {
+            @JsonProperty("stats") GameStatistics stats,
+            @JsonProperty("hasStarted") boolean hasStarted) {
         this.grid = grid;
         this.config = config;
         this.nbTurn = nbTurn;
         this.currentTeam = currentTeam;
         this.key = key;
         this.stats = stats;
+        this.hasStarted = hasStarted;
     }
 
     /**
@@ -112,6 +118,7 @@ public class Game implements Visitable {
                 grid.get(i).set(j, cards.get(cardIndex++));
             }
         }
+        hasStarted = true;
     }
 
     public void switchTeam() {

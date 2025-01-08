@@ -48,7 +48,7 @@ public class EndGameSceneController {
     public void setupGrid() {
         int size = sm.getModel().getGame().getGrid().size();
         ArrayList<ArrayList<Card>> expectedMap = sm.getModel().getGame().getGrid();
-        ArrayList<ArrayList<Card>> key = sm.getModel().getGame().getKey();
+        ArrayList<ArrayList<Card>> key = sm.getModel().getGame().getGrid();
 
         int cellSize = 75 - 5 * (size - 3);
         expectedMapGrid.setStyle(

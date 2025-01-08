@@ -18,6 +18,7 @@ import linguacrypt.model.Card;
 import linguacrypt.model.Color;
 import linguacrypt.model.Game;
 import linguacrypt.model.Team;
+import linguacrypt.scenes.EndGameScene;
 import linguacrypt.scenes.LobbyScene;
 import linguacrypt.scenes.SceneManager;
 
@@ -151,6 +152,15 @@ public class GameSceneController {
         }
     }
 
+    private void switchTeam() {
+        game.switchTeam();
+        bonusGuess = 1;
+        hintLabel.setText("");
+        remainingGuessesLabel.setText("");
+        hintInputBox.setVisible(true);
+        hintDisplayBox.setVisible(false);
+    }
+
     /*
      * Handle a card click event.
      * Reveals the card and updates the game state.
@@ -161,19 +171,21 @@ public class GameSceneController {
             game.revealCard(card);
             remainingGuesses--;
             remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
-
+            if (card.getColor() == Color.BLACK) { // game is lost
+                try {
+                    sm.pushScene(new EndGameScene(sm));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                
+            }
             if (remainingGuesses == 0) {
                 if (bonusGuess > 0) {
                     remainingGuesses = bonusGuess;
                     bonusGuess = 0;
                     remainingGuessesLabel.setText("Essais Bonus : " + remainingGuesses);
                 } else {
-                    game.switchTeam();
-                    bonusGuess = 1;
-                    hintLabel.setText("");
-                    remainingGuessesLabel.setText("");
-                    hintInputBox.setVisible(true);
-                    hintDisplayBox.setVisible(false);
+                    switchTeam();
                 }
             }
 

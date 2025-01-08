@@ -1,6 +1,7 @@
 package linguacrypt.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,11 +25,9 @@ public class Game implements Visitable {
 
     @JsonProperty("nbTurn")
     private int nbTurn;
+
     @JsonProperty("currentTeam")
     private boolean currentTeam;
-
-    @JsonProperty("key")
-    private ArrayList<ArrayList<Card>> key;
 
     @JsonProperty("stats")
     private GameStatistics stats;
@@ -44,7 +43,6 @@ public class Game implements Visitable {
      */
     public Game() {
         this.grid = new ArrayList<>();
-        this.key = new ArrayList<>();
         this.config = new GameConfiguration();
         this.stats = new GameStatistics();
         this.nbTurn = 0;
@@ -65,14 +63,12 @@ public class Game implements Visitable {
             @JsonProperty("config") GameConfiguration config,
             @JsonProperty("nbTurn") int nbTurn,
             @JsonProperty("currentTeam") boolean currentTeam,
-            @JsonProperty("key") ArrayList<ArrayList<Card>> key,
             @JsonProperty("stats") GameStatistics stats,
             @JsonProperty("hasStarted") boolean hasStarted) {
         this.grid = grid;
         this.config = config;
         this.nbTurn = nbTurn;
         this.currentTeam = currentTeam;
-        this.key = key;
         this.stats = stats;
         this.hasStarted = hasStarted;
     }
@@ -125,10 +121,6 @@ public class Game implements Visitable {
         currentTeam = !currentTeam;
     }
 
-    public ArrayList<ArrayList<Card>> getKey() {
-        return key;
-    }
-
     // Getters and Setters
     public ArrayList<ArrayList<Card>> getGrid() {
         return grid;
@@ -156,6 +148,21 @@ public class Game implements Visitable {
 
     public GameStatistics getStats() {
         return stats;
+    }
+
+    public void setGrid(List<Card> key) {
+        ArrayList<ArrayList<Card>> keyMatrix = new ArrayList<>();
+        int size = config.getGridSize();
+        int keyIndex = 0;
+
+        for (int i = 0; i < size; i++) {
+            ArrayList<Card> row = new ArrayList<>();
+            for (int j = 0; j < size; j++) {
+                row.add(key.get(keyIndex++));
+            }
+            keyMatrix.add(row);
+        }
+        this.grid = keyMatrix;
     }
 
     public int revealCard(Card card) {

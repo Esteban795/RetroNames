@@ -1,6 +1,8 @@
 package linguacrypt.controllers;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -11,6 +13,11 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
+import linguacrypt.model.Card;
+import linguacrypt.model.Color;
+import linguacrypt.model.Deck;
+import linguacrypt.model.DeckManager;
+import linguacrypt.model.GameConfiguration;
 import linguacrypt.model.Player;
 import linguacrypt.model.Team;
 import linguacrypt.scenes.MenuScene;
@@ -24,7 +31,7 @@ public class LobbySceneController {
     @FXML
     private TextField pseudoTextField;
 
-    @FXML 
+    @FXML
     private VBox blueTeamOperative;
 
     @FXML
@@ -35,7 +42,7 @@ public class LobbySceneController {
 
     @FXML
     private VBox redTeamOperative;
-    
+
     @FXML
     private VBox pseudoVB;
 
@@ -69,7 +76,7 @@ public class LobbySceneController {
             });
         });
     }
-    
+
     @FXML
     public void switchScene() {
         sm.pushScene(new SettingsScene(sm));
@@ -83,54 +90,53 @@ public class LobbySceneController {
     private Label createDraggableLabel(String text) {
         Label label = new Label(text);
         label.setStyle("-fx-padding: 5; -fx-background-color: white; -fx-border-color: black;");
-        
+
         label.setOnDragDetected(event -> {
             Dragboard db = label.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
             content.putString(label.getText());
             db.setContent(content);
         });
-        
+
         label.setOnDragDone(event -> {
             if (event.getTransferMode() == TransferMode.MOVE) {
                 VBox parent = (VBox) label.getParent();
                 parent.getChildren().remove(label);
             }
         });
-        
+
         return label;
     }
 
     private void setupDragAndDrop(VBox vbox) {
         vbox.setOnDragOver(event -> {
-            if (event.getGestureSource() != vbox &&
-                event.getDragboard().hasString()) {
+            if (event.getGestureSource() != vbox
+                    && event.getDragboard().hasString()) {
                 event.acceptTransferModes(TransferMode.MOVE);
             }
         });
-        
+
         vbox.setOnDragEntered(event -> {
-            if (event.getGestureSource() != vbox &&
-                event.getDragboard().hasString()) {
+            if (event.getGestureSource() != vbox
+                    && event.getDragboard().hasString()) {
             }
         });
-        
-        
+
         vbox.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
             boolean success = false;
-            
+
             if (db.hasString()) {
                 Label newLabel = createDraggableLabel(db.getString());
                 vbox.getChildren().add(newLabel);
                 success = true;
             }
-            
+
             event.setDropCompleted(success);
             event.consume();
         });
     }
-    
+
     @FXML
     public void validatePseudo() {
         String pseudoString = this.pseudoTextField.getText();
@@ -144,9 +150,16 @@ public class LobbySceneController {
         pseudoVB.getChildren().add(pseudoLabel);
     }
 
-    @FXML 
+    @FXML
     public void lobbyDone() throws IOException {
         int count = blueTeamOperative.getChildren().size() + blueTeamSpy.getChildren().size() + redTeamOperative.getChildren().size() + redTeamSpy.getChildren().size();
+        String deckName = decksSelector.getText();
+        System.out.println("Deckname : " + deckName);
+        if (deckName == null || deckName.isEmpty()) {
+            System.out.println("Label vide");
+            errorLabel.setText("Il est nécessaire de sélectionner un deck avant de pouvoir démarrer la partie.");
+            return;
+        }
         if (count < 4) {
             errorLabel.setText("Pas assez de joueurs.");
             return;
@@ -156,15 +169,26 @@ public class LobbySceneController {
             errorLabel.setText("Il doit y avoir exactement un espion par équipe.");
             return;
         }
+
+
+
+        addPlayersToTeams();
+
+        
+        setupCards(deckName);
+
+        sm.pushScene(new MenuScene(sm));
+    }
+
+    private void addPlayersToTeams() {
         Team blueTeam = sm.getModel().getGame().getConfig().getTeamManager().getBlueTeam();
         Team redTeam = sm.getModel().getGame().getConfig().getTeamManager().getRedTeam();
-        
+
         // Adding spies, they should be alone in their team
         Label blueSpy = (Label) blueTeamSpy.getChildren().get(0);
         Label redSpy = (Label) redTeamSpy.getChildren().get(0);
         blueTeam.addPlayer(new Player(blueSpy.getText(), true));
         redTeam.addPlayer(new Player(redSpy.getText(), true));
-
 
         blueTeamOperative.getChildren().forEach(player -> {
             Label label = (Label) player;
@@ -175,7 +199,32 @@ public class LobbySceneController {
             Label label = (Label) player;
             redTeam.addPlayer(new Player(label.toString(), false));
         });
+    }
 
-        sm.pushScene(new MenuScene(sm));
+    private void fillRange(List<Card> cards, int start, int end, Color color) {
+        for (int i = start; i < end; i++) {
+            cards.get(i).setColor(color);
+        }
+    }
+
+    private void setupCards(String deckName) {
+        DeckManager dm = sm.getModel().getDeckManager();
+        GameConfiguration config = sm.getModel().getGame().getConfig();
+        Deck deck = dm.getDeck(deckName);
+
+        config.setCurrentDeck(deck);
+
+        int gridSize = sm.getModel().getGame().getConfig().getGridSize();
+        List<Card> selectedCards = deck.getCardList().subList(0, gridSize * gridSize);
+        int step = gridSize * gridSize / 3;
+        
+        fillRange(selectedCards, 0, step + 1, Color.RED);
+        fillRange(selectedCards, step + 1, 2 * (step + 1),Color.BLUE);
+        fillRange(selectedCards,2 * (step + 1) + 1 , 3 * step - 1,Color.WHITE);
+        selectedCards.get(gridSize * gridSize - 1).setColor(Color.BLACK);
+
+        Collections.shuffle(selectedCards);
+
+        sm.getModel().getGame().setGrid(selectedCards);
     }
 }

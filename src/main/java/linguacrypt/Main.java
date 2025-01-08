@@ -3,17 +3,16 @@ package linguacrypt;
 import java.io.IOException;
 import java.net.URL;
 
-import linguacrypt.model.Card;
-import linguacrypt.model.Deck;
-import linguacrypt.scenes.*;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import linguacrypt.model.Card;
+import linguacrypt.model.Deck;
 import linguacrypt.model.Model;
 import linguacrypt.scenes.ManagedScene;
+import linguacrypt.scenes.MenuScene;
 import linguacrypt.scenes.SceneManager;
 
 public class Main extends Application {
@@ -52,7 +51,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
 
         // Actual Initial Scene
-        ManagedScene GameScene = new GameScene(sm);
+        ManagedScene GameScene = new MenuScene(sm);
         sm.pushScene(GameScene);
         primaryStage.show();
     }

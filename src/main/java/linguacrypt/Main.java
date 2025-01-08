@@ -47,7 +47,7 @@ public class Main extends Application {
         loader.setLocation(fxmlURL);
 
         Parent root = loader.load();
-        Scene scene = new Scene(root, 1600, 900);
+        Scene scene = new Scene(root, sm.getWidth(), sm.getHeight());
         primaryStage.setScene(scene);
 
         // Actual Initial Scene

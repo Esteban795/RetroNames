@@ -1,5 +1,6 @@
 package linguacrypt.controllers;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import linguacrypt.scenes.SceneManager;
@@ -138,8 +139,11 @@ public class EditDecksSceneController {
     private void showDeckCards(Deck deck) {
         cardList.getChildren().clear();
 
+        //Get sorted cards
+        ArrayList<Card> sortedCards = model.getDeckManager().getSortedCards(deck);
+
         // Display each card in the deck
-        for (Card card : deck.getCardList()) {
+        for (Card card : sortedCards) {
             HBox cardContainer = new HBox(5);
             Button cardButton = new Button(card.getCardName());
 

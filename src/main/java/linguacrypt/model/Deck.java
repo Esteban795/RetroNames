@@ -3,8 +3,10 @@ package linguacrypt.model;
 import linguacrypt.visitor.Visitable;
 import linguacrypt.visitor.Visitor;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Represents a deck of cards in the game.

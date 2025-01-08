@@ -15,6 +15,7 @@ public class Model {
     public Model(Boolean loadDeckManager){
         this.game = new Game();
         this.deckManager = DeckManager.loadDeckManager("deckManager.json");
+        
     }
 
     public Game getGame() {

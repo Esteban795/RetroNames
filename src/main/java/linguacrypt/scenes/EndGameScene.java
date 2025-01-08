@@ -8,7 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import linguacrypt.controllers.EndGameSceneController;
 
-public class EndGameScene extends ManagedScene { 
+public class EndGameScene extends ManagedScene {
 
     private EndGameSceneController controller;
 
@@ -22,7 +22,7 @@ public class EndGameScene extends ManagedScene {
         loader.setController(controller);
         try {
             Parent root = loader.load();
-            super.setScene(new Scene(root, 800, 600));
+            super.setScene(new Scene(root, 1280, 800));
         } catch (Exception e) {
             System.out.println("Error loading EndGameScene.fxml");
             sm.getPrimaryStage().close();
@@ -58,5 +58,5 @@ public class EndGameScene extends ManagedScene {
         // TODO Auto-generated method stub
 
     }
-    
+
 }

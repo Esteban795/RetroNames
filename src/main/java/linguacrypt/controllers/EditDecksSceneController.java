@@ -167,29 +167,37 @@ public class EditDecksSceneController {
     }
 
     @FXML
-    private void showNewCardPopup() {
-        // Check if a deck is selected
-        if (selectedDeck == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("No Deck Selected");
-            alert.setHeaderText(null);
-            alert.setContentText("Please select a deck first!");
-            alert.showAndWait();
-            return;
-        }
+private void showNewCardPopup() {
+    if (selectedDeck == null) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("No Deck Selected");
+        alert.setHeaderText(null);
+        alert.setContentText("Please select a deck first!");
+        alert.showAndWait();
+        return;
+    }
 
-        cardNameField.setText("");
-        Optional<ButtonType> result = newCardDialog.showAndWait();
+    cardNameField.setText("");
+    Optional<ButtonType> result = newCardDialog.showAndWait();
 
-        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
-            String cardName = cardNameField.getText().trim();
-            if (!cardName.isEmpty()) {
-                Card newCard = new Card(cardName);
-                selectedDeck.addCard(newCard);
-                showDeckCards(selectedDeck);
-                System.out.println("Card added: " + cardName);
+    if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+        String cardName = cardNameField.getText().trim();
+        if (!cardName.isEmpty()) {
+            if (selectedDeck.getCard(cardName) != null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Duplicate Card Name");
+                alert.setHeaderText(null);
+                alert.setContentText("A card with name '" + cardName + "' already exists in this deck!");
+                alert.showAndWait();
+                return;
             }
+
+            Card newCard = new Card(cardName);
+            selectedDeck.addCard(newCard);
+            showDeckCards(selectedDeck);
+            System.out.println("Card added: " + cardName);
         }
     }
+}
 
 }

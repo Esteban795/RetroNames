@@ -82,23 +82,28 @@
          </children>
       </StackPane>
    </right>
-
-   <bottom>
-      <HBox alignment="CENTER" spacing="10">
+   
+<bottom>
+   <VBox alignment="CENTER" spacing="10">
+      <HBox fx:id="hintInputBox" alignment="CENTER" spacing="10">
          <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="135.0" text="Indice à donner :" />
-            <TextField />
-            <MenuButton mnemonicParsing="false" text="Choix possibles :">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Action 1" />
-                  <MenuItem mnemonicParsing="false" text="Action 2" />
-               </items>
-            </MenuButton>
-            <Button mnemonicParsing="false" text="Valider" />
+            <Label alignment="CENTER" contentDisplay="CENTER" prefWidth="135.0" text="Indice à donner :" />
+            <TextField fx:id="hintField" />
+            <MenuButton fx:id="numberChoice" mnemonicParsing="false" text="Nombre" />
+            <Button mnemonicParsing="false" text="Valider" onAction="#submitHint" />
          </children>
       </HBox>
-   </bottom>
+      
+      <HBox fx:id="hintDisplayBox" alignment="CENTER" spacing="20">
+         <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+         <children>
+            <Label fx:id="hintLabel" style="-fx-font-size: 16px;" />
+            <Label fx:id="remainingGuessesLabel" style="-fx-font-size: 16px;" />
+         </children>
+      </HBox>
+   </VBox>
+</bottom>
 
    <left>
       <StackPane prefWidth="150" BorderPane.alignment="CENTER">

@@ -37,6 +37,15 @@ public class Deck implements Visitable {
     public ArrayList<Card> getCardList() { return cardList; }
     public void setCardList(ArrayList<Card> cardList) { this.cardList = cardList; }
 
+    public Card getCard(String cardName) {
+        for (Card card : cardList) {
+            if (card.getCardName().equals(cardName)) {
+                return card;
+            }
+        }
+        return null;
+    }
+
     /**
      * Add a card to the deck
      * @param card Card to add

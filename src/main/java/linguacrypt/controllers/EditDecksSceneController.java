@@ -135,7 +135,7 @@ public class EditDecksSceneController {
 
     private void addDeckToUI(Deck deck) {
         HBox deckContainer = new HBox(5);
-        Button deckButton = new Button(deck.getDeckName());
+        Button deckButton = new Button(deck.getName());
 
         // Style for selected state
         String defaultStyle = deckButton.getStyle();
@@ -180,7 +180,7 @@ public class EditDecksSceneController {
         // Display each card in the deck
         for (Card card : deck.getCardList()) {
             HBox cardContainer = new HBox(5);
-            Button cardButton = new Button(card.getCardName());
+            Button cardButton = new Button(card.getName());
 
             Button deleteCardButton = new Button("X");
             deleteCardButton.setOnAction(e -> deleteCard(card, cardContainer));
@@ -204,7 +204,7 @@ public class EditDecksSceneController {
             }
             
             cardList.getChildren().remove(cardContainer);
-            System.out.println("Card deleted from deck: " + selectedDeck.getDeckName());
+            System.out.println("Card deleted from deck: " + selectedDeck.getName());
         } else {
             System.out.println("No deck selected!");
         }

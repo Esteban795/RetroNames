@@ -57,12 +57,12 @@ public class EndGameSceneController {
             for (int j = 0; j < size; j++) {
                 Pane pane = new Pane();
                 pane.setPrefSize(cellSize, cellSize); // Set fixed size
-                pane.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: " + expectedMap.get(i).get(j).getCardColor().toString().toLowerCase() + "; -fx-border-color: black;");
+                pane.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: " + expectedMap.get(i).get(j).getColor().toString().toLowerCase() + "; -fx-border-color: black;");
                 expectedMapGrid.add(pane, i, j);
 
                 Pane paneExpected = new Pane();
                 paneExpected.setPrefSize(cellSize, cellSize); // Set fixed size
-                paneExpected.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: " + key.get(i).get(j).getCardColor().toString().toLowerCase() + "; -fx-border-color: black;");
+                paneExpected.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: " + key.get(i).get(j).getColor().toString().toLowerCase() + "; -fx-border-color: black;");
                 keyGrid.add(paneExpected, i, j);
             }
         }

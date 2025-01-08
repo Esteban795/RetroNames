@@ -17,33 +17,44 @@ public class SerializationCycleTest {
     private Game game;
     private SerializationVisitor serializationVisitor;
     private DeserializationVisitor deserializationVisitor;
-    private static final String TEST_RESOURCES = "src/test/resources/cycle_saves/";
 
     @BeforeEach
     void setUp() {
         game = new Game();
-        serializationVisitor = new SerializationVisitor(TEST_RESOURCES);
-        deserializationVisitor = new DeserializationVisitor(TEST_RESOURCES);
-        new File(TEST_RESOURCES).mkdirs();
+        serializationVisitor = new SerializationVisitor();
+        deserializationVisitor = new DeserializationVisitor();
     }
 
     @Test
-    void testFullCycle() {
-        // Setup game
+    void testBasicSerializationCycle() {
+        // Setup test deck
+        String[] testWords = {
+            "CHAT", "CHIEN", "OISEAU", "POISSON", "LAPIN",
+            "VOITURE", "VELO", "MOTO", "AVION", "TRAIN",
+            "POMME", "POIRE", "ORANGE", "BANANE", "FRAISE",
+            "MAISON", "JARDIN", "ROUTE", "ARBRE", "FLEUR",
+            "SOLEIL", "LUNE", "ETOILE", "NUAGE", "PLUIE"
+        };
+        
+        Deck testDeck = new Deck("Test Deck");
+        for (String word : testWords) {
+            testDeck.addCard(new Card(word));
+        }
+        game.getConfig().setCurrentDeck(testDeck);
 
-        TeamManager lobby = game.getConfig().getTeamManager();
-        GameConfiguration config = game.getConfig();
-
-        Team blueTeam = new Team("Blue Team", Color.BLUE);
-        blueTeam.addPlayer(new Player("Alice"));
-        lobby.addTeam(blueTeam);
-
+        // Setup teams and players
         Team redTeam = new Team("Red Team", Color.RED);
+        redTeam.addPlayer(new Player("Alice"));
         redTeam.addPlayer(new Player("Bob"));
-        lobby.addTeam(redTeam);
+        
+        Team blueTeam = new Team("Blue Team", Color.BLUE);
+        blueTeam.addPlayer(new Player("Charlie"));
+        blueTeam.addPlayer(new Player("David"));
 
-        Card card1 = new Card("Word1", Color.BLUE);
-        config.getCurrentDeck().addCard(card1);
+        game.getConfig().getTeamManager().addTeam(redTeam);
+        game.getConfig().getTeamManager().addTeam(blueTeam);
+
+        // Initialize game grid
         game.initGrid();
         game.loadGrid();
 
@@ -52,34 +63,23 @@ public class SerializationCycleTest {
 
         // Deserialize
         Game loadedGame = deserializationVisitor.loadLatestGame();
-        GameConfiguration loadedConfig = loadedGame.getConfig();
-        
+
         // Verify game state
         assertNotNull(loadedGame, "Loaded game should not be null");
-        TeamManager loadedLobby = loadedConfig.getTeamManager();
-        assertEquals("Blue Team", loadedLobby.getBlueTeam().getName(), "Blue team name should match");
-        assertEquals("Red Team", loadedLobby.getRedTeam().getName(), "Red team name should match");
-        assertEquals(Color.BLUE, loadedLobby.getBlueTeam().getColor(), "Blue team color should match");
-        assertEquals(Color.RED, loadedLobby.getRedTeam().getColor(), "Red team color should match");
+        assertEquals(5, loadedGame.getGrid().size(), "Grid should be 5x5");
+        
+        // Verify teams
+        assertEquals("Red Team", loadedGame.getConfig().getTeamManager().getRedTeam().getName());
+        assertEquals("Blue Team", loadedGame.getConfig().getTeamManager().getBlueTeam().getName());
         
         // Verify players
-        assertEquals("Alice", loadedLobby.getBlueTeam().getPlayerList().get(0).getName(), "Blue team player should be Alice");
-        assertEquals("Bob", loadedLobby.getRedTeam().getPlayerList().get(0).getName(), "Red team player should be Bob");
-        
-        // Verify cards
-        assertTrue(loadedConfig.getCurrentDeck().getCardList().size() > 0, "Card list should not be empty");
-        assertEquals("Word1", loadedConfig.getCurrentDeck().getCardList().get(0).getName(), "First card name should match");
-        assertEquals(Color.BLUE, loadedConfig.getCurrentDeck().getCardList().get(0).getColor(), "First card color should match");
-    }
+        assertEquals(2, loadedGame.getConfig().getTeamManager().getRedTeam().getPlayerList().size());
+        assertEquals(2, loadedGame.getConfig().getTeamManager().getBlueTeam().getPlayerList().size());
+        assertEquals("Alice", loadedGame.getConfig().getTeamManager().getRedTeam().getPlayerList().get(0).getName());
+        assertEquals("Charlie", loadedGame.getConfig().getTeamManager().getBlueTeam().getPlayerList().get(0).getName());
 
-    @AfterEach
-    void cleanup() {
-        try {
-            FileUtils.deleteDirectory(new File(TEST_RESOURCES));
-        } catch (IOException e) {
-            System.err.println("Failed to delete test resources directory: " + TEST_RESOURCES);
-            e.printStackTrace();
-        }
+        // Verify deck
+        assertEquals(25, loadedGame.getConfig().getCurrentDeck().getCardList().size());
+        assertEquals("CHAT", loadedGame.getConfig().getCurrentDeck().getCardList().get(0).getName());
     }
-    
 }

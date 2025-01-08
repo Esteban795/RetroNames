@@ -38,6 +38,7 @@ public class Main extends Application {
             testDeck.addCard(card);
         }
         model.getDeckManager().addDeck(testDeck);
+        model.getGame().getConfig().setCurrentDeck(testDeck);
         SceneManager sm = SceneManager.getInstance(primaryStage, model);
 
 

@@ -100,6 +100,7 @@ public class Game implements Visitable {
     public void loadGrid() {
         Deck deck = config.getCurrentDeck();
         if (grid == null || deck == null) {
+            System.err.println("Grid or deck is null");
             return;
         }
 

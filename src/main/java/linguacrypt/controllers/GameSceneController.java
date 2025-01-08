@@ -53,7 +53,12 @@ public class GameSceneController {
 
     public GameSceneController(SceneManager sm) {
         this.sm = sm;
-        this.game = sm.getModel();
+        this.game = sm.getModel().getGame();
+
+            // Make sure a deck is set
+        if (game.getConfig().getCurrentDeck() == null) {
+            game.getConfig().setCurrentDeck(sm.getModel().getDeckManager().getRandomDeck());
+        }
 
         //Create the grid for the scene
         game.initGrid();

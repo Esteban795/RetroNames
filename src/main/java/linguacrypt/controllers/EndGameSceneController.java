@@ -3,6 +3,7 @@ package linguacrypt.controllers;
 import java.util.ArrayList;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -17,16 +18,22 @@ public class EndGameSceneController {
     private final SceneManager sm;
 
     @FXML
-    private VBox gridBox;
+    private GridPane keyGrid;
 
     @FXML
-    private VBox keyBox;
+    private GridPane expectedMapGrid;
 
     @FXML
     private Label blueTeamStatsLabel;
 
     @FXML
     private Label redTeamStatsLabel;
+
+    @FXML
+    private VBox expectedMapBox;
+
+    @FXML 
+    private VBox keyBox;
 
     public EndGameSceneController(SceneManager sm) {
         this.sm = sm;
@@ -40,37 +47,29 @@ public class EndGameSceneController {
 
     public void setupGrid() {
         int size = sm.getModel().getGame().getGrid().size();
-        GridPane expectedMapGrid = new GridPane();
-        GridPane keyGrid = new GridPane();
         ArrayList<ArrayList<Card>> expectedMap = sm.getModel().getGame().getGrid();
         ArrayList<ArrayList<Card>> key = sm.getModel().getGame().getKey();
 
-        // Set grid properties
-        expectedMapGrid.setHgap(5);
-        expectedMapGrid.setVgap(5);
-        keyGrid.setHgap(5);
-        keyGrid.setVgap(5);
-
+        int cellSize = 75 - 5 * (size - 3);
+        expectedMapGrid.setStyle("-fx-max-width:" + (cellSize) * (size + 1) + "; -fx-max-height:" + (cellSize) * (size + 1) + ";");
+        keyGrid.setStyle("-fx-max-width:" + (cellSize) * (size + 1) + "; -fx-max-height:" + (cellSize) * (size + 1) + ";");
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 Pane pane = new Pane();
-                pane.setPrefSize(75, 75); // Set fixed size
-                pane.setStyle("-fx-background-color: " + expectedMap.get(i).get(j).getCardColor().toString().toLowerCase() + "; -fx-border-color: black;");
+                pane.setPrefSize(cellSize, cellSize); // Set fixed size
+                pane.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: " + expectedMap.get(i).get(j).getCardColor().toString().toLowerCase() + "; -fx-border-color: black;");
                 expectedMapGrid.add(pane, i, j);
 
                 Pane paneExpected = new Pane();
-                paneExpected.setPrefSize(75, 75); // Set fixed size
-                paneExpected.setStyle("-fx-background-color: " + key.get(i).get(j).getCardColor().toString().toLowerCase() + "; -fx-border-color: black;");
+                paneExpected.setPrefSize(cellSize, cellSize); // Set fixed size
+                paneExpected.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: " + key.get(i).get(j).getCardColor().toString().toLowerCase() + "; -fx-border-color: black;");
                 keyGrid.add(paneExpected, i, j);
             }
         }
 
-        // Set VBox properties
-        keyBox.setStyle("-fx-padding: 10; -fx-background-color: lightgray;");
-        gridBox.setStyle("-fx-padding: 10; -fx-background-color: lightgray;");
-
-        keyBox.getChildren().add(keyGrid);
-        gridBox.getChildren().add(expectedMapGrid);
+        expectedMapBox.setAlignment(Pos.BASELINE_CENTER);
+        keyBox.setAlignment(Pos.BASELINE_CENTER);
+        
     }
 
     public void displayStats() {

@@ -20,8 +20,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 
 public class EditDecksSceneController {
 
@@ -176,11 +178,11 @@ public class EditDecksSceneController {
             showDeckCards(deck);
         });
 
-        Button deleteButton = new Button("X");
-        deleteButton.getStyleClass().add("delete-button");
-        deleteButton.setOnAction(e -> deleteDeck(deck, deckContainer));
+        Button deleteDeckButton = new Button("X");
+        deleteDeckButton.getStyleClass().add("delete-deck-button");
+        deleteDeckButton.setOnAction(e -> deleteDeck(deck, deckContainer));
 
-        deckContainer.getChildren().addAll(deckButton, deleteButton);
+        deckContainer.getChildren().addAll(deckButton, deleteDeckButton);
         deckList.getChildren().add(deckContainer);
     }
 
@@ -196,26 +198,25 @@ public class EditDecksSceneController {
 
     private void showDeckCards(Deck deck) {
         cardList.getChildren().clear();
-        cardInfoBox.setVisible(false); // Hide when switching decks
+        cardInfoBox.setVisible(false);
+
+        FlowPane cardFlow = new FlowPane();
+        cardFlow.setHgap(5); // reduced horizontal gap
+        cardFlow.setVgap(5); // add vertical gap
+        cardFlow.setPadding(new Insets(5));
+        cardFlow.setPrefWrapLength(sm.getPrimaryStage().getWidth() / 2 - 20); // maximize width
+        cardFlow.setStyle("-fx-alignment: center;"); // Center alignment both horizontally and vertically
 
         for (Card card : deck.getCardList()) {
-            HBox cardContainer = new HBox(10);
-            cardContainer.setPadding(new Insets(5)); // Add padding around container
             Button cardButton = new Button(card.getCardName());
-            cardButton.getStyleClass().add("card-button");
-
-            // Add click handler for card info
-            cardButton.setOnAction(e -> {
-                showCardInfo(card);
-            });
-
-            Button deleteCardButton = new Button("X");
-            deleteCardButton.getStyleClass().add("delete-button");
-            deleteCardButton.setOnAction(e -> deleteCard(card, cardContainer));
-
-            cardContainer.getChildren().addAll(cardButton, deleteCardButton);
-            cardList.getChildren().add(cardContainer);
+            cardButton.getStyleClass().add("embassy-button");
+            cardButton.setMaxWidth(Double.MAX_VALUE);
+            cardButton.setMinHeight(50);
+            cardButton.setOnAction(event -> showCardInfo(card));
+            cardFlow.getChildren().add(cardButton);
         }
+
+        cardList.getChildren().add(cardFlow);
     }
 
     private void showCardInfo(Card card) {
@@ -223,15 +224,34 @@ public class EditDecksSceneController {
         cardInfoBox.setVisible(true);
         cardInfoBox.getChildren().clear();
 
-        Label details = new Label("Card Information");
-        Label nameLabel = new Label("Card Name: " + card.getCardName());
-        String decksString = model.getCardManager().toString(model.getCardManager().getDecks(card));
-        Label deckLabel = new Label("Deck: " + decksString);
+        VBox infoLabels = new VBox(5);
+        infoLabels.getChildren().addAll(
+                new Label("Card Information:"),
+                new Label("Card Name: " + card.getCardName()),
+                new Label("Deck: " + selectedDeck.getDeckName()));
+
+        HBox buttonBox = new HBox(10);
+        Button deleteCardButton = new Button("Delete Card");
+        deleteCardButton.getStyleClass().add("delete-card-button");
+        deleteCardButton.setOnAction(e -> {
+            deleteCard(card);
+            cardInfoBox.setVisible(false);
+        });
+
         Button addToAnotherDeckButton = new Button("Add to Another Deck");
         addToAnotherDeckButton.setOnAction(e -> showAddToAnotherDeckDialog());
 
-        cardInfoBox.getChildren().addAll(details, nameLabel, deckLabel, addToAnotherDeckButton);
-        cardInfoBox.setSpacing(10);
+        buttonBox.getChildren().addAll(addToAnotherDeckButton, deleteCardButton);
+        cardInfoBox.getChildren().addAll(infoLabels, buttonBox);
+    }
+
+    private void deleteCard(Card card) {
+        if (selectedDeck != null) {
+            selectedDeck.removeCard(card);
+            model.getCardManager().deleteCard(card, selectedDeck);
+            cardOrDeckAddedOrRemovesViaUI = true;
+            showDeckCards(selectedDeck);
+        }
     }
 
     @FXML

@@ -11,10 +11,11 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
+import linguacrypt.model.Player;
+import linguacrypt.model.Team;
 import linguacrypt.scenes.MenuScene;
 import linguacrypt.scenes.SceneManager;
 import linguacrypt.scenes.SettingsScene;
-
 
 public class LobbySceneController {
 
@@ -155,6 +156,26 @@ public class LobbySceneController {
             errorLabel.setText("Il doit y avoir exactement un espion par équipe.");
             return;
         }
+        Team blueTeam = sm.getModel().getGame().getConfig().getTeamManager().getBlueTeam();
+        Team redTeam = sm.getModel().getGame().getConfig().getTeamManager().getRedTeam();
+        
+        // Adding spies, they should be alone in their team
+        Label blueSpy = (Label) blueTeamSpy.getChildren().get(0);
+        Label redSpy = (Label) redTeamSpy.getChildren().get(0);
+        blueTeam.addPlayer(new Player(blueSpy.getText(), true));
+        redTeam.addPlayer(new Player(redSpy.getText(), true));
+
+
+        blueTeamOperative.getChildren().forEach(player -> {
+            Label label = (Label) player;
+            blueTeam.addPlayer(new Player(label.toString(), false));
+        });
+
+        redTeamOperative.getChildren().forEach(player -> {
+            Label label = (Label) player;
+            redTeam.addPlayer(new Player(label.toString(), false));
+        });
+
         sm.pushScene(new MenuScene(sm));
     }
 }

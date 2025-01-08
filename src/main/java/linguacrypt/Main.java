@@ -3,17 +3,15 @@ package linguacrypt;
 import java.io.IOException;
 import java.net.URL;
 
-import linguacrypt.model.Model;
-import linguacrypt.model.Game;
-import linguacrypt.scenes.ManagedScene;
-import linguacrypt.scenes.MenuScene;
-import linguacrypt.scenes.SceneManager;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import linguacrypt.model.Model;
+import linguacrypt.scenes.ManagedScene;
+import linguacrypt.scenes.MenuScene;
+import linguacrypt.scenes.SceneManager;
 
 public class Main extends Application {
 
@@ -30,7 +28,7 @@ public class Main extends Application {
         loader.setLocation(fxmlURL);
 
         Parent root = loader.load();
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 1600,900);
         primaryStage.setScene(scene);
 
         // Actual Initial Scene

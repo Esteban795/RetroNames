@@ -2,11 +2,10 @@ package linguacrypt.scenes;
 
 import java.net.URL;
 
-import linguacrypt.controllers.NewLoadSceneController;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import linguacrypt.controllers.NewLoadSceneController;
 
 public class NewLoadScene extends ManagedScene {
 
@@ -23,7 +22,7 @@ public class NewLoadScene extends ManagedScene {
         loader.setController(controller);
         try {
             Parent root = loader.load();
-            super.setScene(new Scene(root, 800, 600));
+            super.setScene(new Scene(root, 1600,900));
             super.getScene().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         } catch (Exception e) {
             System.out.println("Error loading NewLoad.fxml");

@@ -55,10 +55,10 @@ public class SerializationCycleTest {
         // Verify game state
         assertNotNull(loadedGame, "Loaded game should not be null");
         Lobby loadedLobby = loadedGame.getLobby();
-        assertEquals("Blue Team", loadedLobby.getBlueTeam().getTeamName(), "Blue team name should match");
-        assertEquals("Red Team", loadedLobby.getRedTeam().getTeamName(), "Red team name should match");
-        assertEquals(Color.BLUE, loadedLobby.getBlueTeam().getTeamColor(), "Blue team color should match");
-        assertEquals(Color.RED, loadedLobby.getRedTeam().getTeamColor(), "Red team color should match");
+        assertEquals("Blue Team", loadedLobby.getBlueTeam().getName(), "Blue team name should match");
+        assertEquals("Red Team", loadedLobby.getRedTeam().getName(), "Red team name should match");
+        assertEquals(Color.BLUE, loadedLobby.getBlueTeam().getColor(), "Blue team color should match");
+        assertEquals(Color.RED, loadedLobby.getRedTeam().getColor(), "Red team color should match");
         
         // Verify players
         assertEquals("Alice", loadedLobby.getBlueTeam().getPlayerList().get(0).getName(), "Blue team player should be Alice");
@@ -66,8 +66,8 @@ public class SerializationCycleTest {
         
         // Verify cards
         assertTrue(loadedGame.getDeck().getCardList().size() > 0, "Card list should not be empty");
-        assertEquals("Word1", loadedGame.getDeck().getCardList().get(0).getCardName(), "First card name should match");
-        assertEquals(Color.BLUE, loadedGame.getDeck().getCardList().get(0).getCardColor(), "First card color should match");
+        assertEquals("Word1", loadedGame.getDeck().getCardList().get(0).getName(), "First card name should match");
+        assertEquals(Color.BLUE, loadedGame.getDeck().getCardList().get(0).getColor(), "First card color should match");
     }
 
     @AfterEach

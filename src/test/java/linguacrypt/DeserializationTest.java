@@ -32,8 +32,8 @@ public class DeserializationTest {
         Game loaded = visitor.loadGame(TEST_RESOURCES + "game.json");
         assertNotNull(loaded);
         Team blueTeam = loaded.getLobby().getBlueTeam();
-        assertEquals("Blue Team", blueTeam.getTeamName());
-        assertEquals(Color.BLUE, blueTeam.getTeamColor());
+        assertEquals("Blue Team", blueTeam.getName());
+        assertEquals(Color.BLUE, blueTeam.getColor());
     }
 
 }

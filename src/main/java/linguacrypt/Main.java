@@ -3,6 +3,8 @@ package linguacrypt;
 import java.io.IOException;
 import java.net.URL;
 
+import linguacrypt.model.Card;
+import linguacrypt.model.Deck;
 import linguacrypt.model.Game;
 import linguacrypt.scenes.*;
 
@@ -19,7 +21,25 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         this.game = new Game();
+        // Create test deck with 25 cards
+        Deck testDeck = new Deck();
+        String[] testWords = {
+            "CHAT", "CHIEN", "OISEAU", "POISSON", "LAPIN",
+            "VOITURE", "VELO", "MOTO", "AVION", "TRAIN",
+            "POMME", "POIRE", "ORANGE", "BANANE", "FRAISE",
+            "MAISON", "JARDIN", "ROUTE", "ARBRE", "FLEUR",
+            "SOLEIL", "LUNE", "ETOILE", "NUAGE", "PLUIE"
+        };
+        
+        for (String word : testWords) {
+            Card card = new Card(word);
+            testDeck.addCard(card);
+        }
+        
+        game.setDeck(testDeck);
         SceneManager sm = SceneManager.getInstance(primaryStage, this.game);
+
+
 
         // Fake scene that shouldn't be used. It is used to initialize the SceneManager to correct values
         URL fxmlURL = getClass().getResource("/Init.fxml");

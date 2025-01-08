@@ -17,27 +17,31 @@ import javafx.scene.layout.Priority;
 import linguacrypt.model.Card;
 import linguacrypt.model.Color;
 import linguacrypt.model.Game;
+import linguacrypt.model.Team;
 import linguacrypt.scenes.LobbyScene;
 import linguacrypt.scenes.SceneManager;
 
 public class GameSceneController {
 
+    //Necessary attributes to display the game
     private final SceneManager sm;
     private Game game;
     private final int size;
+    private String currentHint = "";
+    private int remainingGuesses = 0;
+    private int bonusGuess = 1;
 
+    //FXML attributes for the game grid
     @FXML
     private GridPane gameGrid;
-
     @FXML
     private Label teamTurnLabel;
-
     @FXML
     private ProgressBar redTeamProgress;
-
     @FXML
     private ProgressBar blueTeamProgress;
 
+    //FXML attributes for the hints
     @FXML private HBox hintInputBox;
     @FXML private HBox hintDisplayBox;
     @FXML private TextField hintField;
@@ -45,12 +49,13 @@ public class GameSceneController {
     @FXML private Label hintLabel;
     @FXML private Label remainingGuessesLabel;
     
-    private String currentHint = "";
-    private int remainingGuesses = 0;
+
 
     public GameSceneController(SceneManager sm) {
         this.sm = sm;
         this.game = sm.getModel();
+
+        //Create the grid for the scene
         game.initGrid();
         this.size = game.getGrid().size();
         System.out.println("GameSceneController initialized with grid size: " + size);
@@ -58,8 +63,8 @@ public class GameSceneController {
 
     @FXML
     public void initialize() {
+        // Initialize game scene elements
         try {
-            // Initialize game elements
             setupGameGrid();
             setupHintControls();
             initializeProgress();
@@ -69,27 +74,30 @@ public class GameSceneController {
         }
     }
     
+    /*
+     * Initialize the grid with the cards of the game's deck.
+     */
     private void setupGameGrid() {
         if (game == null || game.getGrid() == null) {
             System.err.println("Game or grid is null");
             return;
         }
         
-        // Initialize grid if empty
         game.getGrid().clear();
-        for (int i = 0; i < size; i++) {
-            game.getGrid().add(new ArrayList<>());
-            for (int j = 0; j < size; j++) {
-                game.getGrid().get(i).add(new Card("Mot " + i + "," + j));
-            }
-        }
+        game.initGrid();
+        System.out.println("Game grid loaded with cards");
         updateGrid();
+        updateTurnLabel();
     }
     
+    /*
+     * Update the grid with the current state of the game.
+     */
     private void updateGrid() {
+        // Clear the grid
         gameGrid.getChildren().clear();
 
-        // Set fixed column constraints
+        // Set fixed column constraints to have a regular grid
         gameGrid.getColumnConstraints().clear();
         for (int i = 0; i < size; i++) {
             ColumnConstraints column = new ColumnConstraints();
@@ -98,6 +106,7 @@ public class GameSceneController {
             gameGrid.getColumnConstraints().add(column);
         }
 
+        // Add card buttons to the grid
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 Button cardButton = new Button();
@@ -125,15 +134,66 @@ public class GameSceneController {
                     }
                 }
             
+            // Handle card click
             final int row = i;
             final int col = j;
             cardButton.setOnAction(e -> handleCardClick(row, col));
             gameGrid.add(cardButton, j, i);
+            }
         }
     }
-}
 
+    /*
+     * Handle a card click event.
+     * Reveals the card and updates the game state.
+     */
+    private void handleCardClick(int row, int col) {
+        if (remainingGuesses > 0) {
+            Card card = game.getGrid().get(row).get(col);
+            game.revealCard(card);
+            remainingGuesses--;
+            remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
+            
+            if (remainingGuesses == 0) {
+                if(bonusGuess > 0){
+                    remainingGuesses = bonusGuess;
+                    bonusGuess = 0;
+                    remainingGuessesLabel.setText("Essais Bonus : " + remainingGuesses);
+                }
+                else {
+                    game.switchTeam();
+                    bonusGuess = 1;
+                    hintLabel.setText("");
+                    remainingGuessesLabel.setText("");
+                    hintInputBox.setVisible(true);
+                    hintDisplayBox.setVisible(false);
+                }
+            }
+            
+            updateGrid();
+            updateTurnLabel();
+            updateProgress();
+        }
+    }
 
+    private void updateTurnLabel() {
+        Team team = game.getCurrentTeam();
+        boolean isRedTeam = team.getColor() == Color.RED;
+        String teamName = isRedTeam ? "ÉQUIPE ROUGE" : "ÉQUIPE BLEUE";
+        String color = isRedTeam ? "#cc0000" : "#0000cc";
+        String bgColor = isRedTeam ? "#ffcccc" : "#ccccff";
+        
+        teamTurnLabel.setText(teamName);
+        teamTurnLabel.setStyle(String.format(
+            "-fx-font-size: 24px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-background-color: %s; " +
+            "-fx-text-fill: %s; " +
+            "-fx-padding: 5px 15px; " +
+            "-fx-background-radius: 5px;",
+            bgColor, color
+        ));
+    }
 
 
     private void setupHintControls() {
@@ -151,12 +211,6 @@ public class GameSceneController {
         hintDisplayBox.setVisible(false);
     }
     
-    private void initializeProgress() {
-        if (redTeamProgress != null && blueTeamProgress != null) {
-            updateProgress();
-        }
-    }
-    
     @FXML
     public void submitHint() {
         if (hintField == null || numberChoice == null) return;
@@ -171,6 +225,13 @@ public class GameSceneController {
             hintDisplayBox.setVisible(true);
         } catch (NumberFormatException e) {
             System.err.println("Invalid number choice");
+        }
+    }
+
+    
+    private void initializeProgress() {
+        if (redTeamProgress != null && blueTeamProgress != null) {
+            updateProgress();
         }
     }
 
@@ -198,29 +259,6 @@ public class GameSceneController {
         redTeamProgress.setProgress((double)redFound / redTotal);
         blueTeamProgress.setProgress((double)blueFound / blueTotal);
     }
-
-    private void updateTurnLabel() {
-        teamTurnLabel.setText(game.getCurrentTeam().getName());
-    }
-
-    private void handleCardClick(int row, int col) {
-        if (remainingGuesses > 0) {
-            Card card = game.getGrid().get(row).get(col);
-            game.revealCard(card);
-            remainingGuesses--;
-            remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
-            
-            if (remainingGuesses == 0) {
-                hintInputBox.setVisible(true);
-                hintDisplayBox.setVisible(false);
-            }
-            
-            updateGrid();
-            updateTurnLabel();
-            updateProgress();
-        }
-    }
-
 
     @FXML
     public void switchScene() throws IOException {

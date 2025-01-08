@@ -90,14 +90,14 @@ public class Game implements Visitable {
         Team blueTeam = lobby.getBlueTeam();
         if(card.getColor() == Color.RED) {
             redTeam.setNbFoundCards(redTeam.getNbFoundCards() + 1);
-            System.out.println("Red card");
+            //System.out.println("Red card");
             return 0;
         } else if (card.getColor() == Color.BLUE) {
             blueTeam.setNbFoundCards(blueTeam.getNbFoundCards() + 1);
-            System.out.println("Blue card");
+            //System.out.println("Blue card");
             return 0;
         } else if (card.getColor() == Color.WHITE) {
-            System.out.println("White card");
+            //System.out.println("White card");
             return 0;
         } else {
             return 1;
@@ -111,12 +111,16 @@ public class Game implements Visitable {
     public void initGrid() {
         int size = config.getGridSize();
         grid = new ArrayList<>();
+
         for (int i = 0; i < size; i++) {
             ArrayList<Card> row = new ArrayList<>();
             for (int j = 0; j < size; j++) {
                 row.add(null);
             }
             grid.add(row);
+        }
+        if(this.deck != null) {
+            loadGrid();
         }
     }
 
@@ -135,9 +139,15 @@ public class Game implements Visitable {
         
         for (int i = 0; i < size && cardIndex < cards.size(); i++) {
             for (int j = 0; j < size && cardIndex < cards.size(); j++) {
-                grid.get(i).set(j, cards.get(cardIndex++));
+                if (grid.get(i) != null) {
+                    grid.get(i).set(j, cards.get(cardIndex++));
+                }
             }
         }
+    }
+
+    public void switchTeam() {
+        currentTeam = !currentTeam;
     }
 
     // Getters and Setters
@@ -146,15 +156,19 @@ public class Game implements Visitable {
     public ArrayList<ArrayList<Card>> getGrid() { return grid; }
     public GameConfiguration getConfig() { return config; }
     public Team getCurrentTeam() { return(currentTeam ? lobby.getRedTeam() : lobby.getBlueTeam()); }
-
     public int getBlueTeamFoundCards() {
         return lobby.getBlueTeam().getNbFoundCards();
     }
-
     public int getRedTeamFoundCards() {
         return lobby.getRedTeam().getNbFoundCards();
     }
+    public void setDeck(Deck deck) { this.deck = deck; }
 
+    public void printDeck() {
+        for (Card card : deck.getCardList()) {
+            System.out.println(card.getName() + " " + card.getColor());
+        }
+    }
 
     @Override
     public void accept(Visitor visitor) {

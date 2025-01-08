@@ -20,12 +20,12 @@ public class GameScene extends ManagedScene {
         URL fxmlURL = getClass().getResource(super.getFXMLPath());
         loader.setLocation(fxmlURL);
         loader.setController(controller);
-        System.out.println("FXML Path : " + super.getFXMLPath());
+        //System.out.println("FXML Path : " + super.getFXMLPath());
         try {
             Parent root = loader.load();
             super.setScene(new Scene(root, 800, 600));
         } catch (Exception e) {
-            System.out.println("Error loading GameScene.fxml");
+            System.out.println("Error loading GameScene.fxm            System.out.println(\"Red card\");l");
             sm.getPrimaryStage().close();
         }
     }

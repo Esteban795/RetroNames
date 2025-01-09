@@ -40,6 +40,6 @@ public class Model {
     }
 
     public void setDeckManager(DeckManager deckManager) {
-        this.deckManager = deckManager;
+        this.deckManager = new DeckManager(deckManager);
     }
 }

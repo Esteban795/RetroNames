@@ -247,15 +247,18 @@ public class EditDecksSceneController {
         selectedCard = card;
         cardInfoBox.setVisible(true);
         cardInfoBox.getChildren().clear();
-
+    
+        ArrayList<Deck> decks = model.getCardManager().getDecks(card);
+        String deckNames = decks != null ? 
+            String.join(", ", decks.stream().map(Deck::getName).toList()) :
+            "No decks";
+    
         VBox infoLabels = new VBox(5);
         infoLabels.getChildren().addAll(
                 new Label("Card Information:"),
                 new Label("Card Name: " + card.getName()),
-                new Label("Decks: " + String.join(", ", 
-                    model.getCardManager().getDecks(card).stream()
-                        .map(Deck::getName)
-                        .toList())));
+                new Label("Decks: " + deckNames));
+        
 
         HBox buttonBox = new HBox(10);
         infoLabels.setPadding(new Insets(10));

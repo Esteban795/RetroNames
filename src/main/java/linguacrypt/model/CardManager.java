@@ -13,6 +13,16 @@ public class CardManager {
         this.cardDeckMap = new HashMap<>();
     }
 
+    public CardManager(CardManager other) {
+        this.cards = new ArrayList<>(other.cards);
+        this.cardDeckMap = new HashMap<>();
+        
+        // Deep copy of cardDeckMap
+        for (Map.Entry<Card, ArrayList<Deck>> entry : other.cardDeckMap.entrySet()) {
+            this.cardDeckMap.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
+    }
+
     public void addCard(Card card, Deck deck) {
         this.cards.add(card);
         if (this.cardDeckMap.containsKey(card)) {
@@ -49,7 +59,10 @@ public class CardManager {
     }
 
     public ArrayList<Deck> getDecks(Card card) {
-        return this.cardDeckMap.get(card);
+        if (!cardDeckMap.containsKey(card)) {
+            return new ArrayList<>(); // Return empty list instead of null
+        }
+        return cardDeckMap.get(card);
     }
 
     public ArrayList<Deck> getDecks(String cardName) {

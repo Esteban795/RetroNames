@@ -2,7 +2,9 @@ package linguacrypt.model;
 
 import java.io.File;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Random;
 
@@ -13,6 +15,7 @@ import javafx.scene.image.ImageView;
 /**
  * Represents a card in the game with a name and a color.
  */
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Card {
     @JsonProperty("cardName")
     private String cardName;
@@ -55,10 +58,12 @@ public class Card {
         this.cardUrl = cardUrl;
     }
 
+    @JsonIgnore
     public String getName() {
         return cardName;
     }
 
+    @JsonIgnore
     public Color getColor() {
         return cardColor;
     }
@@ -79,6 +84,7 @@ public class Card {
         return cardUrl;
     }
 
+    @JsonIgnore
     public Node getCardView() {
         if (cardUrl != null) {
             File file = new File(cardUrl);

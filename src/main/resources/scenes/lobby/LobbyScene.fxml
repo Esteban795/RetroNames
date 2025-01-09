@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
@@ -9,70 +10,105 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <center>
-      <SplitPane dividerPositions="0.4020100502512563" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
-         <items>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="166.0" prefWidth="278.0">
-               <children>
-                  <VBox alignment="CENTER" layoutX="30.0" layoutY="-2.0" prefHeight="166.0" prefWidth="218.0" spacing="10.0" style="-fx-alignment: center;">
-                     <children>
-                        <Label fx:id="errorLabel" textFill="RED" />
-                        <Label text="Entrez un nom de joueur" />
-                        <Separator prefWidth="200.0" />
-                        <TextField fx:id="pseudoTextField" />
-                        <HBox alignment="CENTER" prefHeight="24.0" prefWidth="56.0">
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#validatePseudo" text="Ajouter" />
-                              <Button mnemonicParsing="false" onAction="#lobbyDone" text="Valider" />
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-               </children>
-            </AnchorPane>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-               <children>
-                  <VBox fx:id="pseudoVB" prefHeight="235.0" prefWidth="278.0" />
-               </children>
-            </AnchorPane>
-         </items>
-      </SplitPane>
-   </center>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <left>
-      <VBox fx:id="blueTeamVB" prefHeight="200.0" prefWidth="160.0" spacing="10.0" style="-fx-background-color: blue;" BorderPane.alignment="CENTER">
+      <VBox fx:id="blueTeamVB" prefHeight="800.0" prefWidth="225.0" spacing="10.0" style="-fx-background-color: blue;" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="150.0" prefWidth="160.0">
+            <VBox prefHeight="400.0" prefWidth="225.0">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="167.0" text="Maitre-espion" textFill="WHITE" />
-                  <VBox fx:id="blueTeamSpy" prefHeight="200.0" prefWidth="100.0" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="225.0" text="Maitre-espion" textFill="WHITE" />
+                  <VBox fx:id="blueTeamSpy" prefHeight="361.0" prefWidth="225.0" />
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefHeight="391.0" prefWidth="225.0">
                <children>
-                  <Label alignment="CENTER" prefHeight="16.0" prefWidth="162.0" text="Opérateurs" textFill="WHITE" />
-                  <VBox fx:id="blueTeamOperative" prefHeight="200.0" prefWidth="100.0" />
+                  <Label alignment="CENTER" prefHeight="31.0" prefWidth="225.0" text="Opérateurs" textFill="WHITE" />
+                  <VBox fx:id="blueTeamOperative" prefHeight="379.0" prefWidth="225.0" />
                </children>
             </VBox>
-         </children></VBox>
+         </children>
+      </VBox>
    </left>
    <right>
-      <VBox fx:id="blueTeamVB1" prefHeight="200.0" prefWidth="160.0" spacing="10.0" style="-fx-background-color: red;" BorderPane.alignment="CENTER">
+      <VBox fx:id="blueTeamVB1" prefHeight="800.0" prefWidth="225.0" spacing="10.0" style="-fx-background-color: red;" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="150.0" prefWidth="160.0">
+            <VBox prefHeight="400.0" prefWidth="225.0">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="167.0" text="Maitre-espion" textFill="WHITE" />
-                  <VBox fx:id="redTeamSpy" prefHeight="200.0" prefWidth="100.0" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="41.0" prefWidth="225.0" text="Maitre-espion" textFill="WHITE" />
+                  <VBox fx:id="redTeamSpy" prefHeight="357.0" prefWidth="225.0" />
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: red;">
+            <VBox prefHeight="404.0" prefWidth="225.0" style="-fx-background-color: red;">
                <children>
-                  <Label alignment="CENTER" prefHeight="16.0" prefWidth="162.0" text="Opérateurs" textFill="WHITE" />
-                  <VBox fx:id="redTeamOperative" prefHeight="200.0" prefWidth="100.0" />
+                  <Label alignment="CENTER" prefHeight="39.0" prefWidth="225.0" text="Opérateurs" textFill="WHITE" />
+                  <VBox fx:id="redTeamOperative" prefHeight="367.0" prefWidth="225.0" />
                </children>
             </VBox>
          </children>
       </VBox>
    </right>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <SplitPane dividerPositions="0.5689655172413793" orientation="VERTICAL" prefHeight="390.0" prefWidth="960.0" VBox.vgrow="NEVER">
+               <items>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="166.0" prefWidth="278.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="218.0" prefWidth="828.0" spacing="10.0" style="-fx-alignment: center;">
+                           <children>
+                              <Label fx:id="errorLabel" textFill="RED" />
+                              <Label text="Entrez un nom de joueur" />
+                              <Separator maxWidth="-Infinity" prefWidth="200.0" />
+                              <TextField fx:id="pseudoTextField" maxWidth="-Infinity" prefHeight="24.0" prefWidth="300.0" />
+                              <HBox alignment="CENTER" prefHeight="24.0" prefWidth="56.0">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#validatePseudo" text="Ajouter" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                     <children>
+                        <VBox fx:id="pseudoVB" prefHeight="235.0" prefWidth="278.0" />
+                     </children>
+                  </AnchorPane>
+               </items>
+            </SplitPane>
+            <VBox prefHeight="200.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="90.0" prefWidth="830.0" text="Sélectionnez un deck :" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <VBox alignment="CENTER" prefHeight="154.0" prefWidth="830.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <ComboBox fx:id="decksSelector" prefWidth="150.0" promptText="Decks" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="Sélectionnez la taille de la grille : " />
+                              <ComboBox fx:id="gridSizeSelector" prefWidth="150.0" promptText="5" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="830.0">
+               <children>
+                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#lobbyDone" prefWidth="90.0" text="Valider" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="26.0" prefWidth="830.0">
+               <children>
+                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#goToMenu" prefHeight="40.0" prefWidth="200.0" text="Retour au menu" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </center>
 </BorderPane>

@@ -92,24 +92,17 @@ public class CardManager {
     }
 
     public Card getCard(String cardName) {
-        try {
-            if (cardName == null) return null;
-            
-            for (Card card : this.cards) {
-                if (card.getName().equals(cardName)) {
-                    return card;
-                }
+        for (Card card : this.cards) {
+            if (card.getName().equals(cardName)) {
+                return card;
             }
-            for (Card card : this.deletedCards.keySet()) {
-                if (card.getName().equals(cardName)) {
-                    return card;
-                }
-            }
-            return null;
-        } catch (Exception e) {
-            System.err.println("Error getting card: " + e.getMessage());
-            return null;
         }
+        for (Card card : this.deletedCards.keySet()) {
+            if (card.getName().equals(cardName)) {
+                return card;
+            }
+        }
+        return null;
     }
 
 }

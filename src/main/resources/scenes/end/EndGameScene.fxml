@@ -20,7 +20,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </Label>
-      <Label fx:id="labelVictor" alignment="CENTER" prefHeight="25.0" prefWidth="1291.0" text="L'équipe rouge remporte la victoire !">
+      <Label fx:id="labelVictor" alignment="CENTER" prefHeight="25.0" prefWidth="1291.0">
          <font>
             <Font size="25.0" />
          </font>

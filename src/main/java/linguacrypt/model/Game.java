@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import linguacrypt.visitor.Visitable;
 import linguacrypt.visitor.Visitor;
-
 /**
  * Représente une partie de LinguaCrypt. Cette classe est le point central du
  * jeu, gérant : - La grille de jeu (matrice de cartes) - La configuration de la
@@ -41,6 +40,7 @@ public class Game implements Visitable {
     /**
      * Constructeur par défaut. Initialise une nouvelle partie avec : - Une
      * grille vide - Une configuration par défaut
+     * currentTeam = true --> red team is playing 
      */
     public Game() {
         this.grid = new ArrayList<>();
@@ -114,7 +114,7 @@ public class Game implements Visitable {
         }
         int gridSize = config.getGridSize();
 
-        ArrayList<Card> cards = new ArrayList<>(deck.getCardList());
+        ArrayList<Card> cards = deck.deepCopyCards();
 
         // Shuffle the cards to change order
         Collections.shuffle(cards);
@@ -153,6 +153,10 @@ public class Game implements Visitable {
         return (currentTeam ? config.getTeamManager().getRedTeam() : config.getTeamManager().getBlueTeam());
     }
 
+    public Team getOppositeTeam() {
+        return (currentTeam ? config.getTeamManager().getBlueTeam() : config.getTeamManager().getRedTeam());
+    }
+
     @JsonIgnore
     public int getBlueTeamFoundCards() {
         return config.getTeamManager().getBlueTeam().getNbFoundCards();
@@ -189,8 +193,10 @@ public class Game implements Visitable {
         card.reveal();
         Team redTeam = config.getTeamManager().getRedTeam();
         Team blueTeam = config.getTeamManager().getBlueTeam();
+        
         if (card.getColor() == Color.RED) {
             redTeam.setNbFoundCards(redTeam.getNbFoundCards() + 1);
+            System.out.println("Red team found " + redTeam.getNbFoundCards() + " cards");
             return 0;
         } else if (card.getColor() == Color.BLUE) {
             blueTeam.setNbFoundCards(blueTeam.getNbFoundCards() + 1);
@@ -200,10 +206,23 @@ public class Game implements Visitable {
         } else {
             return 1;
         }
+        
+    }
+
+    public boolean hasBlueTeamWon() {
+        return config.getTeamManager().getBlueTeam().getNbFoundCards() == config.getNbCardsGoal();
+    }
+
+    public boolean hasRedTeamWon() {
+        return config.getTeamManager().getRedTeam().getNbFoundCards() == config.getNbCardsGoal() + 1;
     }
 
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    public void resetGame() {
+        
     }
 }

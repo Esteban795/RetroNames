@@ -230,29 +230,46 @@ public class GameSceneController {
         if (remainingGuesses > 0 && !game.getGrid().get(row).get(col).isFound()) {
             Card card = game.getGrid().get(row).get(col);
             game.revealCard(card);
-            remainingGuesses--;
-            remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
-            if (card.getColor() == Color.BLACK) { // game is lost
+            if (game.hasBlueTeamWon()) {
+                System.out.println("Blue team has won!");
                 try {
-                    sm.pushScene(new EndGameScene(sm));
-                } catch (Exception e) {
+                    sm.pushScene(new EndGameScene(sm, "bleue"));
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-            }
-            if (remainingGuesses == 0) {
-                if (bonusGuess > 0) {
-                    remainingGuesses = bonusGuess;
-                    bonusGuess = 0;
-                    remainingGuessesLabel.setText("Essais Bonus : " + remainingGuesses);
-                } else {
-                    switchTeam();
+            } else if (game.hasRedTeamWon()) {
+                System.out.println("Red team has won!");
+                try {
+                    sm.pushScene(new EndGameScene(sm, "rouge"));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            } else {
+                remainingGuesses--;
+                remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
+                if (card.getColor() == Color.BLACK) { // game is lost
+                    try {
+                        sm.pushScene(new EndGameScene(sm, game.getOppositeTeam().getName()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (remainingGuesses == 0) {
+                    if (bonusGuess > 0) {
+                        remainingGuesses = bonusGuess;
+                        bonusGuess = 0;
+                        remainingGuessesLabel.setText("Essais Bonus : " + remainingGuesses);
+                    } else {
+                        switchTeam();
+                    }
+                }
+
+                updateGrid();
+                updateTurnLabel();
+                updateProgress();
             }
 
-            updateGrid();
-            updateTurnLabel();
-            updateProgress();
         }
     }
 

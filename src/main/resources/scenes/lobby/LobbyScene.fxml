@@ -59,7 +59,7 @@
                            <children>
                               <Label fx:id="errorLabel" textFill="RED" />
                               <Label text="Entrez un nom de joueur" />
-                              <Separator prefWidth="200.0" />
+                              <Separator maxWidth="-Infinity" prefWidth="200.0" />
                               <TextField fx:id="pseudoTextField" maxWidth="-Infinity" prefHeight="24.0" prefWidth="300.0" />
                               <HBox alignment="CENTER" prefHeight="24.0" prefWidth="56.0">
                                  <children>
@@ -78,20 +78,21 @@
                   </AnchorPane>
                </items>
             </SplitPane>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefHeight="200.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Label alignment="CENTER" prefHeight="85.0" prefWidth="960.0" text="Sélectionnez un deck :" VBox.vgrow="ALWAYS">
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="90.0" prefWidth="830.0" text="Sélectionnez un deck :" VBox.vgrow="ALWAYS">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                  <VBox alignment="CENTER" prefHeight="154.0" prefWidth="830.0" VBox.vgrow="ALWAYS">
                      <children>
                         <ComboBox fx:id="decksSelector" prefWidth="150.0" promptText="Decks" />
                      </children>
                   </VBox>
                </children>
             </VBox>
+            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#goToMenu" prefHeight="24.0" prefWidth="846.0" text="Retour au menu" />
          </children>
       </VBox>
    </center>

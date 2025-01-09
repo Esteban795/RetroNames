@@ -20,6 +20,7 @@ import linguacrypt.model.GameConfiguration;
 import linguacrypt.model.Player;
 import linguacrypt.model.Team;
 import linguacrypt.scenes.GameScene;
+import linguacrypt.scenes.MenuScene;
 import linguacrypt.scenes.SceneManager;
 import linguacrypt.scenes.SettingsScene;
 
@@ -223,4 +224,10 @@ public class LobbySceneController {
 
         sm.getModel().getGame().setGrid(selectedCards);
     }
+
+    @FXML
+    public void goToMenu() {
+        sm.goToPreviousSceneType(MenuScene.class);
+    }
+
 }

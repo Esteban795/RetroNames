@@ -12,4 +12,5 @@
     <Button fx:id="latestGameBtn" text="Latest Game" prefWidth="200"/>
     <VBox fx:id="savedGamesBox" alignment="CENTER" spacing="10"/>
     <Button text="Back" onAction="#goBack" prefWidth="200"/>
+    <Label fx:id="errorLabel" textFill="RED" visible="false" />
 </VBox>

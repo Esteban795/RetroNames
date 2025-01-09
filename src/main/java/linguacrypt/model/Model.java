@@ -23,6 +23,7 @@ public class Model {
             this.deckManager.getDeckList().forEach(deck -> deck.sortCards()); // Assure that cards are sorted
             this.deckManager.getDeckList().forEach(deck -> deck.getCardList().forEach(card -> cardManager.addCard(card, deck))); // Add cards to cardManager            
             this.cardManager.consolidateDuplicateCards();
+            this.deckManager.sortDecks();
         }
     }
 

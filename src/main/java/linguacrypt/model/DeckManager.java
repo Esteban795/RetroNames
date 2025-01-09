@@ -24,24 +24,16 @@ public class DeckManager implements Visitable {
     }
 
     public Boolean addDeck(Deck deck) {
-        if (getDeck(deck.getName()) == null) {
-            int index = 0;
-            for (Deck d : deckList) {
-                if (d.getName().compareTo(deck.getName()) > 0) {
-                    break;
-                }
-                index++;
-            }
-            deckList.add(index, deck);
-
-            // int index = Collections.binarySearch(deckList, deck, (d1, d2) ->
-            // d1.getName().compareTo(d2.getName()));
-            // if (index < 0) index = -index - 1;
-            // deckList.add(deck);
-            return true;
-        } else {
+        if (getDeck(deck.getName()) != null) {
             return false;
         }
+
+        int insertIndex = 0;
+        while (insertIndex < deckList.size() && deckList.get(insertIndex).getName().compareTo(deck.getName()) < 0) {
+            insertIndex++;
+        }
+        deckList.add(insertIndex, deck);
+        return true;
     }
 
     public void removeDeck(Deck deck) {
@@ -90,15 +82,18 @@ public class DeckManager implements Visitable {
     }
 
     public void sortDecks() {
-        boolean isSorted = true;
+        if (deckList.size() <= 1)
+            return;
         for (int i = 0; i < deckList.size() - 1; i++) {
             if (deckList.get(i).getName().compareTo(deckList.get(i + 1).getName()) > 0) {
-                isSorted = false;
-                break;
+                // List is not sorted, continue with sort
+                Collections.sort(deckList, (d1, d2) -> d1.getName().compareTo(d2.getName()));
+                return;
             }
-        }
-        if (!isSorted) {
-            Collections.sort(deckList, (d1, d2) -> d1.getName().compareTo(d2.getName()));
+            if (i == deckList.size() - 2) {
+                // List is already sorted
+                return;
+            }
         }
     }
 }

@@ -174,6 +174,7 @@ public class EditDecksSceneController {
 
     private void reloadDeckList() {
         deckList.getChildren().clear();
+        model.getDeckManager().sortDecks();
         for (Deck deck : model.getDeckManager().getDeckList()) {
             addDeckToUI(deck);
         }

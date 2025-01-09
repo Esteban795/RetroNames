@@ -1,9 +1,6 @@
 package linguacrypt.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -13,8 +10,6 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
-import linguacrypt.model.Card;
-import linguacrypt.model.Color;
 import linguacrypt.model.Deck;
 import linguacrypt.model.DeckManager;
 import linguacrypt.model.GameConfiguration;
@@ -53,6 +48,9 @@ public class LobbySceneController {
     @FXML
     private ComboBox<String> decksSelector;
 
+    @FXML
+    private ComboBox<String> gridSizeSelector;
+
     public LobbySceneController(SceneManager sm) {
         this.sm = sm;
     }
@@ -66,6 +64,7 @@ public class LobbySceneController {
         setupDragAndDrop(redTeamOperative);
 
         setupDeckChoices();
+        setupGridSizeChoices();
     }
 
     private void setupDeckChoices() {
@@ -73,6 +72,12 @@ public class LobbySceneController {
             Label deckItem = new Label(deck.getName());
             decksSelector.getItems().add(deckItem.getText());
         });
+    }
+
+    private void setupGridSizeChoices() {
+        for (int i = 3; i <= 9; i++) {
+            gridSizeSelector.getItems().add(Integer.toString(i));
+        }
     }
 
     @FXML
@@ -138,10 +143,10 @@ public class LobbySceneController {
     @FXML
     public void validatePseudo() {
         String pseudoString = this.pseudoTextField.getText();
-        // sm.getModel().    check if player already exists
         if (pseudoString.isEmpty()) {
             return;
         }
+
         pseudoTextField.setText("");
 
         Label pseudoLabel = createDraggableLabel(pseudoString);
@@ -168,9 +173,16 @@ public class LobbySceneController {
             return;
         }
 
+        int gridSize = gridSizeSelector.getValue() == null ? 5 : Integer.parseInt(gridSizeSelector.getValue());
+        sm.getModel().getGame().getConfig().setGridSize(gridSize);
+
         addPlayersToTeams();
 
-        setupCards(deckName);
+        DeckManager dm = sm.getModel().getDeckManager();
+        GameConfiguration config = sm.getModel().getGame().getConfig();
+        Deck deck = dm.getDeck(deckName);
+
+        config.setCurrentDeck(deck);
 
         sm.pushScene(new GameScene(sm));
     }
@@ -196,46 +208,8 @@ public class LobbySceneController {
         });
     }
 
-    private void fillRange(List<Card> cards, int start, int end, Color color) {
-        for (int i = start; i < end; i++) {
-            cards.get(i).setColor(color);
-        }
-    }
-
-    private void setupCards(String deckName) {
-        DeckManager dm = sm.getModel().getDeckManager();
-        GameConfiguration config = sm.getModel().getGame().getConfig();
-        Deck deck = dm.getDeck(deckName);
-
-        config.setCurrentDeck(deck);
-
-        int gridSize = sm.getModel().getGame().getConfig().getGridSize();
-        ArrayList<Card> cards = new ArrayList<>(deck.getCardList());
-
-        Collections.shuffle(cards);
-        ArrayList<Card> selectedCards = new ArrayList<>(cards.subList(0, gridSize * gridSize));
-        int step = gridSize * gridSize / 3;
-
-        fillRange(selectedCards, 0, step + 1, Color.RED);
-        fillRange(selectedCards, step + 1, 2 * step + 1, Color.BLUE);
-        fillRange(selectedCards, 2 * (step + 1) + 1, 3 * step - 1, Color.WHITE);
-
-        selectedCards.get(gridSize * gridSize - 1).setColor(Color.BLACK);
-
-        Collections.shuffle(selectedCards);
-
-        sm.getModel().getGame().setGrid(selectedCards);
-    }
-
     @FXML
     public void goToMenu() {
         sm.goToPreviousSceneType(MenuScene.class);
     }
-
-    private void printSelectedCards(ArrayList<Card> selectedCards) {
-        for (int i = 0; i < selectedCards.size(); i++) {
-            System.out.println("Name : " + selectedCards.get(i).getName() + " (color : " + selectedCards.get(i).getColor() + ")");
-        }
-    }
-
 }

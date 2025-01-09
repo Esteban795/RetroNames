@@ -88,8 +88,8 @@ public class GameSceneController {
         if (game.getConfig().getCurrentDeck() == null) {
             game.getConfig().setCurrentDeck(sm.getModel().getDeckManager().getRandomDeck());
         }
-        
-        this.size = game.getGrid().size();
+
+        this.size = game.getConfig().getGridSize();
         System.out.println("GameSceneController initialized with grid size: " + size);
     }
 
@@ -109,7 +109,7 @@ public class GameSceneController {
 
     private void setupQRCode() {
         try {
-            Image qrCodeImage = new Image(getClass().getResourceAsStream("/imgs/qrcode_resized.png"));
+            Image qrCodeImage = new Image(getClass().getResourceAsStream("/imgs/qrcode-placeholder.jpg"));
 
             BackgroundImage backgroundImage = new BackgroundImage(
                     qrCodeImage,
@@ -130,12 +130,7 @@ public class GameSceneController {
      * Initialize the grid with the cards of the game's deck.
      */
     private void setupGameGrid() {
-        // if (game == null || game.getGrid() == null) {
-        //     System.err.println("Game or grid is null");
-        //     return;
-        // }
-        // game.getGrid().clear();
-        // game.initGrid();
+        game.loadGrid();
         System.out.println("Game grid loaded with cards");
         updateGrid();
         updateTurnLabel();
@@ -410,11 +405,6 @@ public class GameSceneController {
     }
 
     @FXML
-    public void switchScene() throws IOException {
-        sm.pushScene(new LobbyScene(sm));
-    }
-
-    @FXML
     public void goBack() {
         SerializationVisitor saveVisitor = new SerializationVisitor();
         game.accept(saveVisitor);
@@ -424,9 +414,8 @@ public class GameSceneController {
     @FXML
     public void openQRCode() throws Exception {
         Dialog<ImageView> dialog = new Dialog<>();
-        dialog.setTitle("Scannez ce QR Code pour accéder à la clé de la partie");
+        dialog.setTitle("Scannez ce QR Code pour accéder à la clé de la partie.");
         dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE);
-        System.out.println("Avant appel generate qr");
         int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(), "src/main/resources/imgs/qrcode_resized.png");
         if (res == 0) {
             System.out.println("QR Code generated successfully");
@@ -441,14 +430,4 @@ public class GameSceneController {
             dialog.show();
         }
     }
-
-    public void printGrid() {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                System.out.print(game.getGrid().get(i).get(j).getName() + " " + "(" + game.getGrid().get(i).get(j).getColor() + ") ");
-            }
-            System.out.println();
-        }
-    }
 }
-

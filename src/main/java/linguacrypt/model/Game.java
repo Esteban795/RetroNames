@@ -1,6 +1,7 @@
 package linguacrypt.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -12,10 +13,9 @@ import linguacrypt.visitor.Visitable;
 import linguacrypt.visitor.Visitor;
 
 /**
- * Représente une partie de LinguaCrypt.
- * Cette classe est le point central du jeu, gérant :
- * - La grille de jeu (matrice de cartes)
- * - La configuration de la partie (GameConfiguration)
+ * Représente une partie de LinguaCrypt. Cette classe est le point central du
+ * jeu, gérant : - La grille de jeu (matrice de cartes) - La configuration de la
+ * partie (GameConfiguration)
  */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Game implements Visitable {
@@ -39,10 +39,8 @@ public class Game implements Visitable {
     private boolean hasStarted;
 
     /**
-     * Constructeur par défaut.
-     * Initialise une nouvelle partie avec :
-     * - Une grille vide
-     * - Une configuration par défaut
+     * Constructeur par défaut. Initialise une nouvelle partie avec : - Une
+     * grille vide - Une configuration par défaut
      */
     public Game() {
         this.grid = new ArrayList<>();
@@ -56,7 +54,7 @@ public class Game implements Visitable {
     /**
      * Constructeur pour la désérialisation JSON.
      *
-     * @param grid   La grille de jeu
+     * @param grid La grille de jeu
      * @param config La configuration
      * @param nbTurn Le nombre de tours joués
      */
@@ -97,6 +95,12 @@ public class Game implements Visitable {
         }
     }
 
+    private void fillRange(List<Card> cards, int start, int end, Color color) {
+        for (int i = start; i < end; i++) {
+            cards.get(i).setColor(color);
+        }
+    }
+
     /**
      * Charge les cartes du deck dans la grille. Les cartes sont placées
      * séquentiellement dans la grille, de gauche à droite et de haut en bas.
@@ -108,22 +112,26 @@ public class Game implements Visitable {
             System.err.println("Grid or deck is null");
             return;
         }
+        int gridSize = config.getGridSize();
 
-        // //Print le deck
-        // System.out.println("Deck: " + deck.getName());
-        // for (Card card : deck.getCardList()) {
-        // System.out.println(card.getName());
-        // }
+        ArrayList<Card> cards = new ArrayList<>(deck.getCardList());
 
-        ArrayList<Card> cards = deck.getCardList();
-        int size = config.getGridSize();
-        int cardIndex = 0;
+        // Shuffle the cards to change order
+        Collections.shuffle(cards);
 
-        for (int i = 0; i < size && cardIndex < cards.size(); i++) {
-            for (int j = 0; j < size && cardIndex < cards.size(); j++) {
-                grid.get(i).set(j, cards.get(cardIndex++));
-            }
-        }
+        // Select the correct number of cards
+        ArrayList<Card> selectedCards = new ArrayList<>(cards.subList(0, gridSize * gridSize));
+        int step = gridSize * gridSize / 3;
+
+        fillRange(selectedCards, 0, step + 1, Color.RED);
+        fillRange(selectedCards, step + 1, 2 * step + 1, Color.BLUE);
+        fillRange(selectedCards, 2 * (step + 1) + 1, 3 * step - 1, Color.WHITE);
+
+        selectedCards.get(gridSize * gridSize - 1).setColor(Color.BLACK);
+
+        Collections.shuffle(selectedCards);
+
+        setGrid(selectedCards);
         hasStarted = true;
     }
 

@@ -37,7 +37,6 @@ import linguacrypt.model.Game;
 import linguacrypt.model.Team;
 import linguacrypt.scenes.EndGameScene;
 import linguacrypt.scenes.LobbyScene;
-import linguacrypt.scenes.MenuScene;
 import linguacrypt.scenes.SceneManager;
 import linguacrypt.scenes.SettingsScene;
 import linguacrypt.visitor.DeserializationVisitor;
@@ -107,6 +106,39 @@ public class GameSceneController {
         }
     }
 
+    // INITIALIZATION METHODS
+
+    /*
+     * Initialize the grid with the cards of the game's deck.
+     */
+    private void setupGameGrid() {
+        game.loadGrid();
+        System.out.println("Game grid loaded with cards");
+        updateGrid();
+        updateTurnLabel();
+    }
+
+    private void setupHintControls() {
+        // Setup number choices
+        numberChoice.getItems().clear();
+        for (int i = 1; i <= 9; i++) {
+            final String num = String.valueOf(i);
+            MenuItem item = new MenuItem(num);
+            item.setOnAction(e -> {
+                numberChoice.setText(num);
+            });
+            numberChoice.getItems().add(item);
+        }
+
+        hintDisplayBox.setVisible(false);
+    }
+
+    private void initializeProgress() {
+        if (redTeamProgress != null && blueTeamProgress != null) {
+            updateProgress();
+        }
+    }
+
     private void setupQRCode() {
         try {
             Image qrCodeImage = new Image(getClass().getResourceAsStream("/imgs/qrcode-placeholder.jpg"));
@@ -126,16 +158,7 @@ public class GameSceneController {
         }
     }
 
-    /*
-     * Initialize the grid with the cards of the game's deck.
-     */
-    private void setupGameGrid() {
-        game.loadGrid();
-        System.out.println("Game grid loaded with cards");
-        updateGrid();
-        updateTurnLabel();
-    }
-
+    // END INITIALIZATION METHODS
     /*
      * Update the grid with the current state of the game.
      */
@@ -251,21 +274,6 @@ public class GameSceneController {
                 bgColor, color));
     }
 
-    private void setupHintControls() {
-        // Setup number choices
-        numberChoice.getItems().clear();
-        for (int i = 1; i <= 9; i++) {
-            final String num = String.valueOf(i);
-            MenuItem item = new MenuItem(num);
-            item.setOnAction(e -> {
-                numberChoice.setText(num);
-            });
-            numberChoice.getItems().add(item);
-        }
-
-        hintDisplayBox.setVisible(false);
-    }
-
     @FXML
     public void submitHint() {
         if (hintField == null || numberChoice == null) {
@@ -282,12 +290,6 @@ public class GameSceneController {
             hintDisplayBox.setVisible(true);
         } catch (NumberFormatException e) {
             System.err.println("Invalid number choice");
-        }
-    }
-
-    private void initializeProgress() {
-        if (redTeamProgress != null && blueTeamProgress != null) {
-            updateProgress();
         }
     }
 
@@ -319,12 +321,7 @@ public class GameSceneController {
     @FXML
     private void handleMainMenu() {
         showSaveDialog(() -> {
-            try {
-                sm.pushScene(new MenuScene(sm));
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            sm.popAllButFirst();
         });
     }
 
@@ -344,7 +341,7 @@ public class GameSceneController {
     private void handleLoadGame() {
         showSaveDialog(() -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Select Save File");
+            fileChooser.setTitle("Choisissez un fichier de sauvegarde");
             fileChooser.setInitialDirectory(new File("src/main/resources/saves/"));
             fileChooser.getExtensionFilters().add(
                     new FileChooser.ExtensionFilter("JSON Files", "*.json"));
@@ -363,9 +360,9 @@ public class GameSceneController {
                     }
                 } catch (CorruptedSaveException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Cannot load save file");
-                    alert.setContentText("The selected save file is corrupted");
+                    alert.setTitle("Erreur");
+                    alert.setHeaderText("Impossible de charger la partie sélectionnée.");
+                    alert.setContentText("Le fichier sélectionné est corrompu.");
                     alert.showAndWait();
                 }
             }
@@ -384,13 +381,13 @@ public class GameSceneController {
 
     private void showSaveDialog(Runnable afterSaveAction) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Save Game");
-        alert.setHeaderText("Would you like to save the game before leaving?");
-        alert.setContentText("Choose your option.");
+        alert.setTitle("Sauvegarder la partie :");
+        alert.setHeaderText("Voulez-vous sauvegarder la partie avant avant de quitter ?");
+        alert.setContentText("Choisissez une des trois options :");
 
-        ButtonType buttonTypeSave = new ButtonType("Save and Leave");
-        ButtonType buttonTypeNoSave = new ButtonType("Leave without Saving");
-        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType buttonTypeSave = new ButtonType("Sauvegarder et quitter");
+        ButtonType buttonTypeNoSave = new ButtonType("Quitter sans sauvegarder");
+        ButtonType buttonTypeCancel = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
 
         alert.getButtonTypes().setAll(buttonTypeSave, buttonTypeNoSave, buttonTypeCancel);
 

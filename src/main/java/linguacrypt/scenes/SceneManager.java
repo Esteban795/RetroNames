@@ -73,9 +73,9 @@ public class SceneManager {
     }
 
     public void popAllButFirst() {
-        ManagedScene first = scenes.get(0);
-        scenes.clear();
-        scenes.push(first);
+        while (scenes.size() > 1) {
+            popScene();
+        }
     }
 
     public ManagedScene peek() {

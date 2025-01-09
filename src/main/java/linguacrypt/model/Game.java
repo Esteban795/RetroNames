@@ -191,14 +191,11 @@ public class Game implements Visitable {
         Team blueTeam = config.getTeamManager().getBlueTeam();
         if (card.getColor() == Color.RED) {
             redTeam.setNbFoundCards(redTeam.getNbFoundCards() + 1);
-            // System.out.println("Red card");
             return 0;
         } else if (card.getColor() == Color.BLUE) {
             blueTeam.setNbFoundCards(blueTeam.getNbFoundCards() + 1);
-            // System.out.println("Blue card");
             return 0;
         } else if (card.getColor() == Color.WHITE) {
-            // System.out.println("White card");
             return 0;
         } else {
             return 1;

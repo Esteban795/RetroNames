@@ -22,7 +22,11 @@
                 </VBox>
                 <VBox>
                     <!-- Right side content -->
-                    <Button fx:id="newCardButton" text="New Card" onAction="#showNewCardPopup" />
+                    <HBox spacing="10">
+                        <Button fx:id="newCardButton" text="New Card" onAction="#showNewCardPopup" />
+                        <Button fx:id="deleteDeckButton" text="Delete Deck" onAction="#deleteDeck"
+                            styleClass="delete-deck-button" />
+                    </HBox>
                     <ScrollPane VBox.vgrow="ALWAYS">
                         <VBox fx:id="cardList">
                             <!-- Card list -->

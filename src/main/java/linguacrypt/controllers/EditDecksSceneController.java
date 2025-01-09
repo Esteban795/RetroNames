@@ -63,6 +63,9 @@ public class EditDecksSceneController {
 
     @FXML
     private Button newCardButton;
+    
+    @FXML
+    private Button deleteDeckButton;
 
     @FXML
     private VBox cardInfoBox;
@@ -81,6 +84,7 @@ public class EditDecksSceneController {
             addDeckToUI(deck);
         }
         newCardButton.setDisable(true); // Disable initially
+        deleteDeckButton.setDisable(true); // Disable by default
         cardInfoBox.setVisible(false); // Hide initially
     }
 
@@ -160,8 +164,6 @@ public class EditDecksSceneController {
         Button deckButton = new Button(deck.getName());
         deckButton.getStyleClass().add("deck-button");
 
-        // Style for selected state
-
         deckButton.setOnAction(e -> {
             // Reset previous selection
             if (selectedButton != null) {
@@ -173,27 +175,28 @@ public class EditDecksSceneController {
             selectedButton = deckButton;
             deckButton.getStyleClass().add("selected");
             newCardButton.setDisable(false);
+            deleteDeckButton.setDisable(false);
+            showDeckCards(deck);
 
             // Show cards
             showDeckCards(deck);
         });
 
-        Button deleteDeckButton = new Button("X");
-        deleteDeckButton.getStyleClass().add("delete-deck-button");
-        deleteDeckButton.setOnAction(e -> deleteDeck(deck, deckContainer));
-
-        deckContainer.getChildren().addAll(deckButton, deleteDeckButton);
+        deckContainer.getChildren().add(deckButton);
         deckList.getChildren().add(deckContainer);
+    
     }
 
-    private void deleteDeck(Deck deck, HBox deckContainer) {
-        model.getDeckManager().removeDeck(deck);
-        deckList.getChildren().remove(deckContainer);
-        if (selectedDeck == deck) {
+    @FXML
+    public void deleteDeck() {
+        if (selectedDeck != null) {
+            model.getDeckManager().removeDeck(selectedDeck);
+            reloadDeckList();
+            cardOrDeckAddedOrRemovesViaUI = true;
             selectedDeck = null;
             newCardButton.setDisable(true);
+            deleteDeckButton.setDisable(true);
         }
-        cardOrDeckAddedOrRemovesViaUI = true;
     }
 
     private void showDeckCards(Deck deck) {
@@ -201,15 +204,15 @@ public class EditDecksSceneController {
         cardInfoBox.setVisible(false);
 
         FlowPane cardFlow = new FlowPane();
-        cardFlow.setHgap(5); // reduced horizontal gap
-        cardFlow.setVgap(5); // add vertical gap
-        cardFlow.setPadding(new Insets(5));
+        cardFlow.setHgap(10); // increased horizontal gap
+        cardFlow.setVgap(10); // increased vertical gap
+        cardFlow.setPadding(new Insets(10));
         cardFlow.setPrefWrapLength(sm.getPrimaryStage().getWidth() / 2 - 20); // maximize width
         cardFlow.setStyle("-fx-alignment: center;"); // Center alignment both horizontally and vertically
 
         for (Card card : deck.getCardList()) {
             Button cardButton = new Button(card.getName());
-            cardButton.getStyleClass().add("embassy-button");
+            cardButton.getStyleClass().add("card-button");
             cardButton.setMaxWidth(Double.MAX_VALUE);
             cardButton.setMinHeight(50);
             cardButton.setOnAction(event -> showCardInfo(card));
@@ -231,6 +234,8 @@ public class EditDecksSceneController {
                 new Label("Deck: " + selectedDeck.getName()));
 
         HBox buttonBox = new HBox(10);
+        infoLabels.setPadding(new Insets(10));
+        buttonBox.setPadding(new Insets(10));
         Button deleteCardButton = new Button("Delete Card");
         deleteCardButton.getStyleClass().add("delete-card-button");
         deleteCardButton.setOnAction(e -> {

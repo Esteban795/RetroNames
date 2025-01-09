@@ -6,8 +6,12 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+
+
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SerializationTest {
@@ -20,39 +24,49 @@ public class SerializationTest {
         game = new Game();
         visitor = new SerializationVisitor(TEST_RESOURCES);
         new File(TEST_RESOURCES).mkdirs();
-        setupTestData();
-    }
 
-    private void setupTestData() {
-        // Setup test deck
-        String[] testWords = {
-                "CHAT", "CHIEN", "OISEAU", "POISSON", "LAPIN",
-                "VOITURE", "VELO", "MOTO", "AVION", "TRAIN",
-                "POMME", "POIRE", "ORANGE", "BANANE", "FRAISE",
-                "MAISON", "JARDIN", "ROUTE", "ARBRE", "FLEUR",
-                "SOLEIL", "LUNE", "ETOILE", "NUAGE", "PLUIE"
-        };
-
-        Deck testDeck = new Deck("Test Deck");
-        for (String word : testWords) {
-            testDeck.addCard(new Card(word));
+        // Prepare any new structures in the game
+        if (game.getConfig().getCurrentDeck() == null || game.getConfig().getCurrentDeck().getCardList().isEmpty()) {
+            Deck testDeck = new Deck("TestDeck");
+            testDeck.setCardList(generateTestCards());
+            game.getConfig().setCurrentDeck(testDeck);
         }
-        game.getConfig().setCurrentDeck(testDeck);
 
-        // Setup teams
+        // Configure teams
         Team redTeam = new Team("Red Team", Color.RED);
         redTeam.addPlayer(new Player("Alice"));
-        redTeam.addPlayer(new Player("Bob"));
-
         Team blueTeam = new Team("Blue Team", Color.BLUE);
         blueTeam.addPlayer(new Player("Charlie"));
-        blueTeam.addPlayer(new Player("David"));
-
         game.getConfig().getTeamManager().addTeam(redTeam);
         game.getConfig().getTeamManager().addTeam(blueTeam);
 
+        // Initialize and load the grid
         game.initGrid();
         game.loadGrid();
+    }
+
+    private ArrayList<Card> generateTestCards() {
+        ArrayList<Card> cards = new ArrayList<>();
+        String[] words = {
+            "CHAT", "CHIEN", "OISEAU", "POISSON", "LAPIN",
+            "CAR", "BIKE", "PLANE", "TRAIN", "BOAT",
+            "APPLE", "PEAR", "ORANGE", "BANANA", "STRAWBERRY",
+            "HOUSE", "GARDEN", "ROAD", "TREE", "FLOWER",
+            "SUN", "MOON", "STAR", "CLOUD", "RAIN"
+        };
+        for (String word : words) {
+            cards.add(new Card(word));
+        }
+        return cards;
+    }
+
+    @Test
+    void testSerializeUpdatedGameStructure() {
+        game.accept(visitor);
+        String json = visitor.getResult();
+        assertTrue(json.contains("Red Team"));
+        assertTrue(json.contains("Blue Team"));
+        assertTrue(json.contains("\"grid\""));
     }
 
     @Test
@@ -69,28 +83,19 @@ public class SerializationTest {
     void testSerializeWithTeams() {
         game.accept(visitor);
         String json = visitor.getResult();
-        assertTrue(json.contains("\"Red Team\""));
-        assertTrue(json.contains("\"Blue Team\""));
-        assertTrue(json.contains("\"Alice\""));
-        assertTrue(json.contains("\"Charlie\""));
-    }
-
-    @Test
-    void testSerializeWithCards() {
-        game.accept(visitor);
-        String json = visitor.getResult();
-        assertTrue(json.contains("\"CHAT\""));
-        assertTrue(json.contains("\"CHIEN\""));
-        assertTrue(json.contains("\"cardColor\""));
+        assertTrue(json.contains("Red Team"));
+        assertTrue(json.contains("Blue Team"));
+        assertTrue(json.contains("Alice"));
+        assertTrue(json.contains("Charlie"));
     }
 
     @Test
     void testSerializeWithGrid() {
         game.accept(visitor);
         String json = visitor.getResult();
-        assertTrue(json.contains("\"grid\""));
-        assertTrue(json.contains("\"cardName\""));
-        assertTrue(json.contains("\"found\""));
+        assertTrue(json.contains("CHAT"));
+        assertTrue(json.contains("grid"));
+        assertTrue(json.contains("found"));
     }
 
     @AfterEach

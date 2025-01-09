@@ -5,12 +5,12 @@ import java.util.HashMap;
 
 public class CardManager {
     private ArrayList<Card> cards;
-    private ArrayList<Card> deletedCards;
+    private HashMap<Card, ArrayList<Deck>> deletedCards;
     private HashMap<Card, ArrayList<Deck>> cardDeckMap;
 
     public CardManager() {
         this.cards = new ArrayList<>();
-        this.deletedCards = new ArrayList<>();
+        this.deletedCards = new HashMap<>();
         this.cardDeckMap = new HashMap<>();
     }
 
@@ -27,23 +27,38 @@ public class CardManager {
     }
 
     public void deleteCard(Card card, Deck deck) {
+        System.out.println("delete card " + card.getName() + " from deck " + deck.getName());
         this.cards.remove(card);
-        this.deletedCards.add(card);
-        this.cardDeckMap.get(card).remove(deck);        
+        
+        // Add to deletedCards HashMap
+        if (!deletedCards.containsKey(card)) {
+            deletedCards.put(card, new ArrayList<>());
+        }
+        deletedCards.get(card).add(deck);
+        
+        this.cardDeckMap.get(card).remove(deck);
     }
 
     public void restoreCard(Card card, Deck deck) {
+        System.out.println("restore card " + card.getName() + " to deck " + deck.getName());
         this.cards.add(card);
-        this.deletedCards.remove(card);
-        this.cardDeckMap.get(card).add(deck);
+        deck.addCard(card);
+        
+        // Remove from deletedCards
+        if (deletedCards.containsKey(card)) {
+            deletedCards.get(card).remove(deck);
+            if (deletedCards.get(card).isEmpty()) {
+                deletedCards.remove(card);
+            }
+        }
     }
 
     public ArrayList<Card> getCards() {
         return this.cards;
     }
 
-    public ArrayList<Card> getDeletedCards() {
-        return this.deletedCards;
+    public HashMap<Card, ArrayList<Deck>> getDeletedCards() {
+        return deletedCards;
     }
     
     public HashMap<Card, ArrayList<Deck>> getCardDeckMap() {
@@ -76,18 +91,25 @@ public class CardManager {
         return deckNames;
     }
 
-	public Card getCard(String cardName) {
-        for (Card card : this.cards) {
-            if (card.getName().equals(cardName)) {
-                return card;
+    public Card getCard(String cardName) {
+        try {
+            if (cardName == null) return null;
+            
+            for (Card card : this.cards) {
+                if (card.getName().equals(cardName)) {
+                    return card;
+                }
             }
-        }
-        for (Card card : this.deletedCards) {
-            if (card.getName().equals(cardName)) {
-                return card;
+            for (Card card : this.deletedCards.keySet()) {
+                if (card.getName().equals(cardName)) {
+                    return card;
+                }
             }
+            return null;
+        } catch (Exception e) {
+            System.err.println("Error getting card: " + e.getMessage());
+            return null;
         }
-        return null;
-	}
+    }
 
 }

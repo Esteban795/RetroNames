@@ -3,6 +3,7 @@ package linguacrypt.controllers;
 import javafx.scene.control.Label;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import linguacrypt.scenes.SceneManager;
@@ -105,13 +106,18 @@ public class EditDecksSceneController {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent()) {
                 if (result.get() == saveAndLeave) {
+                    System.out.println("Saving changes to decks...");
                     model.getDeckManager().saveDeckManager();
                     sm.popScene();
                 } else if (result.get() == leaveWithoutSave) {
-                    // Restore all deleted cards using CardManager
-                    for (Card card : model.getCardManager().getDeletedCards()) {
-                        ArrayList<Deck> decks = model.getCardManager().getDecks(card);
+                    System.out.println("Leaving without saving changes...");
+                    // Restore all deleted cards using CardManager's new HashMap structure
+                    HashMap<Card, ArrayList<Deck>> deletedCards = model.getCardManager().getDeletedCards();
+                    for (Map.Entry<Card, ArrayList<Deck>> entry : deletedCards.entrySet()) {
+                        Card card = entry.getKey();
+                        ArrayList<Deck> decks = entry.getValue();
                         for (Deck deck : decks) {
+                            System.out.println("Restoring card: " + card.getName() + " to deck: " + deck.getName());
                             model.getCardManager().restoreCard(card, deck);
                         }
                     }
@@ -123,6 +129,17 @@ public class EditDecksSceneController {
         }
     }
 
+    private void revertChanges() {
+        HashMap<Card, ArrayList<Deck>> deletedCards = model.getCardManager().getDeletedCards();
+        for (Card card : deletedCards.keySet()) {
+            ArrayList<Deck> decks = deletedCards.get(card);
+            for (Deck deck : decks) {
+                System.out.println("Restoring card: " + card.getName() + " to deck: " + deck.getName());
+                model.getCardManager().restoreCard(card, deck);
+            }
+        }
+    }
+    
     @FXML
     public void showNewDeckPopup() {
         deckNameField.setText("");

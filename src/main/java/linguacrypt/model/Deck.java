@@ -75,6 +75,7 @@ public class Deck implements Visitable {
      */
     public void addCard(Card card) { // Add a card to the deck (the deck is supposed to be sorted) at the correct
                                      // position
+        System.out.println("Adding card " + card.getName() + " to deck " + deckName);
         int index = 0;
         for (Card c : cardList) {
             if (c.getName().compareTo(card.getName()) > 0) {

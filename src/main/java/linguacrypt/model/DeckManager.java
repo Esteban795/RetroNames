@@ -45,27 +45,32 @@ public class DeckManager implements Visitable {
         return true;
     }
 
+    public void addDeckAgain(Deck deck) {
+        if (getDeck(deck.getName()) != null) {
+            return;
+        }
+        int insertIndex = 0;
+        while (insertIndex < deckList.size() && deckList.get(insertIndex).getName().compareTo(deck.getName()) < 0) {
+            insertIndex++;
+        }
+        deckList.add(insertIndex, deck);
+    }
+
     public void removeDeck(Deck deck) {
         if (deckList.remove(deck)) {
             deletedDeckList.add(deck);
         }
     }
 
-    public Boolean restoreDeck(Deck deck) {
-        if (deletedDeckList.remove(deck)) {
-            return addDeck(deck);
-        }
-        return false;
-    }
-
     public void restoreAllDecks() {
         for (Deck deck : deletedDeckList) {
-            addDeck(deck);
+            addDeckAgain(deck);
+            System.out.println("Restored deck: " + deck.getName());
         }
         for (Deck deck : newlyAddedDeckList) {
             deckList.remove(deck);
         }
-        deletedDeckList.clear();
+        newlyAddedDeckList.clear();
     }
 
     public ArrayList<Deck> getDeckList() {

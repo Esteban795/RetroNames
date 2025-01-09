@@ -57,5 +57,9 @@ public class LobbyScene extends ManagedScene {
         // TODO Auto-generated method stub
 
     }
+
+    public LobbySceneController getController() {
+        return controller;
+    }
     
 }

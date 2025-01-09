@@ -73,9 +73,9 @@ public class SceneManager {
     }
 
     public void popAllButFirst() {
-        ManagedScene first = scenes.get(0);
-        scenes.clear();
-        scenes.push(first);
+        while (scenes.size() > 1) {
+            popScene();
+        }
     }
 
     public ManagedScene peek() {
@@ -98,11 +98,11 @@ public class SceneManager {
         return model;
     }
 
-    public void goToPreviousSceneType(Object obj) {
-        while (!scenes.peek().getClass().equals(obj)) {
+    public boolean goToPreviousSceneType(Object obj) {
+        while (!scenes.peek().getClass().equals(obj) && scenes.size() > 1) {
             // Pop all scenes until we reach the correct type scene
             popScene();
         }
-
+        return scenes.peek().getClass().equals(obj);
     }
 }

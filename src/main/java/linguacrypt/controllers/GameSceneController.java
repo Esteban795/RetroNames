@@ -86,6 +86,7 @@ public class GameSceneController {
     @FXML
     public void initialize() {
         // Initialize game scene elements
+        printGrid();
         try {
             setupGameGrid();
             setupHintControls();
@@ -120,12 +121,12 @@ public class GameSceneController {
      * Initialize the grid with the cards of the game's deck.
      */
     private void setupGameGrid() {
-        if (game == null || game.getGrid() == null) {
-            System.err.println("Game or grid is null");
-            return;
-        }
-        game.getGrid().clear();
-        game.initGrid();
+        // if (game == null || game.getGrid() == null) {
+        //     System.err.println("Game or grid is null");
+        //     return;
+        // }
+        // game.getGrid().clear();
+        // game.initGrid();
         System.out.println("Game grid loaded with cards");
         updateGrid();
         updateTurnLabel();
@@ -323,11 +324,9 @@ public class GameSceneController {
     @FXML
     public void openQRCode() throws Exception {
         Dialog<ImageView> dialog = new Dialog<>();
-        dialog.setTitle("QR Code de la clé de jeu");
-        dialog.setHeaderText("Scannez ce QR Code pour rejoindre la partie");
+        dialog.setTitle("Scannez ce QR Code pour accéder à la clé de la partie");
         dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE);
-
-        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(), "src/main/resources/imgs/qrcode.jpg");
+        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(), "src/main/resources/imgs/qrcode_resized.jpg");
         if (res == 0) {
             System.out.println("QR Code generated successfully");
             Image img = new Image(getClass().getResourceAsStream("/imgs/qrcode_resized.jpg"));
@@ -337,8 +336,17 @@ public class GameSceneController {
             dialog.getDialogPane().getChildren().add(qrCodeView);
             dialog.getDialogPane().setMinWidth(width);
             dialog.getDialogPane().setMinHeight(height);
-            
             dialog.show();
         }
     }
+
+    public void printGrid() {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                System.out.print(game.getGrid().get(i).get(j).getName() + " " + "(" + game.getGrid().get(i).get(j).getColor() + ") ");
+            }
+            System.out.println();
+        }
+    }
 }
+

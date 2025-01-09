@@ -27,30 +27,28 @@ public class QRCodeGenerator {
         int width = grid.size();
         int height = grid.get(0).size();
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 Card card = grid.get(i).get(j);
                 switch (card.getColor()) {
                     case RED:
-                        image.setRGB(i, j, 0xFF0000);
+                        image.setRGB(j,i, 0xFF0000);
                         break;
                     case BLUE:
-                        image.setRGB(i, j, 0x0000FF);
+                        image.setRGB(j,i, 0x0000FF);
                         break;
                     case WHITE:
-                        image.setRGB(i, j, 0xFFFFDD);
+                        image.setRGB(j,i, 0xFFFFDD);
                         break;
                     case BLACK:
-                        image.setRGB(i, j, 0x000000);
+                        image.setRGB(j,i, 0x000000);
                         break;
                     default:
-                        image.setRGB(i, j, 0xFFFFFF);
+                        image.setRGB(j,i, 0xFFFFFF);
                         break;
                 }
             }
         }
-
         // Save the image to a file
         File outputfile = new File("grid.png");
         ImageIO.write(image, "png", outputfile);
@@ -109,7 +107,7 @@ public class QRCodeGenerator {
 
         BufferedImage copyImg = deepCopy(image);
         BufferedImage resizedImg = copyImg.getSubimage(minX - 10, minY - 10, maxX - minX + 20, maxY - minY + 20);
-        ImageIO.write(resizedImg, "png", new File("src/main/resources/imgs/qrcode_resized.jpg"));
+        ImageIO.write(resizedImg, "png", new File("src/main/resources/imgs/qrcode_resized.png"));
     }
 
     private static BufferedImage deepCopy(BufferedImage bi) {

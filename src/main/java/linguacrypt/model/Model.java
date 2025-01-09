@@ -5,6 +5,7 @@ import linguacrypt.model.CardManager;
 import linguacrypt.model.Game;
 
 public class Model {
+
     private Game game;
     private DeckManager deckManager;
     private CardManager cardManager;
@@ -14,7 +15,7 @@ public class Model {
         this.deckManager = new DeckManager();
     }
 
-    public Model(Boolean loadDeckManager){
+    public Model(Boolean loadDeckManager) {
         this.game = new Game();
         this.deckManager = DeckManager.loadDeckManager("deckManager.json");
         this.cardManager = new CardManager();

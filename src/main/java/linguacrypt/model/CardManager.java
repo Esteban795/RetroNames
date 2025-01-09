@@ -56,7 +56,7 @@ public class CardManager {
 
     public ArrayList<Deck> getDecks(String cardName) {
         for (Card card : this.cards) {
-            if (card.getCardName().equals(cardName)) {
+            if (card.getName().equals(cardName)) {
                 return this.cardDeckMap.get(card);
             }
         }
@@ -67,8 +67,8 @@ public class CardManager {
         System.out.println("toString");
         String deckNames = "";
         for (Deck d : deck) {
-            System.out.println(d.getDeckName());
-            deckNames += d.getDeckName() + ", ";
+            System.out.println(d.getName());
+            deckNames += d.getName() + ", ";
         }
         if (!deckNames.isEmpty()) {
             deckNames = deckNames.substring(0, deckNames.length() - 2);
@@ -78,12 +78,12 @@ public class CardManager {
 
 	public Card getCard(String cardName) {
         for (Card card : this.cards) {
-            if (card.getCardName().equals(cardName)) {
+            if (card.getName().equals(cardName)) {
                 return card;
             }
         }
         for (Card card : this.deletedCards) {
-            if (card.getCardName().equals(cardName)) {
+            if (card.getName().equals(cardName)) {
                 return card;
             }
         }

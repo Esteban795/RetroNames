@@ -20,6 +20,9 @@ public class Team {
     @JsonProperty("nbSpy")
     private int nbSpy;
 
+    @JsonProperty("nbFoundCards")
+    private int nbFoundCards;
+
     @JsonCreator
     public Team(
         @JsonProperty("teamName") String teamName,
@@ -28,6 +31,7 @@ public class Team {
         this.teamColor = teamColor;
         this.playerList = new ArrayList<>();
         this.nbSpy = 0;
+        this.nbFoundCards = 0;
     }
 
     public void addPlayer(Player player) {
@@ -43,15 +47,15 @@ public class Team {
         playerList.remove(player);
     }
 
-    public void setTeamName(String teamName) {
+    public void setName(String teamName) {
         this.teamName = teamName;
     }
 
-    public String getTeamName() {
+    public String getName() {
         return teamName;
     }
 
-    public Color getTeamColor() {
+    public Color getColor() {
         return teamColor;
     }
 
@@ -65,5 +69,13 @@ public class Team {
 
     public void setNbSpy(int nbSpy) {
         this.nbSpy = nbSpy;
+    }
+
+    public int getNbFoundCards() {
+        return nbFoundCards;
+    }
+
+    public void setNbFoundCards(int nbFoundCards) {
+        this.nbFoundCards = nbFoundCards;
     }
 }

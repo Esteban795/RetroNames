@@ -29,9 +29,9 @@ public class TeamManager {
     public void addTeam(Team team) {
         if (team == null) return;
         
-        if (team.getTeamColor() == Color.BLUE) {
+        if (team.getColor() == Color.BLUE) {
             this.blueTeam = team;
-        } else if (team.getTeamColor() == Color.RED) {
+        } else if (team.getColor() == Color.RED) {
             this.redTeam = team;
         }
     }

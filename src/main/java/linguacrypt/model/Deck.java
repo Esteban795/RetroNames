@@ -2,6 +2,8 @@ package linguacrypt.model;
 
 import linguacrypt.visitor.Visitable;
 import linguacrypt.visitor.Visitor;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,6 +14,7 @@ import java.util.Collections;
  * Represents a deck of cards in the game.
  * Contains a list of cards and methods to manage them.
  */
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Deck implements Visitable {
     @JsonProperty("deckName")
     private String deckName;
@@ -24,6 +27,11 @@ public class Deck implements Visitable {
         this.cardList = new ArrayList<>();
     }
 
+    public Deck(String deckName) {
+        this.deckName = deckName;
+        this.cardList = new ArrayList<>();
+    }
+
     @JsonCreator
     public Deck(
             @JsonProperty("deckName") String deckName,
@@ -33,10 +41,12 @@ public class Deck implements Visitable {
     }
 
     // Getters and Setters
-    public String getDeckName() {
+    @JsonProperty("deckName")
+    public String getName() {
         return deckName;
     }
 
+    @JsonProperty("deckName")
     public void setDeckName(String deckName) {
         this.deckName = deckName;
     }
@@ -51,7 +61,7 @@ public class Deck implements Visitable {
 
     public Card getCard(String cardName) {
         for (Card card : cardList) {
-            if (card.getCardName().equals(cardName)) {
+            if (card.getName().equals(cardName)) {
                 return card;
             }
         }
@@ -67,7 +77,7 @@ public class Deck implements Visitable {
                                      // position
         int index = 0;
         for (Card c : cardList) {
-            if (c.getCardName().compareTo(card.getCardName()) > 0) {
+            if (c.getName().compareTo(card.getName()) > 0) {
                 break;
             }
             index++;
@@ -93,13 +103,13 @@ public class Deck implements Visitable {
         // Used when the deck is loaded from a file (it is possible that the cards are not sorted if the file was created or edited manually)
         boolean isSorted = true;
         for (int i = 0; i < cardList.size() - 1; i++) {
-            if (cardList.get(i).getCardName().compareTo(cardList.get(i + 1).getCardName()) > 0) {
+            if (cardList.get(i).getName().compareTo(cardList.get(i + 1).getName()) > 0) {
                 isSorted = false;
                 break;
             }
         }
         if (!isSorted) {
-            Collections.sort(cardList, (c1, c2) -> c1.getCardName().compareTo(c2.getCardName()));
+            Collections.sort(cardList, (c1, c2) -> c1.getName().compareTo(c2.getName()));
         }
     }
 

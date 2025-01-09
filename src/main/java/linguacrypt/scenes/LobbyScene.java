@@ -23,7 +23,7 @@ public class LobbyScene extends ManagedScene {
             Parent root = loader.load();
             super.setScene(new Scene(root, 1600,900));
         } catch (Exception e) {
-            System.out.println("Error loading MenuScene.fxml");
+            System.out.println("Error loading LobbyScene.fxml");
             sm.getPrimaryStage().close();
         }
     }

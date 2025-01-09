@@ -2,9 +2,8 @@ package linguacrypt.scenes;
 
 import java.util.Stack;
 
-import linguacrypt.model.Model;
-
 import javafx.stage.Stage;
+import linguacrypt.model.Model;
 
 public class SceneManager {
 
@@ -64,7 +63,7 @@ public class SceneManager {
     }
 
     public void popAllButFirst() {
-        ManagedScene first = scenes.firstElement();
+        ManagedScene first = scenes.get(0);
         scenes.clear();
         scenes.push(first);
     }
@@ -87,5 +86,13 @@ public class SceneManager {
 
     public Model getModel() {
         return model;
+    }
+
+    public void goToPreviousSceneType(Object obj) {
+        while (!scenes.peek().getClass().equals(obj)) {
+            // Pop all scenes until we reach the correct type scene
+            popScene();
+        }
+
     }
 }

@@ -157,7 +157,7 @@ public class EditDecksSceneController {
     private void addDeckToUI(Deck deck) {
         HBox deckContainer = new HBox(10);
         deckContainer.setPadding(new Insets(5)); // Add padding around container
-        Button deckButton = new Button(deck.getDeckName());
+        Button deckButton = new Button(deck.getName());
         deckButton.getStyleClass().add("deck-button");
 
         // Style for selected state
@@ -208,7 +208,7 @@ public class EditDecksSceneController {
         cardFlow.setStyle("-fx-alignment: center;"); // Center alignment both horizontally and vertically
 
         for (Card card : deck.getCardList()) {
-            Button cardButton = new Button(card.getCardName());
+            Button cardButton = new Button(card.getName());
             cardButton.getStyleClass().add("embassy-button");
             cardButton.setMaxWidth(Double.MAX_VALUE);
             cardButton.setMinHeight(50);
@@ -227,8 +227,8 @@ public class EditDecksSceneController {
         VBox infoLabels = new VBox(5);
         infoLabels.getChildren().addAll(
                 new Label("Card Information:"),
-                new Label("Card Name: " + card.getCardName()),
-                new Label("Deck: " + selectedDeck.getDeckName()));
+                new Label("Card Name: " + card.getName()),
+                new Label("Deck: " + selectedDeck.getName()));
 
         HBox buttonBox = new HBox(10);
         Button deleteCardButton = new Button("Delete Card");
@@ -264,7 +264,7 @@ public class EditDecksSceneController {
         for (Deck deck : model.getDeckManager().getDeckList()) {
             model.getCardManager().getDecks(selectedCard);
             if (deck != selectedDeck && !model.getCardManager().getDecks(selectedCard).contains(deck)) {
-                deckComboBox.getItems().add(deck.getDeckName());
+                deckComboBox.getItems().add(deck.getName());
             }
         }
 
@@ -289,7 +289,7 @@ public class EditDecksSceneController {
             model.getCardManager().deleteCard(card, selectedDeck);
             cardOrDeckAddedOrRemovesViaUI = true;
             cardList.getChildren().remove(cardContainer);
-            System.out.println("Card deleted from deck: " + selectedDeck.getDeckName());
+            System.out.println("Card deleted from deck: " + selectedDeck.getName());
         } else {
             System.out.println("No deck selected!");
         }

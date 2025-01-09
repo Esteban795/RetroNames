@@ -77,9 +77,7 @@ public class GameSceneController {
         if (game.getConfig().getCurrentDeck() == null) {
             game.getConfig().setCurrentDeck(sm.getModel().getDeckManager().getRandomDeck());
         }
-
-        // Create the grid for the scene
-        game.initGrid();
+        
         this.size = game.getGrid().size();
         System.out.println("GameSceneController initialized with grid size: " + size);
     }

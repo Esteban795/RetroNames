@@ -1,6 +1,7 @@
 package linguacrypt.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -152,7 +153,6 @@ public class LobbySceneController {
         int count = blueTeamOperative.getChildren().size() + blueTeamSpy.getChildren().size() + redTeamOperative.getChildren().size() + redTeamSpy.getChildren().size();
         String deckName = decksSelector.getValue();
 
-
         if (count < 4) {
             errorLabel.setText("Pas assez de joueurs.");
             return;
@@ -168,10 +168,8 @@ public class LobbySceneController {
             return;
         }
 
-
         addPlayersToTeams();
 
-        
         setupCards(deckName);
 
         sm.pushScene(new GameScene(sm));
@@ -212,12 +210,16 @@ public class LobbySceneController {
         config.setCurrentDeck(deck);
 
         int gridSize = sm.getModel().getGame().getConfig().getGridSize();
-        List<Card> selectedCards = deck.getCardList().subList(0, gridSize * gridSize);
+        ArrayList<Card> cards = new ArrayList<>(deck.getCardList());
+
+        Collections.shuffle(cards);
+        ArrayList<Card> selectedCards = new ArrayList<>(cards.subList(0, gridSize * gridSize));
         int step = gridSize * gridSize / 3;
-        
+
         fillRange(selectedCards, 0, step + 1, Color.RED);
-        fillRange(selectedCards, step + 1, 2 * (step + 1),Color.BLUE);
-        fillRange(selectedCards,2 * (step + 1) + 1 , 3 * step - 1,Color.WHITE);
+        fillRange(selectedCards, step + 1, 2 * step + 1, Color.BLUE);
+        fillRange(selectedCards, 2 * (step + 1) + 1, 3 * step - 1, Color.WHITE);
+
         selectedCards.get(gridSize * gridSize - 1).setColor(Color.BLACK);
 
         Collections.shuffle(selectedCards);
@@ -228,6 +230,12 @@ public class LobbySceneController {
     @FXML
     public void goToMenu() {
         sm.goToPreviousSceneType(MenuScene.class);
+    }
+
+    private void printSelectedCards(ArrayList<Card> selectedCards) {
+        for (int i = 0; i < selectedCards.size(); i++) {
+            System.out.println("Name : " + selectedCards.get(i).getName() + " (color : " + selectedCards.get(i).getColor() + ")");
+        }
     }
 
 }

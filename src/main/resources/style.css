@@ -1,24 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap');
+/* MENU STYLE */
+.menu-background {
+    -fx-background-image: url("/data/back3.png");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+.particle-pane {
+    -fx-background-color: transparent;
+    -fx-min-width: 100%;
+    -fx-min-height: 100%;
+    -fx-max-width: infinity;
+    -fx-max-height: infinity;
+}
+
+
+.game-title {
+    -fx-font-family: "ZCOOL KuaiLe", serif;
+    -fx-font-size: 96px;-fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
+}
+
+/* MENU BUTTONS */
 .menu-button {
+    -fx-font-family: "CustomFont";
     -fx-font-size: 18px;
-    -fx-background-color: #04AA6D;
-    -fx-text-fill: white;
-    -fx-background-radius: 5px;
+    -fx-font-family: "Microsoft Sans Serif", "MS Sans Serif", "Segoe UI", sans-serif;
+    -fx-background-color: #c0c0c0;
+    -fx-text-fill: black;
+    -fx-background-radius: 0;
+    -fx-border-style: solid;
+    -fx-border-width: 2px;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
     -fx-pref-width: 300px;
     -fx-pref-height: 50px;
+    -fx-effect: none;
 }
 
 .menu-button:hover {
-    -fx-background-color: #038857;
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
-}
-.menu-button:focused {
-    -fx-border-color: black;
-    -fx-border-width: 2px;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+    -fx-background-color: #d4d4d4;
 }
 
+.menu-button:pressed {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #808080 #ffffff #ffffff #808080;
+    -fx-translate-y: 1px;
+    -fx-translate-x: 1px;
+}
+
+.menu-button:focused {
+    -fx-background-color: #c0c0c0;
+    -fx-border-style: dotted;
+    -fx-border-color: black;
+}
 
 /* EDIT DECK STYLE */
 /* DECK BUTTON STYLE */
@@ -29,7 +66,7 @@
     -fx-background-radius: 5px;
     -fx-pref-width: 200px;
     -fx-pref-height: 40px;
-    -fx-padding: 10px; 
+    -fx-padding: 10px;
 }
 
 .deck-button:hover {
@@ -112,6 +149,7 @@
     -fx-background-radius: 5px;
     -fx-padding: 10px;
 }
+
 /* Menu specific styles */
 .menu-bar {
     -fx-background-color: #f4f4f4;
@@ -140,6 +178,3 @@
 
 
 /* This is a test */
-
-
-

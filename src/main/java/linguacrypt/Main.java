@@ -51,7 +51,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
 
         // Actual Initial Scene
-        ManagedScene MenuScene = new LoadMenuScene(sm);
+        ManagedScene MenuScene = new MenuScene(sm);
         sm.pushScene(MenuScene);
         primaryStage.show();
     }

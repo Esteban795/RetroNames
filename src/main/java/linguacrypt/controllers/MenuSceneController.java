@@ -85,17 +85,6 @@ public class MenuSceneController {
 
     @FXML
     private void initialize() {
-        try {
-            Font customFont = Font.loadFont(
-                getClass().getResourceAsStream("/fonts/MonaLisa-Regular.ttf"), 
-                14
-            );
-            if (customFont == null) {
-                System.err.println("Error loading custom font");
-            }
-        } catch (Exception e) {
-            System.err.println("Could not load font: " + e.getMessage());
-        }
         // Called after FXML is loaded
         // Create fire effect
         Glow glow = new Glow(0.0);

@@ -42,13 +42,12 @@ public class EndGameSceneController {
     @FXML
     void initialize() {
         setupGrid();
-        displayStats();
+        displayStats();   
     }
 
     public void setupGrid() {
         int size = sm.getModel().getGame().getGrid().size();
         ArrayList<ArrayList<Card>> expectedMap = sm.getModel().getGame().getGrid();
-        ArrayList<ArrayList<Card>> key = sm.getModel().getGame().getKey();
 
         int cellSize = 75 - 5 * (size - 3);
         expectedMapGrid.setStyle(
@@ -59,15 +58,16 @@ public class EndGameSceneController {
             for (int j = 0; j < size; j++) {
                 Pane pane = new Pane();
                 pane.setPrefSize(cellSize, cellSize); // Set fixed size
-                pane.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: "
-                        + expectedMap.get(i).get(j).getColor().toString().toLowerCase() + "; -fx-border-color: black;");
-                expectedMapGrid.add(pane, i, j);
+                String color = expectedMap.get(i).get(j).isFound() ? expectedMap.get(i).get(j).getColor().toString()
+                        .toLowerCase() : "white";
+                pane.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: " + color + "; -fx-border-color: black;");
+                expectedMapGrid.add(pane, j,i);
 
                 Pane paneExpected = new Pane();
                 paneExpected.setPrefSize(cellSize, cellSize); // Set fixed size
                 paneExpected.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: "
-                        + key.get(i).get(j).getColor().toString().toLowerCase() + "; -fx-border-color: black;");
-                keyGrid.add(paneExpected, i, j);
+                        + expectedMap.get(i).get(j).getColor().toString().toLowerCase() + "; -fx-border-color: black;");
+                keyGrid.add(paneExpected, j,i);
             }
         }
 

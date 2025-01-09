@@ -9,6 +9,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -17,27 +18,34 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+   prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1"
+   xmlns:fx="http://javafx.com/fxml/1">
+
    <top>
       <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
+         <menus>
+            <Menu mnemonicParsing="false" text="Jeu">
+               <items>
+                  <MenuItem fx:id="menuItemMainMenu" mnemonicParsing="false" text="Menu"
+                     onAction="#handleMainMenu" />
+                  <MenuItem fx:id="menuItemTeamSelect" mnemonicParsing="false" text="Nouveau"
+                     onAction="#handleTeamSelect" />
+                  <MenuItem fx:id="menuItemLoadGame" mnemonicParsing="false" text="Charger" onAction="#handleLoadGame" />
+                  <MenuItem fx:id="menuItemSettings" mnemonicParsing="false" text="Paramètres"
+                     onAction="#handleSettings" />
+                  <SeparatorMenuItem />
+                  <MenuItem fx:id="menuItemQuit" mnemonicParsing="false" text="Quitter"
+                     onAction="#handleQuit" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Aide">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="About" />
+               </items>
+            </Menu>
+         </menus>
       </MenuBar>
    </top>
 
@@ -63,63 +71,78 @@
 
    <right>
       <StackPane prefWidth="150" BorderPane.alignment="CENTER">
-         <padding><Insets bottom="10" left="5" right="10" top="10" /></padding>
-      <children>
-         <ProgressBar fx:id="blueTeamProgress" 
-                     maxHeight="Infinity" 
-                     maxWidth="Infinity" 
-                     prefHeight="Infinity" 
-                     prefWidth="200" 
-                     style="-fx-accent: #0000cc; -fx-control-inner-background: #ccccff;"
-                     VBox.vgrow="ALWAYS"
-                     scaleX="-1" />
+         <padding>
+            <Insets bottom="10" left="5" right="10" top="10" />
+         </padding>
+         <children>
+            <ProgressBar fx:id="blueTeamProgress"
+               maxHeight="Infinity"
+               maxWidth="Infinity"
+               prefHeight="Infinity"
+               prefWidth="200"
+               style="-fx-accent: #0000cc; -fx-control-inner-background: #ccccff;"
+               VBox.vgrow="ALWAYS"
+               scaleX="-1" />
             <VBox alignment="CENTER" scaleX="-1.0" spacing="10">
-               <Label scaleX="-1.0" style="-fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
-                         -fx-padding: 5;" text="Équipe Bleue" />
-               <Label fx:id="blueTeamPlayers" style="-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
+               <Label scaleX="-1.0"
+                  style="-fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
+                         -fx-padding: 5;"
+                  text="Équipe Bleue" />
+               <Label fx:id="blueTeamPlayers"
+                  style="-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
                          -fx-padding: 5;" />
             </VBox>
          </children>
       </StackPane>
    </right>
-   
-<bottom>
-   <VBox alignment="CENTER" spacing="10">
-      <HBox fx:id="hintInputBox" alignment="CENTER" spacing="10">
-         <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
-         <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" prefWidth="135.0" text="Indice à donner :" />
-            <TextField fx:id="hintField" />
-            <MenuButton fx:id="numberChoice" mnemonicParsing="false" text="Nombre" />
-            <Button mnemonicParsing="false" text="Valider" onAction="#submitHint" />
-         </children>
-      </HBox>
-      
-      <HBox fx:id="hintDisplayBox" alignment="CENTER" spacing="20">
-         <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
-         <children>
-            <Label fx:id="hintLabel" style="-fx-font-size: 16px;" />
-            <Label fx:id="remainingGuessesLabel" style="-fx-font-size: 16px;" />
-         </children>
-      </HBox>
-   </VBox>
-</bottom>
+
+   <bottom>
+      <VBox alignment="CENTER" spacing="10">
+         <HBox fx:id="hintInputBox" alignment="CENTER" spacing="10">
+            <padding>
+               <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+            <children>
+               <Label alignment="CENTER" contentDisplay="CENTER" prefWidth="135.0"
+                  text="Indice à donner :" />
+               <TextField fx:id="hintField" />
+               <MenuButton fx:id="numberChoice" mnemonicParsing="false" text="Nombre" />
+               <Button mnemonicParsing="false" text="Valider" onAction="#submitHint" />
+            </children>
+         </HBox>
+
+         <HBox fx:id="hintDisplayBox" alignment="CENTER" spacing="20">
+            <padding>
+               <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+            <children>
+               <Label fx:id="hintLabel" style="-fx-font-size: 16px;" />
+               <Label fx:id="remainingGuessesLabel" style="-fx-font-size: 16px;" />
+            </children>
+         </HBox>
+      </VBox>
+   </bottom>
 
    <left>
       <StackPane prefWidth="150" BorderPane.alignment="CENTER">
-         <padding><Insets bottom="10" left="10" right="5" top="10" /></padding>
+         <padding>
+            <Insets bottom="10" left="10" right="5" top="10" />
+         </padding>
          <children>
-            <ProgressBar fx:id="redTeamProgress" 
-                     maxHeight="Infinity" 
-                     maxWidth="Infinity" 
-                     prefHeight="Infinity" 
-                     prefWidth="200" 
-                     style="-fx-accent: #cc0000; -fx-control-inner-background: #ffcccc;"
-                     VBox.vgrow="ALWAYS" />
+            <ProgressBar fx:id="redTeamProgress"
+               maxHeight="Infinity"
+               maxWidth="Infinity"
+               prefHeight="Infinity"
+               prefWidth="200"
+               style="-fx-accent: #cc0000; -fx-control-inner-background: #ffcccc;"
+               VBox.vgrow="ALWAYS" />
             <VBox alignment="CENTER" spacing="10">
-               <Label style="-fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
-                         -fx-padding: 5;" text="Équipe Rouge" />
-               <Label fx:id="redTeamPlayers" style="-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
+               <Label
+                  style="-fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
+                         -fx-padding: 5;"
+                  text="Équipe Rouge" />
+               <Label fx:id="redTeamPlayers"
+                  style="-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
                          -fx-padding: 5;" />
             </VBox>
          </children>

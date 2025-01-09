@@ -13,8 +13,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import linguacrypt.model.Model;
-import linguacrypt.scenes.ManagedScene;
-import linguacrypt.scenes.SceneManager;
 
 public class Main extends Application {
 
@@ -53,7 +51,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
 
         // Actual Initial Scene
-        ManagedScene MenuScene = new MenuScene(sm);
+        ManagedScene MenuScene = new LoadMenuScene(sm);
         sm.pushScene(MenuScene);
         primaryStage.show();
     }

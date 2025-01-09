@@ -1,10 +1,16 @@
 package linguacrypt.controllers;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -14,12 +20,18 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.stage.FileChooser;
+import linguacrypt.exception.CorruptedSaveException;
 import linguacrypt.model.Card;
 import linguacrypt.model.Color;
 import linguacrypt.model.Game;
 import linguacrypt.model.Team;
 import linguacrypt.scenes.LobbyScene;
+import linguacrypt.scenes.MenuScene;
 import linguacrypt.scenes.SceneManager;
+import linguacrypt.scenes.SettingsScene;
+import linguacrypt.visitor.DeserializationVisitor;
+import linguacrypt.visitor.SerializationVisitor;
 
 public class GameSceneController {
 
@@ -266,12 +278,102 @@ public class GameSceneController {
     }
 
     @FXML
+    private void handleMainMenu() {
+        showSaveDialog(() -> {
+            try {
+                sm.pushScene(new MenuScene(sm));
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @FXML
+    private void handleTeamSelect() {
+        showSaveDialog(() -> {
+            try {
+                sm.pushScene(new LobbyScene(sm));
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @FXML
+    private void handleLoadGame() {
+        showSaveDialog(() -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select Save File");
+            fileChooser.setInitialDirectory(new File("src/main/resources/saves/"));
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+
+            File selectedFile = fileChooser.showOpenDialog(sm.getPrimaryStage());
+            if (selectedFile != null) {
+                try {
+                    DeserializationVisitor visitor = new DeserializationVisitor();
+                    Game loadedGame = visitor.loadGame(selectedFile.getPath());
+                    if (loadedGame != null) {
+                        this.game = loadedGame;
+                        sm.getModel().setGame(loadedGame);
+                        setupGameGrid();
+                        setupHintControls();
+                        initializeProgress();
+                    }
+                } catch (CorruptedSaveException e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Cannot load save file");
+                    alert.setContentText("The selected save file is corrupted");
+                    alert.showAndWait();
+                }
+            }
+        });
+    }
+
+    @FXML
+    private void handleSettings() {
+        sm.pushScene(new SettingsScene(sm));
+    }
+
+    @FXML
+    private void handleQuit() {
+        showSaveDialog(() -> Platform.exit());
+    }
+
+    private void showSaveDialog(Runnable afterSaveAction) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Save Game");
+        alert.setHeaderText("Would you like to save the game before leaving?");
+        alert.setContentText("Choose your option.");
+
+        ButtonType buttonTypeSave = new ButtonType("Save and Leave");
+        ButtonType buttonTypeNoSave = new ButtonType("Leave without Saving");
+        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonTypeSave, buttonTypeNoSave, buttonTypeCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == buttonTypeSave) {
+            SerializationVisitor saveVisitor = new SerializationVisitor();
+            game.accept(saveVisitor);
+            afterSaveAction.run();
+        } else if (result.get() == buttonTypeNoSave) {
+            afterSaveAction.run();
+        }
+    }
+
+    @FXML
     public void switchScene() throws IOException {
         sm.pushScene(new LobbyScene(sm));
     }
 
     @FXML
     public void goBack() {
+        SerializationVisitor saveVisitor = new SerializationVisitor();
+        game.accept(saveVisitor);
         sm.popScene();
     }
 }

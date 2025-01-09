@@ -96,7 +96,7 @@ public class Game implements Visitable {
             grid.add(row);
         }
         if (this.config.getCurrentDeck() != null) {
-            //System.out.println("On charge la grille");
+            // System.out.println("On charge la grille");
             loadGrid();
         }
     }
@@ -116,9 +116,8 @@ public class Game implements Visitable {
         // //Print le deck
         // System.out.println("Deck: " + deck.getName());
         // for (Card card : deck.getCardList()) {
-        //     System.out.println(card.getName());
+        // System.out.println(card.getName());
         // }
-        
 
         ArrayList<Card> cards = deck.getCardList();
         int size = config.getGridSize();
@@ -153,6 +152,7 @@ public class Game implements Visitable {
     public Team getCurrentTeam() {
         return (currentTeam ? config.getTeamManager().getRedTeam() : config.getTeamManager().getBlueTeam());
     }
+
     @JsonIgnore
     public int getBlueTeamFoundCards() {
         return config.getTeamManager().getBlueTeam().getNbFoundCards();

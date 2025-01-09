@@ -21,6 +21,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
@@ -113,6 +114,17 @@ public class GameSceneController {
             setupHintControls();
             initializeProgress();
             updatePlayerLabels();
+            // Permet de gérer l'appui sur la touche entrée pour valider l'indice
+            hintField.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    submitHint();
+                }
+            });
+            numberChoice.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    submitHint();
+                }
+            });
             setupQRCode();
 
         } catch (Exception e) {

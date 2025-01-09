@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 import linguacrypt.model.Card;
@@ -64,6 +65,12 @@ public class LobbySceneController {
         setupDragAndDrop(blueTeamSpy);
         setupDragAndDrop(redTeamSpy);
         setupDragAndDrop(redTeamOperative);
+        // Permet de gérer l'ajout de pseudo avec la touche entrée
+        pseudoTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                validatePseudo();
+            }
+        });
 
         setupDeckChoices();
     }
@@ -138,7 +145,7 @@ public class LobbySceneController {
     @FXML
     public void validatePseudo() {
         String pseudoString = this.pseudoTextField.getText();
-        // sm.getModel().    check if player already exists
+        // sm.getModel(). check if player already exists
         if (pseudoString.isEmpty()) {
             return;
         }
@@ -150,7 +157,8 @@ public class LobbySceneController {
 
     @FXML
     public void lobbyDone() throws IOException {
-        int count = blueTeamOperative.getChildren().size() + blueTeamSpy.getChildren().size() + redTeamOperative.getChildren().size() + redTeamSpy.getChildren().size();
+        int count = blueTeamOperative.getChildren().size() + blueTeamSpy.getChildren().size()
+                + redTeamOperative.getChildren().size() + redTeamSpy.getChildren().size();
         String deckName = decksSelector.getValue();
 
         if (count < 4) {
@@ -234,7 +242,8 @@ public class LobbySceneController {
 
     private void printSelectedCards(ArrayList<Card> selectedCards) {
         for (int i = 0; i < selectedCards.size(); i++) {
-            System.out.println("Name : " + selectedCards.get(i).getName() + " (color : " + selectedCards.get(i).getColor() + ")");
+            System.out.println(
+                    "Name : " + selectedCards.get(i).getName() + " (color : " + selectedCards.get(i).getColor() + ")");
         }
     }
 

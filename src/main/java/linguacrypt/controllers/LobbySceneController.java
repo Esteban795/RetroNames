@@ -187,12 +187,12 @@ public class LobbySceneController {
 
         blueTeamOperative.getChildren().forEach(player -> {
             Label label = (Label) player;
-            blueTeam.addPlayer(new Player(label.toString(), false));
+            blueTeam.addPlayer(new Player(label.getText(), false));
         });
 
         redTeamOperative.getChildren().forEach(player -> {
             Label label = (Label) player;
-            redTeam.addPlayer(new Player(label.toString(), false));
+            redTeam.addPlayer(new Player(label.getText(), false));
         });
     }
 

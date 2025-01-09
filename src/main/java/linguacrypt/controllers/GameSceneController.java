@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import javax.management.relation.Role;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -28,12 +30,14 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import linguacrypt.QRCode.QRCodeGenerator;
 import linguacrypt.exception.CorruptedSaveException;
 import linguacrypt.model.Card;
 import linguacrypt.model.Color;
 import linguacrypt.model.Game;
+import linguacrypt.model.Player;
 import linguacrypt.model.Team;
 import linguacrypt.scenes.EndGameScene;
 import linguacrypt.scenes.LobbyScene;
@@ -62,6 +66,14 @@ public class GameSceneController {
     private ProgressBar redTeamProgress;
     @FXML
     private ProgressBar blueTeamProgress;
+    @FXML
+    private Label redTeamSpymaster;
+    @FXML
+    private VBox redTeamOperators;
+    @FXML
+    private Label blueTeamSpymaster;
+    @FXML
+    private VBox blueTeamOperators;
 
     // FXML attributes for the hints
     @FXML
@@ -88,7 +100,7 @@ public class GameSceneController {
         if (game.getConfig().getCurrentDeck() == null) {
             game.getConfig().setCurrentDeck(sm.getModel().getDeckManager().getRandomDeck());
         }
-        
+
         this.size = game.getGrid().size();
         System.out.println("GameSceneController initialized with grid size: " + size);
     }
@@ -100,10 +112,43 @@ public class GameSceneController {
             setupGameGrid();
             setupHintControls();
             initializeProgress();
+            updatePlayerLabels();
             setupQRCode();
+
         } catch (Exception e) {
             System.err.println("Error during initialization: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    private void updatePlayerLabels() {
+        Team redTeam = game.getConfig().getTeamManager().getRedTeam();
+        Team blueTeam = game.getConfig().getTeamManager().getBlueTeam();
+
+        // Clear previous operators
+        redTeamOperators.getChildren().clear();
+        blueTeamOperators.getChildren().clear();
+
+        // Update Red Team
+        for (Player p : redTeam.getPlayerList()) {
+            if (p.getRole()) {
+                redTeamSpymaster.setText(p.getName());
+            } else {
+                Label operatorLabel = new Label(p.getName());
+                operatorLabel.setStyle("-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5); -fx-padding: 5;");
+                redTeamOperators.getChildren().add(operatorLabel);
+            }
+        }
+
+        // Update Blue Team
+        for (Player p : blueTeam.getPlayerList()) {
+            if (p.getRole()) {
+                blueTeamSpymaster.setText(p.getName());
+            } else {
+                Label operatorLabel = new Label(p.getName());
+                operatorLabel.setStyle("-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5); -fx-padding: 5;");
+                blueTeamOperators.getChildren().add(operatorLabel);
+            }
         }
     }
 
@@ -116,8 +161,7 @@ public class GameSceneController {
                     BackgroundRepeat.NO_REPEAT,
                     BackgroundRepeat.NO_REPEAT,
                     BackgroundPosition.CENTER,
-                    new BackgroundSize(100, 100, true, true, false, true)
-            );
+                    new BackgroundSize(100, 100, true, true, false, true));
 
             qrCodeButton.setBackground(new Background(backgroundImage));
         } catch (Exception e) {
@@ -131,8 +175,8 @@ public class GameSceneController {
      */
     private void setupGameGrid() {
         // if (game == null || game.getGrid() == null) {
-        //     System.err.println("Game or grid is null");
-        //     return;
+        // System.err.println("Game or grid is null");
+        // return;
         // }
         // game.getGrid().clear();
         // game.initGrid();
@@ -248,11 +292,11 @@ public class GameSceneController {
         teamTurnLabel.setText(teamName);
         teamTurnLabel.setStyle(String.format(
                 "-fx-font-size: 24px; "
-                + "-fx-font-weight: bold; "
-                + "-fx-background-color: %s; "
-                + "-fx-text-fill: %s; "
-                + "-fx-padding: 5px 15px; "
-                + "-fx-background-radius: 5px;",
+                        + "-fx-font-weight: bold; "
+                        + "-fx-background-color: %s; "
+                        + "-fx-text-fill: %s; "
+                        + "-fx-padding: 5px 15px; "
+                        + "-fx-background-radius: 5px;",
                 bgColor, color));
     }
 
@@ -426,8 +470,8 @@ public class GameSceneController {
         Dialog<ImageView> dialog = new Dialog<>();
         dialog.setTitle("Scannez ce QR Code pour accéder à la clé de la partie");
         dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE);
-        System.out.println("Avant appel generate qr");
-        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(), "src/main/resources/imgs/qrcode_resized.png");
+        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(),
+                "src/main/resources/imgs/qrcode_resized.png");
         if (res == 0) {
             System.out.println("QR Code generated successfully");
             File fileImg = new File("src/main/resources/imgs/qrcode_resized.png");
@@ -445,10 +489,10 @@ public class GameSceneController {
     public void printGrid() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                System.out.print(game.getGrid().get(i).get(j).getName() + " " + "(" + game.getGrid().get(i).get(j).getColor() + ") ");
+                System.out.print(game.getGrid().get(i).get(j).getName() + " " + "("
+                        + game.getGrid().get(i).get(j).getColor() + ") ");
             }
             System.out.println();
         }
     }
 }
-

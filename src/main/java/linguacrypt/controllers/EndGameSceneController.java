@@ -1,5 +1,6 @@
 package linguacrypt.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.fxml.FXML;
@@ -104,8 +105,10 @@ public class EndGameSceneController {
     }
 
     @FXML
-    public void goToLobby() {
-        sm.goToPreviousSceneType(LobbyScene.class);
+    public void goToLobby() throws IOException {
+        if(!sm.goToPreviousSceneType(LobbyScene.class)){
+            sm.pushScene(new LobbyScene(sm));
+        }
     }
 
 }

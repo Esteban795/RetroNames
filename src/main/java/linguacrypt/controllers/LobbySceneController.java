@@ -212,8 +212,6 @@ public class LobbySceneController {
         addPlayersToTeams();
 
         setupCards(deckName);
-        System.out.println("Deck selected : " + deckName);
-        System.out.println("On passe à la scène de jeu");
 
         sm.pushScene(new GameScene(sm));
     }

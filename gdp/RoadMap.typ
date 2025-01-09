@@ -39,18 +39,15 @@ difficulté : 0-5
 
 == Jour 4
 
-- Mode Duo
+- Mode Duo - 2h
+- Mode de jeu Blitz - 2h
+- Image à la place des mots - 1h
+- Statistiques - 1h
 
-
-- Mode de jeu Blitz
-- Image à la place des mots
-- Statistiques
-
-== Jour X
-- Settings
+== Jour 5
 - Jeu :
-  - Affichage équipe
-- CSS
+  - Affichage équipe - 30min
+- CSS  - 3h
 
 
 

@@ -21,22 +21,27 @@ public class DeckManager implements Visitable {
     @JsonProperty("deletedDeckList")
     private ArrayList<Deck> deletedDeckList;
 
+    @JsonProperty("newlyAddedDeckList")
+    private ArrayList<Deck> newlyAddedDeckList;
+
+
     @JsonCreator
     public DeckManager() {
         this.deckList = new ArrayList<>();
         this.deletedDeckList = new ArrayList<>();
+        this.newlyAddedDeckList = new ArrayList<>();
     }
 
     public Boolean addDeck(Deck deck) {
         if (getDeck(deck.getName()) != null) {
             return false;
         }
-
         int insertIndex = 0;
         while (insertIndex < deckList.size() && deckList.get(insertIndex).getName().compareTo(deck.getName()) < 0) {
             insertIndex++;
         }
         deckList.add(insertIndex, deck);
+        newlyAddedDeckList.add(deck);
         return true;
     }
 
@@ -56,6 +61,9 @@ public class DeckManager implements Visitable {
     public void restoreAllDecks() {
         for (Deck deck : deletedDeckList) {
             addDeck(deck);
+        }
+        for (Deck deck : newlyAddedDeckList) {
+            deckList.remove(deck);
         }
         deletedDeckList.clear();
     }

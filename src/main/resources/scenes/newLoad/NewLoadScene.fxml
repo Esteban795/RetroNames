@@ -4,34 +4,39 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" 
-           xmlns:fx="http://javafx.com/fxml/1">
-           
+<BorderPane xmlns="http://javafx.com/javafx/8"
+    xmlns:fx="http://javafx.com/fxml/1">
+
     <padding>
-        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0" />
     </padding>
-    
+
     <center>
         <VBox alignment="CENTER" spacing="20.0">
             <padding>
-                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0" />
             </padding>
-            
-            <Button fx:id="buttonNew" 
-                    onAction="#newGame" 
-                    styleClass="menu-button"
-                    text="New Game"/>
-            
-            <Button fx:id="buttonLoad" 
-                    onAction="#loadGame" 
-                    styleClass="menu-button"
-                    text="Load Game"/>
-            
-            <Button fx:id="buttonBack" 
-                    onAction="#goBack" 
-                    styleClass="menu-button"
-                    text="Back"/>
+
+            <Button fx:id="buttonNew"
+                onAction="#newGame"
+                styleClass="menu-button"
+                text="New Game" />
+
+            <Button fx:id="buttonLoad"
+                onAction="#loadGame"
+                styleClass="menu-button"
+                text="Load Game" />
+
+            <Button fx:id="buttonQuickPlay"
+                onAction="#quickPlay"
+                styleClass="menu-button"
+                text="Quick Play" />
+
+            <Button fx:id="buttonBack"
+                onAction="#goBack"
+                styleClass="menu-button"
+                text="Back" />
         </VBox>
     </center>
-    
+
 </BorderPane>

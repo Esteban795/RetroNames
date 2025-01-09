@@ -88,6 +88,12 @@
                   <VBox alignment="CENTER" prefHeight="154.0" prefWidth="830.0" VBox.vgrow="ALWAYS">
                      <children>
                         <ComboBox fx:id="decksSelector" prefWidth="150.0" promptText="Decks" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="Sélectionnez la taille de la grille : " />
+                              <ComboBox fx:id="gridSizeSelector" prefWidth="150.0" promptText="5" />
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </children>

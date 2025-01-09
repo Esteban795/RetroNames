@@ -12,10 +12,10 @@ public class EndGameScene extends ManagedScene {
 
     private EndGameSceneController controller;
 
-    public EndGameScene(SceneManager sm) throws IOException {
+    public EndGameScene(SceneManager sm,String winningTeam) throws IOException {
         super(sm);
         super.setFXMLPath("/scenes/end/EndGameScene.fxml");
-        controller = new EndGameSceneController(sm);
+        controller = new EndGameSceneController(sm,winningTeam);
         FXMLLoader loader = new FXMLLoader();
         URL fxmlURL = getClass().getResource(super.getFXMLPath());
         loader.setLocation(fxmlURL);

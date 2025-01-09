@@ -54,6 +54,9 @@ public class LobbySceneController {
     @FXML
     private ComboBox<String> decksSelector;
 
+    @FXML
+    private ComboBox<String> gridSizeSelector;
+
     public LobbySceneController(SceneManager sm) {
         this.sm = sm;
     }
@@ -68,43 +71,44 @@ public class LobbySceneController {
         setupListeners();
 
         setupDeckChoices();
+        setupGridSizeChoices();
     }
 
-    private void setupListeners(){
-            // Permet de gérer l'ajout de pseudo avec la touche entrée
-            pseudoTextField.setOnKeyPressed(event -> {
-                if (event.getCode() == KeyCode.ENTER) {
-                    validatePseudo();
-                }
-            });
-    
-            pseudoTextField.sceneProperty().addListener((observable, oldScene, newScene) -> {
-                if (newScene != null) {
-                    newScene.setOnKeyPressed(event -> {
-                        if (event.isControlDown() && event.getCode() == KeyCode.X) {
+    private void setupListeners() {
+        // Permet de gérer l'ajout de pseudo avec la touche entrée
+        pseudoTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                validatePseudo();
+            }
+        });
+
+        pseudoTextField.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.setOnKeyPressed(event -> {
+                    if (event.isControlDown() && event.getCode() == KeyCode.X) {
+                        quickAddPlayers();
+                    }
+                });
+            }
+        });
+
+        pseudoTextField.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.setOnKeyPressed(event -> {
+                    if (event.isControlDown()) {
+                        if (event.getCode() == KeyCode.X) {
                             quickAddPlayers();
-                        }
-                    });
-                }
-            });
-    
-            pseudoTextField.sceneProperty().addListener((observable, oldScene, newScene) -> {
-                if (newScene != null) {
-                    newScene.setOnKeyPressed(event -> {
-                        if (event.isControlDown()) {
-                            if (event.getCode() == KeyCode.X) {
-                                quickAddPlayers();
-                            } else if (event.getCode() == KeyCode.ENTER) {
-                                try {
-                                    lobbyDone();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                        } else if (event.getCode() == KeyCode.ENTER) {
+                            try {
+                                lobbyDone();
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
                         }
-                    });
-                }
-            });
+                    }
+                });
+            }
+        });
 
     }
 
@@ -113,6 +117,12 @@ public class LobbySceneController {
             Label deckItem = new Label(deck.getName());
             decksSelector.getItems().add(deckItem.getText());
         });
+    }
+
+    private void setupGridSizeChoices() {
+        for (int i = 3; i <= 9; i++) {
+            gridSizeSelector.getItems().add(Integer.toString(i));
+        }
     }
 
     @FXML
@@ -178,10 +188,10 @@ public class LobbySceneController {
     @FXML
     public void validatePseudo() {
         String pseudoString = this.pseudoTextField.getText();
-        // sm.getModel(). check if player already exists
         if (pseudoString.isEmpty()) {
             return;
         }
+
         pseudoTextField.setText("");
 
         Label pseudoLabel = createDraggableLabel(pseudoString);
@@ -209,9 +219,16 @@ public class LobbySceneController {
             return;
         }
 
+        int gridSize = gridSizeSelector.getValue() == null ? 5 : Integer.parseInt(gridSizeSelector.getValue());
+        sm.getModel().getGame().getConfig().setGridSize(gridSize);
+
         addPlayersToTeams();
 
-        setupCards(deckName);
+        DeckManager dm = sm.getModel().getDeckManager();
+        GameConfiguration config = sm.getModel().getGame().getConfig();
+        Deck deck = dm.getDeck(deckName);
+
+        config.setCurrentDeck(deck);
 
         sm.pushScene(new GameScene(sm));
     }

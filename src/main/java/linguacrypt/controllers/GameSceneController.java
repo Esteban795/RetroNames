@@ -22,6 +22,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import linguacrypt.QRCode.QRCodeGenerator;
 import linguacrypt.model.Card;
 import linguacrypt.model.Color;
 import linguacrypt.model.Game;
@@ -320,21 +321,24 @@ public class GameSceneController {
     }
 
     @FXML
-    public void openQRCode() {
+    public void openQRCode() throws Exception {
         Dialog<ImageView> dialog = new Dialog<>();
         dialog.setTitle("QR Code de la clé de jeu");
         dialog.setHeaderText("Scannez ce QR Code pour rejoindre la partie");
         dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE);
 
-        Image img = new Image(getClass().getResourceAsStream("/imgs/qrcode.jpg"));
-        double width = img.getWidth();
-        double height = img.getHeight();
-        ImageView qrCodeView = new ImageView(img);
-
-        dialog.getDialogPane().getChildren().add(qrCodeView);
-        dialog.getDialogPane().setMinWidth(width);
-        dialog.getDialogPane().setMinHeight(height);
-
-        dialog.show();
+        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(), "src/main/resources/imgs/qrcode.jpg");
+        if (res == 0) {
+            System.out.println("QR Code generated successfully");
+            Image img = new Image(getClass().getResourceAsStream("/imgs/qrcode_resized.jpg"));
+            double width = img.getWidth();
+            double height = img.getHeight();
+            ImageView qrCodeView = new ImageView(img);
+            dialog.getDialogPane().getChildren().add(qrCodeView);
+            dialog.getDialogPane().setMinWidth(width);
+            dialog.getDialogPane().setMinHeight(height);
+            
+            dialog.show();
+        }
     }
 }

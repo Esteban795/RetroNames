@@ -5,11 +5,19 @@ import java.util.ArrayList;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -56,6 +64,9 @@ public class GameSceneController {
     @FXML
     private Label remainingGuessesLabel;
 
+    @FXML
+    private Button qrCodeButton;
+
     public GameSceneController(SceneManager sm) {
         this.sm = sm;
         this.game = sm.getModel().getGame();
@@ -78,8 +89,28 @@ public class GameSceneController {
             setupGameGrid();
             setupHintControls();
             initializeProgress();
+            setupQRCode();
         } catch (Exception e) {
             System.err.println("Error during initialization: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void setupQRCode() {
+        try {
+            Image qrCodeImage = new Image(getClass().getResourceAsStream("/imgs/qrcode.jpg"));
+
+            BackgroundImage backgroundImage = new BackgroundImage(
+                    qrCodeImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100, 100, true, true, false, true)
+            );
+
+            qrCodeButton.setBackground(new Background(backgroundImage));
+        } catch (Exception e) {
+            System.err.println("Error loading QR code image: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -177,7 +208,7 @@ public class GameSceneController {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                
+
             }
             if (remainingGuesses == 0) {
                 if (bonusGuess > 0) {
@@ -204,12 +235,12 @@ public class GameSceneController {
 
         teamTurnLabel.setText(teamName);
         teamTurnLabel.setStyle(String.format(
-                "-fx-font-size: 24px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-color: %s; " +
-                        "-fx-text-fill: %s; " +
-                        "-fx-padding: 5px 15px; " +
-                        "-fx-background-radius: 5px;",
+                "-fx-font-size: 24px; "
+                + "-fx-font-weight: bold; "
+                + "-fx-background-color: %s; "
+                + "-fx-text-fill: %s; "
+                + "-fx-padding: 5px 15px; "
+                + "-fx-background-radius: 5px;",
                 bgColor, color));
     }
 
@@ -230,8 +261,9 @@ public class GameSceneController {
 
     @FXML
     public void submitHint() {
-        if (hintField == null || numberChoice == null)
+        if (hintField == null || numberChoice == null) {
             return;
+        }
 
         currentHint = hintField.getText();
         try {
@@ -285,5 +317,24 @@ public class GameSceneController {
     @FXML
     public void goBack() {
         sm.popScene();
+    }
+
+    @FXML
+    public void openQRCode() {
+        Dialog<ImageView> dialog = new Dialog<>();
+        dialog.setTitle("QR Code de la clé de jeu");
+        dialog.setHeaderText("Scannez ce QR Code pour rejoindre la partie");
+        dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE);
+
+        Image img = new Image(getClass().getResourceAsStream("/imgs/qrcode.jpg"));
+        double width = img.getWidth();
+        double height = img.getHeight();
+        ImageView qrCodeView = new ImageView(img);
+
+        dialog.getDialogPane().getChildren().add(qrCodeView);
+        dialog.getDialogPane().setMinWidth(width);
+        dialog.getDialogPane().setMinHeight(height);
+
+        dialog.show();
     }
 }

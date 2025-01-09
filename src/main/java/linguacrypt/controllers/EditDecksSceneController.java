@@ -125,6 +125,8 @@ public class EditDecksSceneController {
                             model.getCardManager().restoreCard(card, deck);
                         }
                     }
+                    // Restore all deleted decks using DeckManager's new ArrayList structure
+                    model.getDeckManager().restoreAllDecks();
                     sm.popScene();
                 }
             }

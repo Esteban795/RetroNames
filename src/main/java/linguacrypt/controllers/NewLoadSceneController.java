@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import linguacrypt.scenes.LoadMenuScene;
 import linguacrypt.scenes.LobbyScene;
 import linguacrypt.scenes.SceneManager;
 
@@ -38,7 +39,8 @@ public class NewLoadSceneController {
     }
     
     @FXML
-    public void loadGame() {
+    public void loadGame() throws IOException {
         System.out.println("Load Game button clicked!");
+        sm.pushScene(new LoadMenuScene(sm));
     }
 }

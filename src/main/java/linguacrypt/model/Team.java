@@ -1,12 +1,15 @@
 package linguacrypt.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 
 /**
  * Represents a team in the game.
  */
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Team {
     @JsonProperty("playerList")
     private ArrayList<Player> playerList;
@@ -51,10 +54,12 @@ public class Team {
         this.teamName = teamName;
     }
 
+    @JsonIgnore
     public String getName() {
         return teamName;
     }
 
+    @JsonIgnore
     public Color getColor() {
         return teamColor;
     }

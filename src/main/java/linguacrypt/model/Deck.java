@@ -37,6 +37,7 @@ public class Deck implements Visitable {
         this.cardList = cardList != null ? cardList : new ArrayList<>();
     }
 
+    @JsonIgnore
     // Getters and Setters
     public String getName() {
         return deckName;

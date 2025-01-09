@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 import linguacrypt.model.Card;
@@ -64,8 +65,47 @@ public class LobbySceneController {
         setupDragAndDrop(blueTeamSpy);
         setupDragAndDrop(redTeamSpy);
         setupDragAndDrop(redTeamOperative);
+        setupListeners();
 
         setupDeckChoices();
+    }
+
+    private void setupListeners(){
+            // Permet de gérer l'ajout de pseudo avec la touche entrée
+            pseudoTextField.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    validatePseudo();
+                }
+            });
+    
+            pseudoTextField.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    newScene.setOnKeyPressed(event -> {
+                        if (event.isControlDown() && event.getCode() == KeyCode.X) {
+                            quickAddPlayers();
+                        }
+                    });
+                }
+            });
+    
+            pseudoTextField.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    newScene.setOnKeyPressed(event -> {
+                        if (event.isControlDown()) {
+                            if (event.getCode() == KeyCode.X) {
+                                quickAddPlayers();
+                            } else if (event.getCode() == KeyCode.ENTER) {
+                                try {
+                                    lobbyDone();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+
     }
 
     private void setupDeckChoices() {
@@ -138,7 +178,7 @@ public class LobbySceneController {
     @FXML
     public void validatePseudo() {
         String pseudoString = this.pseudoTextField.getText();
-        // sm.getModel().    check if player already exists
+        // sm.getModel(). check if player already exists
         if (pseudoString.isEmpty()) {
             return;
         }
@@ -150,7 +190,8 @@ public class LobbySceneController {
 
     @FXML
     public void lobbyDone() throws IOException {
-        int count = blueTeamOperative.getChildren().size() + blueTeamSpy.getChildren().size() + redTeamOperative.getChildren().size() + redTeamSpy.getChildren().size();
+        int count = blueTeamOperative.getChildren().size() + blueTeamSpy.getChildren().size()
+                + redTeamOperative.getChildren().size() + redTeamSpy.getChildren().size();
         String deckName = decksSelector.getValue();
 
         if (count < 4) {
@@ -187,13 +228,31 @@ public class LobbySceneController {
 
         blueTeamOperative.getChildren().forEach(player -> {
             Label label = (Label) player;
-            blueTeam.addPlayer(new Player(label.toString(), false));
+            blueTeam.addPlayer(new Player(label.getText(), false));
         });
 
         redTeamOperative.getChildren().forEach(player -> {
             Label label = (Label) player;
-            redTeam.addPlayer(new Player(label.toString(), false));
+            redTeam.addPlayer(new Player(label.getText(), false));
         });
+    }
+
+    private void quickAddPlayers() {
+        // Add Red Spymaster
+        Label redSpy = createDraggableLabel("RedSpy");
+        redTeamSpy.getChildren().add(redSpy);
+
+        // Add Red Operative
+        Label redOp = createDraggableLabel("RedOp");
+        redTeamOperative.getChildren().add(redOp);
+
+        // Add Blue Spymaster
+        Label blueSpy = createDraggableLabel("BlueSpy");
+        blueTeamSpy.getChildren().add(blueSpy);
+
+        // Add Blue Operative
+        Label blueOp = createDraggableLabel("BlueOp");
+        blueTeamOperative.getChildren().add(blueOp);
     }
 
     private void fillRange(List<Card> cards, int start, int end, Color color) {
@@ -234,7 +293,8 @@ public class LobbySceneController {
 
     private void printSelectedCards(ArrayList<Card> selectedCards) {
         for (int i = 0; i < selectedCards.size(); i++) {
-            System.out.println("Name : " + selectedCards.get(i).getName() + " (color : " + selectedCards.get(i).getColor() + ")");
+            System.out.println(
+                    "Name : " + selectedCards.get(i).getName() + " (color : " + selectedCards.get(i).getColor() + ")");
         }
     }
 

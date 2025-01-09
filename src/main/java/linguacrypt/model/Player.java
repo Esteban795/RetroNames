@@ -37,6 +37,11 @@ public class Player {
         this.name = name;
     }
 
+    @JsonProperty("role")
+    public boolean getRole() {
+        return role;
+    }
+
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }

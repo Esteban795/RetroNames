@@ -2,6 +2,7 @@ package linguacrypt.controllers;
 
 import java.io.IOException;
 
+import linguacrypt.scenes.GameScene;
 import linguacrypt.scenes.MenuScene;
 import linguacrypt.scenes.SceneManager;
 import linguacrypt.scenes.SettingsScene;
@@ -139,6 +140,6 @@ public class LobbySceneController {
             errorLabel.setText("Il doit y avoir exactement un espion par équipe.");
             return;
         }
-        sm.pushScene(new MenuScene(sm));
+        sm.pushScene(new GameScene(sm));
     }
 }

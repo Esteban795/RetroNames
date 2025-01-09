@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" 
+           xmlns:fx="http://javafx.com/fxml/1">
+    
+    <padding>
+        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+    </padding>
+    
+    <center>
+        <VBox alignment="CENTER" spacing="20.0">
+            <padding>
+                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+            </padding>
+            
+            <Button fx:id="latestGameBtn" 
+                    text="Latest Game" 
+                    styleClass="menu-button"/>
+                    
+            <VBox fx:id="savedGamesBox" 
+                  alignment="CENTER" 
+                  spacing="10"/>
+                  
+            <Button fx:id="browseSavesBtn"
+                    text="Browse Other Saves" 
+                    styleClass="menu-button"/>
+                    
+            <Button text="Back" 
+                    onAction="#goBack" 
+                    styleClass="menu-button"/>
+                    
+            <Label fx:id="errorLabel" 
+                   textFill="RED" 
+                   visible="false"/>
+        </VBox>
+    </center>
+    
+</BorderPane>

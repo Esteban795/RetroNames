@@ -2,7 +2,9 @@ package linguacrypt.model;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import linguacrypt.visitor.Visitable;
@@ -14,6 +16,7 @@ import linguacrypt.visitor.Visitor;
  * - La grille de jeu (matrice de cartes)
  * - La configuration de la partie (GameConfiguration)
  */
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Game implements Visitable {
 
     @JsonProperty("grid")
@@ -93,6 +96,7 @@ public class Game implements Visitable {
             grid.add(row);
         }
         if (this.config.getCurrentDeck() != null) {
+            // System.out.println("On charge la grille");
             loadGrid();
         }
     }
@@ -108,6 +112,12 @@ public class Game implements Visitable {
             System.err.println("Grid or deck is null");
             return;
         }
+
+        // //Print le deck
+        // System.out.println("Deck: " + deck.getName());
+        // for (Card card : deck.getCardList()) {
+        // System.out.println(card.getName());
+        // }
 
         ArrayList<Card> cards = deck.getCardList();
         int size = config.getGridSize();
@@ -138,10 +148,12 @@ public class Game implements Visitable {
         return config;
     }
 
+    @JsonIgnore
     public Team getCurrentTeam() {
         return (currentTeam ? config.getTeamManager().getRedTeam() : config.getTeamManager().getBlueTeam());
     }
 
+    @JsonIgnore
     public int getBlueTeamFoundCards() {
         return config.getTeamManager().getBlueTeam().getNbFoundCards();
     }

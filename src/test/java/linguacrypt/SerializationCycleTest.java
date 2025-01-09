@@ -6,18 +6,25 @@ import linguacrypt.visitor.SerializationVisitor;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.File;
+
+import org.junit.jupiter.api.AfterEach;
 
 public class SerializationCycleTest {
     private Game game;
     private SerializationVisitor serializationVisitor;
     private DeserializationVisitor deserializationVisitor;
+    private static final String TEST_RESOURCES = "src/test/resources/temp_saves/";
 
     @BeforeEach
     void setUp() {
         game = new Game();
-        serializationVisitor = new SerializationVisitor();
-        deserializationVisitor = new DeserializationVisitor();
+        serializationVisitor = new SerializationVisitor(TEST_RESOURCES);
+        deserializationVisitor = new DeserializationVisitor(TEST_RESOURCES);
+        new File(TEST_RESOURCES).mkdirs();
     }
 
     @Test
@@ -51,7 +58,6 @@ public class SerializationCycleTest {
 
         // Initialize game grid
         game.initGrid();
-        game.loadGrid();
 
         // Serialize
         game.accept(serializationVisitor);
@@ -75,6 +81,17 @@ public class SerializationCycleTest {
 
         // Verify deck
         assertEquals(25, loadedGame.getConfig().getCurrentDeck().getCardList().size());
-        assertEquals("CHAT", loadedGame.getConfig().getCurrentDeck().getCardList().get(0).getName());
+        //The deck is sorted, so the first card should be "ARBRE"
+        assertEquals("ARBRE", loadedGame.getConfig().getCurrentDeck().getCardList().get(0).getName());
+    }
+
+    @AfterEach
+    void tearDown() {
+        File directory = new File(TEST_RESOURCES);
+        if (directory.exists()) {
+            for (File file : directory.listFiles()) {
+                file.delete();
+            }
+        }
     }
 }

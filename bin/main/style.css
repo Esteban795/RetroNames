@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Tiny5&display=swap');
 /* MENU STYLE */
 .menu-background {
     -fx-background-image: url("/data/back3.png");
@@ -17,7 +17,7 @@
 
 
 .game-title {
-    -fx-font-family: "ZCOOL KuaiLe", serif;
+    -fx-font-family: "Tiny5", serif;
     -fx-font-size: 96px;-fx-font-weight: bold;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
 }

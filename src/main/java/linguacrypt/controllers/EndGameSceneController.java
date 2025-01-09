@@ -10,6 +10,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import linguacrypt.model.Card;
+import linguacrypt.model.Game;
 import linguacrypt.scenes.LobbyScene;
 import linguacrypt.scenes.MenuScene;
 import linguacrypt.scenes.SceneManager;
@@ -17,6 +18,10 @@ import linguacrypt.scenes.SceneManager;
 public class EndGameSceneController {
 
     private final SceneManager sm;
+    private final String winningTeam;
+
+    @FXML
+    private Label labelVictor;
 
     @FXML
     private GridPane keyGrid;
@@ -36,12 +41,14 @@ public class EndGameSceneController {
     @FXML
     private VBox keyBox;
 
-    public EndGameSceneController(SceneManager sm) {
+    public EndGameSceneController(SceneManager sm,String winningTeam) {
         this.sm = sm;
+        this.winningTeam = winningTeam;
     }
 
     @FXML
     void initialize() {
+        labelVictor.setText("L'équipe " + winningTeam + " a gagné !");
         setupGrid();
         displayStats();   
     }
@@ -101,12 +108,15 @@ public class EndGameSceneController {
 
     @FXML
     public void goToMenu() {
+        sm.getModel().setGame(new Game());
         sm.goToPreviousSceneType(MenuScene.class);
     }
 
     @FXML
     public void goToLobby() throws IOException {
         if(!sm.goToPreviousSceneType(LobbyScene.class)){
+            sm.getModel().getGame().getConfig().getTeamManager().getBlueTeam().setNbFoundCards(0);
+            sm.getModel().getGame().getConfig().getTeamManager().getRedTeam().setNbFoundCards(0);
             sm.pushScene(new LobbyScene(sm));
         }
     }

@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import javax.management.relation.Role;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -42,7 +40,6 @@ import linguacrypt.model.Player;
 import linguacrypt.model.Team;
 import linguacrypt.scenes.EndGameScene;
 import linguacrypt.scenes.LobbyScene;
-import linguacrypt.scenes.MenuScene;
 import linguacrypt.scenes.SceneManager;
 import linguacrypt.scenes.SettingsScene;
 import linguacrypt.visitor.DeserializationVisitor;
@@ -102,7 +99,7 @@ public class GameSceneController {
             game.getConfig().setCurrentDeck(sm.getModel().getDeckManager().getRandomDeck());
         }
 
-        this.size = game.getGrid().size();
+        this.size = game.getConfig().getGridSize();
         System.out.println("GameSceneController initialized with grid size: " + size);
     }
 
@@ -130,6 +127,39 @@ public class GameSceneController {
         } catch (Exception e) {
             System.err.println("Error during initialization: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    // INITIALIZATION METHODS
+
+    /*
+     * Initialize the grid with the cards of the game's deck.
+     */
+    private void setupGameGrid() {
+        game.loadGrid();
+        System.out.println("Game grid loaded with cards");
+        updateGrid();
+        updateTurnLabel();
+    }
+
+    private void setupHintControls() {
+        // Setup number choices
+        numberChoice.getItems().clear();
+        for (int i = 1; i <= 9; i++) {
+            final String num = String.valueOf(i);
+            MenuItem item = new MenuItem(num);
+            item.setOnAction(e -> {
+                numberChoice.setText(num);
+            });
+            numberChoice.getItems().add(item);
+        }
+
+        hintDisplayBox.setVisible(false);
+    }
+
+    private void initializeProgress() {
+        if (redTeamProgress != null && blueTeamProgress != null) {
+            updateProgress();
         }
     }
 
@@ -166,7 +196,7 @@ public class GameSceneController {
 
     private void setupQRCode() {
         try {
-            Image qrCodeImage = new Image(getClass().getResourceAsStream("/imgs/qrcode_resized.png"));
+            Image qrCodeImage = new Image(getClass().getResourceAsStream("/imgs/qrcode-placeholder.jpg"));
 
             BackgroundImage backgroundImage = new BackgroundImage(
                     qrCodeImage,
@@ -182,21 +212,7 @@ public class GameSceneController {
         }
     }
 
-    /*
-     * Initialize the grid with the cards of the game's deck.
-     */
-    private void setupGameGrid() {
-        // if (game == null || game.getGrid() == null) {
-        // System.err.println("Game or grid is null");
-        // return;
-        // }
-        // game.getGrid().clear();
-        // game.initGrid();
-        System.out.println("Game grid loaded with cards");
-        updateGrid();
-        updateTurnLabel();
-    }
-
+    // END INITIALIZATION METHODS
     /*
      * Update the grid with the current state of the game.
      */
@@ -268,29 +284,46 @@ public class GameSceneController {
         if (remainingGuesses > 0 && !game.getGrid().get(row).get(col).isFound()) {
             Card card = game.getGrid().get(row).get(col);
             game.revealCard(card);
-            remainingGuesses--;
-            remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
-            if (card.getColor() == Color.BLACK) { // game is lost
+            if (game.hasBlueTeamWon()) {
+                System.out.println("Blue team has won!");
                 try {
-                    sm.pushScene(new EndGameScene(sm));
-                } catch (Exception e) {
+                    sm.pushScene(new EndGameScene(sm, "bleue"));
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-            }
-            if (remainingGuesses == 0) {
-                if (bonusGuess > 0) {
-                    remainingGuesses = bonusGuess;
-                    bonusGuess = 0;
-                    remainingGuessesLabel.setText("Essais Bonus : " + remainingGuesses);
-                } else {
-                    switchTeam();
+            } else if (game.hasRedTeamWon()) {
+                System.out.println("Red team has won!");
+                try {
+                    sm.pushScene(new EndGameScene(sm, "rouge"));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            } else {
+                remainingGuesses--;
+                remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
+                if (card.getColor() == Color.BLACK) { // game is lost
+                    try {
+                        sm.pushScene(new EndGameScene(sm, game.getOppositeTeam().getName()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (remainingGuesses == 0) {
+                    if (bonusGuess > 0) {
+                        remainingGuesses = bonusGuess;
+                        bonusGuess = 0;
+                        remainingGuessesLabel.setText("Essais Bonus : " + remainingGuesses);
+                    } else {
+                        switchTeam();
+                    }
+                }
+
+                updateGrid();
+                updateTurnLabel();
+                updateProgress();
             }
 
-            updateGrid();
-            updateTurnLabel();
-            updateProgress();
         }
     }
 
@@ -312,21 +345,6 @@ public class GameSceneController {
                 bgColor, color));
     }
 
-    private void setupHintControls() {
-        // Setup number choices
-        numberChoice.getItems().clear();
-        for (int i = 1; i <= 9; i++) {
-            final String num = String.valueOf(i);
-            MenuItem item = new MenuItem(num);
-            item.setOnAction(e -> {
-                numberChoice.setText(num);
-            });
-            numberChoice.getItems().add(item);
-        }
-
-        hintDisplayBox.setVisible(false);
-    }
-
     @FXML
     public void submitHint() {
         if (hintField == null || numberChoice == null) {
@@ -343,12 +361,6 @@ public class GameSceneController {
             hintDisplayBox.setVisible(true);
         } catch (NumberFormatException e) {
             System.err.println("Invalid number choice");
-        }
-    }
-
-    private void initializeProgress() {
-        if (redTeamProgress != null && blueTeamProgress != null) {
-            updateProgress();
         }
     }
 
@@ -380,12 +392,7 @@ public class GameSceneController {
     @FXML
     private void handleMainMenu() {
         showSaveDialog(() -> {
-            try {
-                sm.pushScene(new MenuScene(sm));
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            sm.popAllButFirst();
         });
     }
 
@@ -405,7 +412,7 @@ public class GameSceneController {
     private void handleLoadGame() {
         showSaveDialog(() -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Select Save File");
+            fileChooser.setTitle("Choisissez un fichier de sauvegarde");
             fileChooser.setInitialDirectory(new File("src/main/resources/saves/"));
             fileChooser.getExtensionFilters().add(
                     new FileChooser.ExtensionFilter("JSON Files", "*.json"));
@@ -424,9 +431,9 @@ public class GameSceneController {
                     }
                 } catch (CorruptedSaveException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Cannot load save file");
-                    alert.setContentText("The selected save file is corrupted");
+                    alert.setTitle("Erreur");
+                    alert.setHeaderText("Impossible de charger la partie sélectionnée.");
+                    alert.setContentText("Le fichier sélectionné est corrompu.");
                     alert.showAndWait();
                 }
             }
@@ -445,13 +452,13 @@ public class GameSceneController {
 
     private void showSaveDialog(Runnable afterSaveAction) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Save Game");
-        alert.setHeaderText("Would you like to save the game before leaving?");
-        alert.setContentText("Choose your option.");
+        alert.setTitle("Sauvegarder la partie :");
+        alert.setHeaderText("Voulez-vous sauvegarder la partie avant avant de quitter ?");
+        alert.setContentText("Choisissez une des trois options :");
 
-        ButtonType buttonTypeSave = new ButtonType("Save and Leave");
-        ButtonType buttonTypeNoSave = new ButtonType("Leave without Saving");
-        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType buttonTypeSave = new ButtonType("Sauvegarder et quitter");
+        ButtonType buttonTypeNoSave = new ButtonType("Quitter sans sauvegarder");
+        ButtonType buttonTypeCancel = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
 
         alert.getButtonTypes().setAll(buttonTypeSave, buttonTypeNoSave, buttonTypeCancel);
 
@@ -466,11 +473,6 @@ public class GameSceneController {
     }
 
     @FXML
-    public void switchScene() throws IOException {
-        sm.pushScene(new LobbyScene(sm));
-    }
-
-    @FXML
     public void goBack() {
         SerializationVisitor saveVisitor = new SerializationVisitor();
         game.accept(saveVisitor);
@@ -480,10 +482,9 @@ public class GameSceneController {
     @FXML
     public void openQRCode() throws Exception {
         Dialog<ImageView> dialog = new Dialog<>();
-        dialog.setTitle("Scannez ce QR Code pour accéder à la clé de la partie");
+        dialog.setTitle("Scannez ce QR Code pour accéder à la clé de la partie.");
         dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE);
-        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(),
-                "src/main/resources/imgs/qrcode_resized.png");
+        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(), "src/main/resources/imgs/qrcode_resized.png");
         if (res == 0) {
             System.out.println("QR Code generated successfully");
             File fileImg = new File("src/main/resources/imgs/qrcode_resized.png");
@@ -495,16 +496,6 @@ public class GameSceneController {
             dialog.getDialogPane().setMinWidth(width);
             dialog.getDialogPane().setMinHeight(height);
             dialog.show();
-        }
-    }
-
-    public void printGrid() {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                System.out.print(game.getGrid().get(i).get(j).getName() + " " + "("
-                        + game.getGrid().get(i).get(j).getColor() + ") ");
-            }
-            System.out.println();
         }
     }
 }

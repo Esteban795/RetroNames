@@ -118,6 +118,7 @@ public class GameSceneController {
         gameGrid.getChildren().clear();
 
         // Set fixed column constraints to have a regular grid
+        gameGrid.getRowConstraints().clear();
         gameGrid.getColumnConstraints().clear();
         for (int i = 0; i < size; i++) {
             ColumnConstraints column = new ColumnConstraints();

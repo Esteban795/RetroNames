@@ -81,7 +81,8 @@ public class SerializationCycleTest {
 
         // Verify deck
         assertEquals(25, loadedGame.getConfig().getCurrentDeck().getCardList().size());
-        assertEquals("CHAT", loadedGame.getConfig().getCurrentDeck().getCardList().get(0).getName());
+        //The deck is sorted, so the first card should be "ARBRE"
+        assertEquals("ARBRE", loadedGame.getConfig().getCurrentDeck().getCardList().get(0).getName());
     }
 
     @AfterEach

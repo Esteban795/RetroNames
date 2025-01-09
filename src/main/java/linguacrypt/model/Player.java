@@ -2,6 +2,7 @@ package linguacrypt.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import linguacrypt.visitor.Visitor;
 
 /**
@@ -15,7 +16,11 @@ public class Player {
     private String name;
     private boolean role;
 
-    public Player() {} // Requis pour Jackson
+    public Player(String name, boolean role) { 
+        this.name = name;
+        this.role = role;
+    }
+     
 
     @JsonCreator
     public Player(@JsonProperty("name") String name) {
@@ -30,6 +35,11 @@ public class Player {
     @JsonProperty("name")
     public void setName(String name) {
         this.name = name;
+    }
+
+    @JsonProperty("role")
+    public boolean getRole() {
+        return role;
     }
 
     public void accept(Visitor visitor) {

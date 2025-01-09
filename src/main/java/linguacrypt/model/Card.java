@@ -3,9 +3,13 @@ package linguacrypt.model;
 import java.io.File;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Objects;
 import java.util.Random;
 
 import javafx.scene.Node;
@@ -92,6 +96,7 @@ public class Card {
         return cardUrl;
     }
 
+    @JsonIgnore
     public Node getCardView() {
         if (cardUrl != null) {
             File file = new File(cardUrl);
@@ -99,5 +104,27 @@ public class Card {
             return new ImageView(img);
         }
         return new Label(cardName);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return cardName.equals(card.cardName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cardName);
+    }
+
+    @Override
+    public Card clone() {
+        try {
+            return (Card) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new Card(this);
+        }
     }
 }

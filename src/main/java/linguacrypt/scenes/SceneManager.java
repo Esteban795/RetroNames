@@ -11,6 +11,8 @@ public class SceneManager {
     private final Stack<ManagedScene> scenes;
     private final Stage primaryStage;
     private static SceneManager instance;
+    private final int width = 1280;
+    private final int height = 800;
 
     private SceneManager(Stage primaryStage, Model model) {
         this.primaryStage = primaryStage;
@@ -25,6 +27,14 @@ public class SceneManager {
         return instance;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+    
     public ManagedScene pushScene(ManagedScene scene, boolean resize) {
         double width = primaryStage.getScene().getWidth();
         double height = primaryStage.getScene().getHeight();
@@ -63,9 +73,9 @@ public class SceneManager {
     }
 
     public void popAllButFirst() {
-        ManagedScene first = scenes.get(0);
-        scenes.clear();
-        scenes.push(first);
+        while (scenes.size() > 1) {
+            popScene();
+        }
     }
 
     public ManagedScene peek() {
@@ -88,11 +98,11 @@ public class SceneManager {
         return model;
     }
 
-    public void goToPreviousSceneType(Object obj) {
-        while (!scenes.peek().getClass().equals(obj)) {
+    public boolean goToPreviousSceneType(Object obj) {
+        while (!scenes.peek().getClass().equals(obj) && scenes.size() > 1) {
             // Pop all scenes until we reach the correct type scene
             popScene();
         }
-
+        return scenes.peek().getClass().equals(obj);
     }
 }

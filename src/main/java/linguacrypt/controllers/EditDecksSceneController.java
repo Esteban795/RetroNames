@@ -266,7 +266,7 @@ public class EditDecksSceneController {
         Button deleteCardButton = new Button("Delete Card");
         deleteCardButton.getStyleClass().add("delete-card-button");
         deleteCardButton.setOnAction(e -> {
-            deleteCard(card);
+            deleteCard(card, selectedDeck);
             cardInfoBox.setVisible(false);
         });
 
@@ -277,12 +277,20 @@ public class EditDecksSceneController {
         cardInfoBox.getChildren().addAll(infoLabels, buttonBox);
     }
 
-    private void deleteCard(Card card) {
-        if (selectedDeck != null) {
-            selectedDeck.removeCard(card);
-            model.getCardManager().deleteCard(card, selectedDeck);
+    public void deleteCard(Card card, Deck deck) {
+        if (card == null || deck == null) return;
+        
+        System.out.println("delete card " + card.getName() + " from deck " + deck.getName());
+        
+        ArrayList<Deck> decks = model.getCardManager().getCardDeckMap().get(card);
+        if (decks != null) {
+            decks.remove(deck);
+            if (decks.isEmpty()) {
+                model.getCardManager().getCards().remove(card);
+                model.getCardManager().getCardDeckMap().remove(card);
+            }
             cardOrDeckAddedOrRemovesViaUI = true;
-            showDeckCards(selectedDeck);
+            
         }
     }
 

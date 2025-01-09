@@ -31,6 +31,10 @@ public class Model {
         return game;
     }
 
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
     public DeckManager getDeckManager() {
         return deckManager;
     }

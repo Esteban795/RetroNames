@@ -47,6 +47,7 @@ public class Deck implements Visitable {
         }
     }
 
+    @JsonIgnore
     // Getters and Setters
     @JsonProperty("deckName")
     public String getName() {

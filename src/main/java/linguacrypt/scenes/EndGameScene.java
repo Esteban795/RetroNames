@@ -22,7 +22,7 @@ public class EndGameScene extends ManagedScene {
         loader.setController(controller);
         try {
             Parent root = loader.load();
-            super.setScene(new Scene(root, 1280, 800));
+            super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
         } catch (Exception e) {
             System.out.println("Error loading EndGameScene.fxml");
             sm.getPrimaryStage().close();

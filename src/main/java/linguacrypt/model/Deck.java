@@ -122,4 +122,11 @@ public class Deck implements Visitable {
     public boolean containsCard(Card selectedCard) {
         return cardList.contains(selectedCard);
     }
+    
+    public void replaceCard(Card oldCard, Card newCard) {
+        int index = cardList.indexOf(oldCard);
+        if (index != -1) {
+            cardList.set(index, newCard);
+        }
+    }
 }

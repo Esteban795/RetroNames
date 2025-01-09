@@ -2,6 +2,7 @@ package linguacrypt.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class CardManager {
     private ArrayList<Card> cards;
@@ -29,13 +30,13 @@ public class CardManager {
     public void deleteCard(Card card, Deck deck) {
         System.out.println("delete card " + card.getName() + " from deck " + deck.getName());
         this.cards.remove(card);
-        
+
         // Add to deletedCards HashMap
         if (!deletedCards.containsKey(card)) {
             deletedCards.put(card, new ArrayList<>());
         }
         deletedCards.get(card).add(deck);
-        
+
         this.cardDeckMap.get(card).remove(deck);
     }
 
@@ -43,7 +44,7 @@ public class CardManager {
         System.out.println("restore card " + card.getName() + " to deck " + deck.getName());
         this.cards.add(card);
         deck.addCard(card);
-        
+
         // Remove from deletedCards
         if (deletedCards.containsKey(card)) {
             deletedCards.get(card).remove(deck);
@@ -60,7 +61,7 @@ public class CardManager {
     public HashMap<Card, ArrayList<Deck>> getDeletedCards() {
         return deletedCards;
     }
-    
+
     public HashMap<Card, ArrayList<Deck>> getCardDeckMap() {
         return this.cardDeckMap;
     }
@@ -78,7 +79,7 @@ public class CardManager {
         return null;
     }
 
-    public String toString(ArrayList<Deck> deck){
+    public String toString(ArrayList<Deck> deck) {
         System.out.println("toString");
         String deckNames = "";
         for (Deck d : deck) {
@@ -105,4 +106,39 @@ public class CardManager {
         return null;
     }
 
+    public void consolidateDuplicateCards() {
+        HashMap<String, Card> uniqueCards = new HashMap<>();
+
+        // First pass: identify unique cards
+        for (Card card : cards) {
+            String cardName = card.getName();
+            if (!uniqueCards.containsKey(cardName)) {
+                uniqueCards.put(cardName, card);
+            }
+        }
+
+        // Second pass: update references in decks
+        for (Map.Entry<Card, ArrayList<Deck>> entry : cardDeckMap.entrySet()) {
+            Card currentCard = entry.getKey();
+            String cardName = currentCard.getName();
+
+            if (uniqueCards.containsKey(cardName)) {
+                Card uniqueCard = uniqueCards.get(cardName);
+                if (currentCard != uniqueCard) {
+                    // Update deck references to use unique card
+                    ArrayList<Deck> decks = entry.getValue();
+                    for (Deck deck : decks) {
+                        deck.replaceCard(currentCard, uniqueCard);
+                    }
+
+                    // Update cardDeckMap
+                    if (!cardDeckMap.containsKey(uniqueCard)) {
+                        cardDeckMap.put(uniqueCard, new ArrayList<>());
+                    }
+                    cardDeckMap.get(uniqueCard).addAll(decks);
+                    cards.remove(currentCard);
+                }
+            }
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package linguacrypt.controllers;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -86,7 +87,6 @@ public class GameSceneController {
     @FXML
     public void initialize() {
         // Initialize game scene elements
-        printGrid();
         try {
             setupGameGrid();
             setupHintControls();
@@ -100,7 +100,7 @@ public class GameSceneController {
 
     private void setupQRCode() {
         try {
-            Image qrCodeImage = new Image(getClass().getResourceAsStream("/imgs/qrcode.jpg"));
+            Image qrCodeImage = new Image(getClass().getResourceAsStream("/imgs/qrcode_resized.png"));
 
             BackgroundImage backgroundImage = new BackgroundImage(
                     qrCodeImage,
@@ -326,10 +326,12 @@ public class GameSceneController {
         Dialog<ImageView> dialog = new Dialog<>();
         dialog.setTitle("Scannez ce QR Code pour accéder à la clé de la partie");
         dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE);
-        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(), "src/main/resources/imgs/qrcode_resized.jpg");
+        System.out.println("Avant appel generate qr");
+        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(), "src/main/resources/imgs/qrcode_resized.png");
         if (res == 0) {
             System.out.println("QR Code generated successfully");
-            Image img = new Image(getClass().getResourceAsStream("/imgs/qrcode_resized.jpg"));
+            File fileImg = new File("src/main/resources/imgs/qrcode_resized.png");
+            Image img = new Image(fileImg.toURI().toString());
             double width = img.getWidth();
             double height = img.getHeight();
             ImageView qrCodeView = new ImageView(img);

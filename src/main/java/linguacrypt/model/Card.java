@@ -58,6 +58,13 @@ public class Card {
         this.cardUrl = cardUrl;
     }
 
+    public Card(Card card) {
+        this.cardName = card.cardName;
+        this.cardColor = card.cardColor;
+        this.found = card.found;
+        this.cardUrl = card.cardUrl;
+    }
+
     @JsonProperty("cardName")
     public String getName() {
         return cardName;

@@ -38,4 +38,8 @@ public class Model {
     public CardManager getCardManager() {
         return cardManager;
     }
+
+    public void setDeckManager(DeckManager deckManager) {
+        this.deckManager = deckManager;
+    }
 }

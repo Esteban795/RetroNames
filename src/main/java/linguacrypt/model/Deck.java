@@ -39,6 +39,13 @@ public class Deck implements Visitable {
         this.deckName = deckName;
         this.cardList = cardList != null ? cardList : new ArrayList<>();
     }
+    public Deck(Deck deck) {
+        this.deckName = deck.deckName;
+        this.cardList = new ArrayList<>();
+        for (Card card : deck.cardList) {
+            this.cardList.add(new Card(card));
+        }
+    }
 
     // Getters and Setters
     @JsonProperty("deckName")
@@ -101,7 +108,8 @@ public class Deck implements Visitable {
     // Methods
     @JsonIgnore
     public void sortCards() { // Sort the cards in the deck
-        // Used when the deck is loaded from a file (it is possible that the cards are not sorted if the file was created or edited manually)
+        // Used when the deck is loaded from a file (it is possible that the cards are
+        // not sorted if the file was created or edited manually)
         boolean isSorted = true;
         for (int i = 0; i < cardList.size() - 1; i++) {
             if (cardList.get(i).getName().compareTo(cardList.get(i + 1).getName()) > 0) {
@@ -122,7 +130,7 @@ public class Deck implements Visitable {
     public boolean containsCard(Card selectedCard) {
         return cardList.contains(selectedCard);
     }
-    
+
     public void replaceCard(Card oldCard, Card newCard) {
         int index = cardList.indexOf(oldCard);
         if (index != -1) {

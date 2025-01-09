@@ -18,18 +18,17 @@ public class DeckManager implements Visitable {
     @JsonProperty("deckList")
     private ArrayList<Deck> deckList;
 
-    @JsonProperty("deletedDeckList")
-    private ArrayList<Deck> deletedDeckList;
-
-    @JsonProperty("newlyAddedDeckList")
-    private ArrayList<Deck> newlyAddedDeckList;
-
 
     @JsonCreator
     public DeckManager() {
         this.deckList = new ArrayList<>();
-        this.deletedDeckList = new ArrayList<>();
-        this.newlyAddedDeckList = new ArrayList<>();
+    }
+
+    public DeckManager(DeckManager deckManager) {
+        this.deckList = new ArrayList<>();
+        for (Deck deck : deckManager.deckList) {
+            this.deckList.add(new Deck(deck));
+        }
     }
 
     public Boolean addDeck(Deck deck) {
@@ -41,7 +40,6 @@ public class DeckManager implements Visitable {
             insertIndex++;
         }
         deckList.add(insertIndex, deck);
-        newlyAddedDeckList.add(deck);
         return true;
     }
 
@@ -57,28 +55,11 @@ public class DeckManager implements Visitable {
     }
 
     public void removeDeck(Deck deck) {
-        if (deckList.remove(deck)) {
-            deletedDeckList.add(deck);
+        deckList.remove(deck);
         }
-    }
-
-    public void restoreAllDecks() {
-        for (Deck deck : deletedDeckList) {
-            addDeckAgain(deck);
-            System.out.println("Restored deck: " + deck.getName());
-        }
-        for (Deck deck : newlyAddedDeckList) {
-            deckList.remove(deck);
-        }
-        newlyAddedDeckList.clear();
-    }
-
+        
     public ArrayList<Deck> getDeckList() {
         return deckList;
-    }
-
-    public ArrayList<Deck> getDeletedDeckList() {
-        return deletedDeckList;
     }
 
     public Deck getDeck(String deckName) {

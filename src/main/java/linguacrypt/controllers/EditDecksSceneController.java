@@ -9,6 +9,7 @@ import java.util.Optional;
 import linguacrypt.scenes.SceneManager;
 import linguacrypt.model.Card;
 import linguacrypt.model.Deck;
+import linguacrypt.model.DeckManager;
 import linguacrypt.model.Model;
 
 import javafx.fxml.FXML;
@@ -30,6 +31,9 @@ public class EditDecksSceneController {
 
     private SceneManager sm;
     private Model model;
+
+    @FXML
+    private DeckManager deckManagerCopy;
 
     @FXML
     private Button buttonBack;
@@ -56,6 +60,7 @@ public class EditDecksSceneController {
 
     @FXML
     private VBox cardList;
+    
     @FXML
     private Deck currentDeck;
 
@@ -78,6 +83,7 @@ public class EditDecksSceneController {
         this.sm = sm;
         this.model = sm.getModel();
         cardOrDeckAddedOrRemovesViaUI = false;
+        deckManagerCopy = new DeckManager(model.getDeckManager());
     }
 
     @FXML
@@ -114,35 +120,25 @@ public class EditDecksSceneController {
                     model.getDeckManager().saveDeckManager();
                     sm.popScene();
                 } else if (result.get() == leaveWithoutSave) {
-                    System.out.println("Leaving without saving changes...");
-                    // Restore all deleted cards using CardManager's new HashMap structure
-                    HashMap<Card, ArrayList<Deck>> deletedCards = model.getCardManager().getDeletedCards();
-                    for (Map.Entry<Card, ArrayList<Deck>> entry : deletedCards.entrySet()) {
-                        Card card = entry.getKey();
-                        ArrayList<Deck> decks = entry.getValue();
-                        for (Deck deck : decks) {
-                            System.out.println("Restoring card: " + card.getName() + " to deck: " + deck.getName());
-                            model.getCardManager().restoreCard(card, deck);
-                        }
-                    }
-                    // Restore all deleted decks using DeckManager's new ArrayList structure
-                    model.getDeckManager().restoreAllDecks();
+                    // System.out.println("Leaving without saving changes...");
+                    // // Restore all deleted cards using CardManager's new HashMap structure
+                    // HashMap<Card, ArrayList<Deck>> deletedCards = model.getCardManager().getDeletedCards();
+                    // for (Map.Entry<Card, ArrayList<Deck>> entry : deletedCards.entrySet()) {
+                    //     Card card = entry.getKey();
+                    //     ArrayList<Deck> decks = entry.getValue();
+                    //     for (Deck deck : decks) {
+                    //         System.out.println("Restoring card: " + card.getName() + " to deck: " + deck.getName());
+                    //         model.getCardManager().restoreCard(card, deck);
+                    //     }
+                    // }
+                    // // Restore all deleted decks using DeckManager's new ArrayList structure
+                    // model.getDeckManager().restoreAllDecks();
+                    model.setDeckManager(deckManagerCopy); 
                     sm.popScene();
                 }
             }
         } else {
             sm.popScene();
-        }
-    }
-
-    private void revertChanges() {
-        HashMap<Card, ArrayList<Deck>> deletedCards = model.getCardManager().getDeletedCards();
-        for (Card card : deletedCards.keySet()) {
-            ArrayList<Deck> decks = deletedCards.get(card);
-            for (Deck deck : decks) {
-                System.out.println("Restoring card: " + card.getName() + " to deck: " + deck.getName());
-                model.getCardManager().restoreCard(card, deck);
-            }
         }
     }
 
@@ -316,17 +312,7 @@ public class EditDecksSceneController {
         showCardInfo(selectedCard);
     }
 
-    private void deleteCard(Card card, HBox cardContainer) {
-        if (selectedDeck != null) {
-            selectedDeck.removeCard(card);
-            model.getCardManager().deleteCard(card, selectedDeck);
-            cardOrDeckAddedOrRemovesViaUI = true;
-            cardList.getChildren().remove(cardContainer);
-            System.out.println("Card deleted from deck: " + selectedDeck.getName());
-        } else {
-            System.out.println("No deck selected!");
-        }
-    }
+    
 
     @FXML
     public void createCard() {

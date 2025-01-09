@@ -6,12 +6,10 @@ import java.util.Map;
 
 public class CardManager {
     private ArrayList<Card> cards;
-    private HashMap<Card, ArrayList<Deck>> deletedCards;
     private HashMap<Card, ArrayList<Deck>> cardDeckMap;
 
     public CardManager() {
         this.cards = new ArrayList<>();
-        this.deletedCards = new HashMap<>();
         this.cardDeckMap = new HashMap<>();
     }
 
@@ -31,11 +29,6 @@ public class CardManager {
         System.out.println("delete card " + card.getName() + " from deck " + deck.getName());
         this.cards.remove(card);
 
-        // Add to deletedCards HashMap
-        if (!deletedCards.containsKey(card)) {
-            deletedCards.put(card, new ArrayList<>());
-        }
-        deletedCards.get(card).add(deck);
 
         this.cardDeckMap.get(card).remove(deck);
     }
@@ -45,21 +38,10 @@ public class CardManager {
         this.cards.add(card);
         deck.addCard(card);
 
-        // Remove from deletedCards
-        if (deletedCards.containsKey(card)) {
-            deletedCards.get(card).remove(deck);
-            if (deletedCards.get(card).isEmpty()) {
-                deletedCards.remove(card);
-            }
-        }
     }
 
     public ArrayList<Card> getCards() {
         return this.cards;
-    }
-
-    public HashMap<Card, ArrayList<Deck>> getDeletedCards() {
-        return deletedCards;
     }
 
     public HashMap<Card, ArrayList<Deck>> getCardDeckMap() {
@@ -94,11 +76,6 @@ public class CardManager {
 
     public Card getCard(String cardName) {
         for (Card card : this.cards) {
-            if (card.getName().equals(cardName)) {
-                return card;
-            }
-        }
-        for (Card card : this.deletedCards.keySet()) {
             if (card.getName().equals(cardName)) {
                 return card;
             }

@@ -65,14 +65,47 @@ public class LobbySceneController {
         setupDragAndDrop(blueTeamSpy);
         setupDragAndDrop(redTeamSpy);
         setupDragAndDrop(redTeamOperative);
-        // Permet de gérer l'ajout de pseudo avec la touche entrée
-        pseudoTextField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                validatePseudo();
-            }
-        });
+        setupListeners();
 
         setupDeckChoices();
+    }
+
+    private void setupListeners(){
+            // Permet de gérer l'ajout de pseudo avec la touche entrée
+            pseudoTextField.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    validatePseudo();
+                }
+            });
+    
+            pseudoTextField.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    newScene.setOnKeyPressed(event -> {
+                        if (event.isControlDown() && event.getCode() == KeyCode.X) {
+                            quickAddPlayers();
+                        }
+                    });
+                }
+            });
+    
+            pseudoTextField.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    newScene.setOnKeyPressed(event -> {
+                        if (event.isControlDown()) {
+                            if (event.getCode() == KeyCode.X) {
+                                quickAddPlayers();
+                            } else if (event.getCode() == KeyCode.ENTER) {
+                                try {
+                                    lobbyDone();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+
     }
 
     private void setupDeckChoices() {
@@ -202,6 +235,24 @@ public class LobbySceneController {
             Label label = (Label) player;
             redTeam.addPlayer(new Player(label.getText(), false));
         });
+    }
+
+    private void quickAddPlayers() {
+        // Add Red Spymaster
+        Label redSpy = createDraggableLabel("RedSpy");
+        redTeamSpy.getChildren().add(redSpy);
+
+        // Add Red Operative
+        Label redOp = createDraggableLabel("RedOp");
+        redTeamOperative.getChildren().add(redOp);
+
+        // Add Blue Spymaster
+        Label blueSpy = createDraggableLabel("BlueSpy");
+        blueTeamSpy.getChildren().add(blueSpy);
+
+        // Add Blue Operative
+        Label blueOp = createDraggableLabel("BlueOp");
+        blueTeamOperative.getChildren().add(blueOp);
     }
 
     private void fillRange(List<Card> cards, int start, int end, Color color) {

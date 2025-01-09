@@ -1,6 +1,9 @@
 package linguacrypt.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -8,8 +11,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
+import linguacrypt.model.Card;
+import linguacrypt.model.Color;
 import linguacrypt.model.Deck;
 import linguacrypt.model.DeckManager;
 import linguacrypt.model.GameConfiguration;
@@ -62,9 +68,47 @@ public class LobbySceneController {
         setupDragAndDrop(blueTeamSpy);
         setupDragAndDrop(redTeamSpy);
         setupDragAndDrop(redTeamOperative);
+        setupListeners();
 
         setupDeckChoices();
-        setupGridSizeChoices();
+    }
+
+    private void setupListeners() {
+        // Permet de gérer l'ajout de pseudo avec la touche entrée
+        pseudoTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                validatePseudo();
+            }
+        });
+
+        pseudoTextField.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.setOnKeyPressed(event -> {
+                    if (event.isControlDown() && event.getCode() == KeyCode.X) {
+                        quickAddPlayers();
+                    }
+                });
+            }
+        });
+
+        pseudoTextField.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.setOnKeyPressed(event -> {
+                    if (event.isControlDown()) {
+                        if (event.getCode() == KeyCode.X) {
+                            quickAddPlayers();
+                        } else if (event.getCode() == KeyCode.ENTER) {
+                            try {
+                                lobbyDone();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
     }
 
     private void setupDeckChoices() {
@@ -155,7 +199,8 @@ public class LobbySceneController {
 
     @FXML
     public void lobbyDone() throws IOException {
-        int count = blueTeamOperative.getChildren().size() + blueTeamSpy.getChildren().size() + redTeamOperative.getChildren().size() + redTeamSpy.getChildren().size();
+        int count = blueTeamOperative.getChildren().size() + blueTeamSpy.getChildren().size()
+                + redTeamOperative.getChildren().size() + redTeamSpy.getChildren().size();
         String deckName = decksSelector.getValue();
 
         if (count < 4) {
@@ -199,17 +244,78 @@ public class LobbySceneController {
 
         blueTeamOperative.getChildren().forEach(player -> {
             Label label = (Label) player;
-            blueTeam.addPlayer(new Player(label.toString(), false));
+            blueTeam.addPlayer(new Player(label.getText(), false));
         });
 
         redTeamOperative.getChildren().forEach(player -> {
             Label label = (Label) player;
-            redTeam.addPlayer(new Player(label.toString(), false));
+            redTeam.addPlayer(new Player(label.getText(), false));
         });
+    }
+
+    public void quickAddPlayers() {
+        // Add Red Spymaster
+        Label redSpy = createDraggableLabel("RedSpy");
+        redTeamSpy.getChildren().add(redSpy);
+
+        // Add Red Operative
+        Label redOp = createDraggableLabel("RedOp");
+        redTeamOperative.getChildren().add(redOp);
+
+        // Add Blue Spymaster
+        Label blueSpy = createDraggableLabel("BlueSpy");
+        blueTeamSpy.getChildren().add(blueSpy);
+
+        // Add Blue Operative
+        Label blueOp = createDraggableLabel("BlueOp");
+        blueTeamOperative.getChildren().add(blueOp);
+    }
+
+    private void fillRange(List<Card> cards, int start, int end, Color color) {
+        for (int i = start; i < end; i++) {
+            cards.get(i).setColor(color);
+        }
+    }
+
+    public void setupCards(String deckName) {
+        DeckManager dm = sm.getModel().getDeckManager();
+        GameConfiguration config = sm.getModel().getGame().getConfig();
+        Deck deck = dm.getDeck(deckName);
+
+        config.setCurrentDeck(deck);
+
+        int gridSize = sm.getModel().getGame().getConfig().getGridSize();
+        ArrayList<Card> cards = new ArrayList<>(deck.getCardList());
+
+        Collections.shuffle(cards);
+        ArrayList<Card> selectedCards = new ArrayList<>(cards.subList(0, gridSize * gridSize));
+        int step = gridSize * gridSize / 3;
+
+        fillRange(selectedCards, 0, step + 1, Color.RED);
+        fillRange(selectedCards, step + 1, 2 * step + 1, Color.BLUE);
+        fillRange(selectedCards, 2 * (step + 1) + 1, 3 * step - 1, Color.WHITE);
+
+        selectedCards.get(gridSize * gridSize - 1).setColor(Color.BLACK);
+
+        Collections.shuffle(selectedCards);
+
+        sm.getModel().getGame().setGrid(selectedCards);
     }
 
     @FXML
     public void goToMenu() {
         sm.goToPreviousSceneType(MenuScene.class);
     }
+
+    private void printSelectedCards(ArrayList<Card> selectedCards) {
+        for (int i = 0; i < selectedCards.size(); i++) {
+            System.out.println(
+                    "Name : " + selectedCards.get(i).getName() + " (color : " + selectedCards.get(i).getColor() + ")");
+        }
+    }
+
+    public void setSelectedDeck(String deckName) {
+        decksSelector.setValue(deckName);
+    }
+
 }

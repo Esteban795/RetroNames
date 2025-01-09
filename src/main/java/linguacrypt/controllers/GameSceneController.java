@@ -19,6 +19,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
@@ -28,12 +29,14 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import linguacrypt.QRCode.QRCodeGenerator;
 import linguacrypt.exception.CorruptedSaveException;
 import linguacrypt.model.Card;
 import linguacrypt.model.Color;
 import linguacrypt.model.Game;
+import linguacrypt.model.Player;
 import linguacrypt.model.Team;
 import linguacrypt.scenes.EndGameScene;
 import linguacrypt.scenes.LobbyScene;
@@ -61,6 +64,14 @@ public class GameSceneController {
     private ProgressBar redTeamProgress;
     @FXML
     private ProgressBar blueTeamProgress;
+    @FXML
+    private Label redTeamSpymaster;
+    @FXML
+    private VBox redTeamOperators;
+    @FXML
+    private Label blueTeamSpymaster;
+    @FXML
+    private VBox blueTeamOperators;
 
     // FXML attributes for the hints
     @FXML
@@ -99,7 +110,20 @@ public class GameSceneController {
             setupGameGrid();
             setupHintControls();
             initializeProgress();
+            updatePlayerLabels();
+            // Permet de gérer l'appui sur la touche entrée pour valider l'indice
+            hintField.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    submitHint();
+                }
+            });
+            numberChoice.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    submitHint();
+                }
+            });
             setupQRCode();
+
         } catch (Exception e) {
             System.err.println("Error during initialization: " + e.getMessage());
             e.printStackTrace();
@@ -139,6 +163,37 @@ public class GameSceneController {
         }
     }
 
+    private void updatePlayerLabels() {
+        Team redTeam = game.getConfig().getTeamManager().getRedTeam();
+        Team blueTeam = game.getConfig().getTeamManager().getBlueTeam();
+
+        // Clear previous operators
+        redTeamOperators.getChildren().clear();
+        blueTeamOperators.getChildren().clear();
+
+        // Update Red Team
+        for (Player p : redTeam.getPlayerList()) {
+            if (p.getRole()) {
+                redTeamSpymaster.setText(p.getName());
+            } else {
+                Label operatorLabel = new Label(p.getName());
+                operatorLabel.setStyle("-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5); -fx-padding: 5;");
+                redTeamOperators.getChildren().add(operatorLabel);
+            }
+        }
+
+        // Update Blue Team
+        for (Player p : blueTeam.getPlayerList()) {
+            if (p.getRole()) {
+                blueTeamSpymaster.setText(p.getName());
+            } else {
+                Label operatorLabel = new Label(p.getName());
+                operatorLabel.setStyle("-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5); -fx-padding: 5;");
+                blueTeamOperators.getChildren().add(operatorLabel);
+            }
+        }
+    }
+
     private void setupQRCode() {
         try {
             Image qrCodeImage = new Image(getClass().getResourceAsStream("/imgs/qrcode-placeholder.jpg"));
@@ -148,8 +203,7 @@ public class GameSceneController {
                     BackgroundRepeat.NO_REPEAT,
                     BackgroundRepeat.NO_REPEAT,
                     BackgroundPosition.CENTER,
-                    new BackgroundSize(100, 100, true, true, false, true)
-            );
+                    new BackgroundSize(100, 100, true, true, false, true));
 
             qrCodeButton.setBackground(new Background(backgroundImage));
         } catch (Exception e) {
@@ -283,11 +337,11 @@ public class GameSceneController {
         teamTurnLabel.setText(teamName);
         teamTurnLabel.setStyle(String.format(
                 "-fx-font-size: 24px; "
-                + "-fx-font-weight: bold; "
-                + "-fx-background-color: %s; "
-                + "-fx-text-fill: %s; "
-                + "-fx-padding: 5px 15px; "
-                + "-fx-background-radius: 5px;",
+                        + "-fx-font-weight: bold; "
+                        + "-fx-background-color: %s; "
+                        + "-fx-text-fill: %s; "
+                        + "-fx-padding: 5px 15px; "
+                        + "-fx-background-radius: 5px;",
                 bgColor, color));
     }
 

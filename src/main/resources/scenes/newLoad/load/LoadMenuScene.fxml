@@ -4,13 +4,29 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox alignment="CENTER" spacing="20" xmlns:fx="http://javafx.com/fxml">
-    <padding>
-        <Insets bottom="20" left="20" right="20" top="20"/>
-    </padding>
-
-    <Button fx:id="latestGameBtn" text="Latest Game" prefWidth="200"/>
-    <VBox fx:id="savedGamesBox" alignment="CENTER" spacing="10"/>
-    <Button text="Back" onAction="#goBack" prefWidth="200"/>
-    <Label fx:id="errorLabel" textFill="RED" visible="false" />
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
+      prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml">
+    <children>
+<VBox alignment="CENTER" spacing="20" layoutX="150" layoutY="100">
+    <Button fx:id="latestGameBtn" 
+            text="Latest Game" 
+            styleClass="menu-button"/>
+            
+    <VBox fx:id="savedGamesBox" 
+          alignment="CENTER" 
+          spacing="10"/>
+          
+    <Button fx:id="browseSavesBtn"
+            text="Choose Save" 
+            styleClass="menu-button"/>
+            
+    <Button text="Back" 
+            onAction="#goBack" 
+            styleClass="menu-button"/>
+            
+    <Label fx:id="errorLabel" 
+           textFill="RED" 
+           visible="false" />
 </VBox>
+    </children>
+</Pane>

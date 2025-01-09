@@ -23,13 +23,15 @@ public class LoadMenuScene extends ManagedScene {
         loader.setController(controller);
         try {
             Parent root = loader.load();
-            super.setScene(new Scene(root, 1600,900));
+            super.setScene(new Scene(root, 1600, 900));
+            super.getScene().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         } catch (Exception e) {
             System.out.println("Error loading LoadMenuScene.fxml");
             sm.getPrimaryStage().close();
         }
 
     }
+
     @Override
     public void update() {
         // TODO Auto-generated method stub

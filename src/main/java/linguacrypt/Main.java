@@ -3,8 +3,8 @@ package linguacrypt;
 import java.io.IOException;
 import java.net.URL;
 
-import linguacrypt.model.Card;
-import linguacrypt.model.Deck;
+// import linguacrypt.model.Card;
+// import linguacrypt.model.Deck;
 import linguacrypt.scenes.*;
 
 import javafx.application.Application;

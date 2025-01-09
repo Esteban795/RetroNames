@@ -28,7 +28,8 @@
                   <VBox fx:id="blueTeamOperative" prefHeight="379.0" prefWidth="225.0" />
                </children>
             </VBox>
-         </children></VBox>
+         </children>
+      </VBox>
    </left>
    <right>
       <VBox fx:id="blueTeamVB1" prefHeight="800.0" prefWidth="225.0" spacing="10.0" style="-fx-background-color: red;" BorderPane.alignment="CENTER">
@@ -64,7 +65,6 @@
                               <HBox alignment="CENTER" prefHeight="24.0" prefWidth="56.0">
                                  <children>
                                     <Button mnemonicParsing="false" onAction="#validatePseudo" text="Ajouter" />
-                                    <Button mnemonicParsing="false" onAction="#lobbyDone" text="Valider" />
                                  </children>
                               </HBox>
                            </children>
@@ -92,7 +92,16 @@
                   </VBox>
                </children>
             </VBox>
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#goToMenu" prefHeight="24.0" prefWidth="846.0" text="Retour au menu" />
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="830.0">
+               <children>
+                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#lobbyDone" prefWidth="90.0" text="Valider" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="26.0" prefWidth="830.0">
+               <children>
+                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#goToMenu" prefHeight="40.0" prefWidth="200.0" text="Retour au menu" />
+               </children>
+            </VBox>
          </children>
       </VBox>
    </center>

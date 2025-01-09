@@ -212,6 +212,8 @@ public class LobbySceneController {
         addPlayersToTeams();
 
         setupCards(deckName);
+        System.out.println("Deck selected : " + deckName);
+        System.out.println("On passe à la scène de jeu");
 
         sm.pushScene(new GameScene(sm));
     }
@@ -237,7 +239,7 @@ public class LobbySceneController {
         });
     }
 
-    private void quickAddPlayers() {
+    public void quickAddPlayers() {
         // Add Red Spymaster
         Label redSpy = createDraggableLabel("RedSpy");
         redTeamSpy.getChildren().add(redSpy);
@@ -261,7 +263,7 @@ public class LobbySceneController {
         }
     }
 
-    private void setupCards(String deckName) {
+    public void setupCards(String deckName) {
         DeckManager dm = sm.getModel().getDeckManager();
         GameConfiguration config = sm.getModel().getGame().getConfig();
         Deck deck = dm.getDeck(deckName);
@@ -296,6 +298,10 @@ public class LobbySceneController {
             System.out.println(
                     "Name : " + selectedCards.get(i).getName() + " (color : " + selectedCards.get(i).getColor() + ")");
         }
+    }
+
+    public void setSelectedDeck(String deckName) {
+        decksSelector.setValue(deckName);
     }
 
 }

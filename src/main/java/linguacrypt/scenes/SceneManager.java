@@ -11,6 +11,8 @@ public class SceneManager {
     private final Stack<ManagedScene> scenes;
     private final Stage primaryStage;
     private static SceneManager instance;
+    private final int width = 1280;
+    private final int height = 800;
 
     private SceneManager(Stage primaryStage, Model model) {
         this.primaryStage = primaryStage;
@@ -25,6 +27,14 @@ public class SceneManager {
         return instance;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+    
     public ManagedScene pushScene(ManagedScene scene, boolean resize) {
         double width = primaryStage.getScene().getWidth();
         double height = primaryStage.getScene().getHeight();

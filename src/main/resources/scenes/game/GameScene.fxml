@@ -14,13 +14,14 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-   prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1"
+   prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1"
    xmlns:fx="http://javafx.com/fxml/1">
 
    <top>
@@ -85,12 +86,10 @@
                scaleX="-1" />
             <VBox alignment="CENTER" scaleX="-1.0" spacing="10">
                <Label scaleX="-1.0"
-                  style="-fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
-                         -fx-padding: 5;"
+                  style="-fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);                          -fx-padding: 5;"
                   text="Équipe Bleue" />
                <Label fx:id="blueTeamPlayers"
-                  style="-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
-                         -fx-padding: 5;" />
+                  style="-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);                          -fx-padding: 5;" />
             </VBox>
          </children>
       </StackPane>
@@ -98,16 +97,19 @@
 
    <bottom>
       <VBox alignment="CENTER" spacing="10">
-         <HBox fx:id="hintInputBox" alignment="CENTER" spacing="10">
+         <HBox fx:id="hintInputBox" alignment="CENTER_LEFT" prefHeight="84.0" prefWidth="1280.0" spacing="10">
             <padding>
                <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
             <children>
-               <Label alignment="CENTER" contentDisplay="CENTER" prefWidth="135.0"
+                  <Region prefHeight="24.0" prefWidth="340.0" />
+            <Label alignment="CENTER" contentDisplay="CENTER" prefWidth="135.0"
                   text="Indice à donner :" />
                <TextField fx:id="hintField" />
                <MenuButton fx:id="numberChoice" mnemonicParsing="false" text="Nombre" />
-               <Button mnemonicParsing="false" text="Valider" onAction="#submitHint" />
+               <Button mnemonicParsing="false" onAction="#submitHint" text="Valider" />
+               <Region prefHeight="24.0" prefWidth="289.0" />
+               <Button fx:id="qrCodeButton" mnemonicParsing="false" onAction="#openQRCode" prefHeight="75.0" prefWidth="75.0" />
             </children>
          </HBox>
 

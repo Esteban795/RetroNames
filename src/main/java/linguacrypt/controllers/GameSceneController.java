@@ -386,6 +386,10 @@ public class GameSceneController {
                     e.printStackTrace();
                 }
             } else {
+                boolean isRedCard = card.getColor() == Color.RED;
+                if ((isRedCard && !game.getBooleanCurrentTeam()) || (!isRedCard && game.getBooleanCurrentTeam())) {
+                    endTurn();
+                }
                 game.setRemainingGuesses(game.getRemainingGuesses() - 1);
                 remainingGuessesLabel.setText("Essais restants : " + game.getRemainingGuesses());
                 if (card.getColor() == Color.BLACK) { // game is lost

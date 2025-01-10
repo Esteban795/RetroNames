@@ -369,6 +369,9 @@ public class GameSceneController {
 
             Card card = game.getGrid().get(row).get(col);
             game.revealCard(card);
+
+            game.getStats().updateStats(game.getBooleanCurrentTeam(), card.getColor());
+            
             Button revealedCard = (Button) gameGrid.getChildren().get(row * size + col);
             animate(revealedCard, card.getColor());
             if (game.hasBlueTeamWon()) {
@@ -386,6 +389,11 @@ public class GameSceneController {
                     e.printStackTrace();
                 }
             } else {
+                boolean isRedCard = card.getColor() == Color.RED;
+                if (card.getColor() == Color.WHITE || (isRedCard && !game.getBooleanCurrentTeam()) || (!isRedCard && game.getBooleanCurrentTeam())) {
+
+                    endTurn();
+                }
                 game.setRemainingGuesses(game.getRemainingGuesses() - 1);
                 remainingGuessesLabel.setText("Essais restants : " + game.getRemainingGuesses());
                 if (card.getColor() == Color.BLACK) { // game is lost

@@ -19,19 +19,19 @@
                 <top>
                         <VBox>
                                 <Label fx:id="gameTitle" text="RetroNames" styleClass="game-title"
-                                BorderPane.alignment="TOP_LEFT">
-                                <padding>
-                                        <Insets top="20.0" bottom="20.0" left="50.0" />
-                                </padding>
+                                        BorderPane.alignment="TOP_LEFT">
+                                        <padding>
+                                                <Insets top="40.0" bottom="40.0" left="80.0" />
+                                        </padding>
                                         <BorderPane.margin>
-                                                <Insets top="20.0" left="30.0" />
+                                                <Insets top="30.0" left="50.0" />
                                         </BorderPane.margin>
                                 </Label>
                                 <VBox rotate="-15">
-                                <Label fx:id="subtitleLabel" styleClass="subtitle-text" >
-                                        
-                                </Label>
-                                <padding>
+                                        <Label fx:id="subtitleLabel" styleClass="subtitle-text">
+
+                                        </Label>
+                                        <padding>
                                                 <Insets top="-95.0" bottom="20.0" left="350.0" />
                                         </padding>
                                 </VBox>
@@ -84,7 +84,7 @@
                 </center>
 
         </BorderPane>
-        <Pane fx:id="particlePane" mouseTransparent="true" />
+        <Pane fx:id="particlePane" mouseTransparent="true" prefWidth="1200" prefHeight="800" />
         <Label text="Fait par WHJFX"
                 StackPane.alignment="BOTTOM_RIGHT"
                 styleClass="credits-label">

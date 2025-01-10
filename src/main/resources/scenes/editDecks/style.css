@@ -1,0 +1,134 @@
+@font-face {
+    font-family: 'Pixel Operator Mono';
+    src: url('file:src/main/resources/fonts/PixelOperatorMono.ttf');
+}
+
+* {
+    -fx-font-family: 'Pixel Operator Mono';
+    -fx-font-size: 20px;
+}
+
+.root {
+    -fx-background-color: #c0c0c0;
+}
+
+/* Buttons */
+.deck-button, .menu-button, .card-button {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-border-width: 2;
+    -fx-background-radius: 0;
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+}
+
+.deck-button:hover, .menu-button:hover, .card-button:hover {
+    -fx-background-color: #d4d4d4;
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+}
+
+.deck-button:pressed, .menu-button:pressed, .card-button:pressed {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #808080 #ffffff #ffffff #808080;
+}
+
+.delete-deck-button, .delete-card-button {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-text-fill: black;
+}
+
+.delete-deck-button:hover, .delete-card-button:hover {
+    -fx-background-color: #d4d4d4;
+}
+
+.delete-deck-button:pressed, .delete-card-button:pressed {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #808080 #ffffff #ffffff #808080;
+}
+
+/* Panels */
+.split-pane {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-border-width: 2;
+}
+
+.scroll-pane {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #808080 #ffffff #ffffff #808080;
+    -fx-border-width: 2;
+}
+
+/* Card info box */
+.card-info-box {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #808080 #ffffff #ffffff #808080;
+    -fx-border-width: 2;
+    -fx-padding: 10;
+}
+
+.add-card-button {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-border-width: 2;
+    -fx-background-radius: 0;
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+}
+
+.add-card-button:hover {
+    -fx-background-color: #d4d4d4;
+}
+
+.add-card-button:pressed {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #808080 #ffffff #ffffff #808080;
+}
+
+
+/* Dialog styles */
+.custom-dialog {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-border-width: 2;
+}
+
+.dialog-content {
+    -fx-background-color: #c0c0c0;
+    -fx-padding: 10;
+}
+
+.combo-box {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-border-width: 2;
+}
+
+.combo-box:hover {
+    -fx-background-color: #d4d4d4;
+}
+
+.combo-box:pressed {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #808080 #ffffff #ffffff #808080;
+}
+
+.dialog-button {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-border-width: 2;
+    -fx-background-radius: 0;
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+}
+
+.dialog-button:hover {
+    -fx-background-color: #d4d4d4;
+}
+
+.dialog-button:pressed {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #808080 #ffffff #ffffff #808080;
+}

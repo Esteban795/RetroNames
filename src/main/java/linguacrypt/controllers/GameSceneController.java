@@ -184,6 +184,16 @@ public class GameSceneController {
             game.initGrid();
         }
         System.out.println("Game grid loaded with cards");
+
+        // Testing purposes
+        // for (int i = 0; i < size; i++){
+        //     for (int j = 0; j < size; j++){
+        //         if ((i + j) % 4 == 0 ) {
+        //             game.getGrid().get(i).get(j).setCardUrl("./src/main/resources/imgs/icons/check-0.png");
+        //         }
+        //     }
+        // }       
+         
         updateGrid();
         updateTurnLabel();
     }
@@ -305,7 +315,21 @@ public class GameSceneController {
                 cardButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
                 Card card = game.getGrid().get(i).get(j);
-                cardButton.setText(card.getName().toUpperCase());
+
+                if (card.isImage()) {
+                    try {
+                        ImageView imgView = card.getCardView();
+                        imgView.setPreserveRatio(true);
+                        imgView.setFitWidth(125);
+                        imgView.setFitHeight(125);
+                        cardButton.setGraphic(imgView);
+                    } catch (Exception e) {
+                        System.err.println("Error loading card image: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                } else {
+                    cardButton.setText(card.getName());
+                }
 
                 // Set button style based on card state
                 if (card.isFound()) {
@@ -471,10 +495,11 @@ public class GameSceneController {
         teamTurnLabel.setText(teamName);
         teamTurnLabel.setStyle(String.format(
                 "-fx-font-size: 24px; "
-                        + "-fx-font-weight: bold; "
-                        + "-fx-background-color: %s; "
-                        + "-fx-text-fill: %s; "
-                        + "-fx-padding: 5px 15px; ",
+                + "-fx-font-weight: bold; "
+                + "-fx-background-color: %s; "
+                + "-fx-text-fill: %s; "
+                + "-fx-padding: 5px 15px; "
+                + "-fx-background-radius: 5px;",
                 bgColor, color));
     }
 
@@ -810,5 +835,14 @@ public class GameSceneController {
 
         System.out.println("Playing animation");
         timeline.play();
+    }
+
+    private void printGrid() {
+        for (ArrayList<Card> row : game.getGrid()) {
+            for (Card card : row) {
+                System.out.print(card.getName() + "(" + card.getColor() + ")[" + card.getCardUrl() + "] ");
+            }
+            System.out.println();
+        }
     }
 }

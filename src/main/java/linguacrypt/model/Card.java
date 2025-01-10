@@ -1,6 +1,7 @@
 package linguacrypt.model;
 
 import java.io.File;
+import java.util.Random;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -8,10 +9,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Random;
 
-import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 /**
@@ -31,6 +29,9 @@ public class Card {
     @JsonProperty("cardUrl")
     private String cardUrl;
 
+    @JsonIgnore
+    private ImageView cardView;
+
     public Card(String cardName) {
         this.cardName = cardName;
         //TEMPORAIRE POUR TESTER L'AFFICHAGE
@@ -39,6 +40,7 @@ public class Card {
         this.cardColor = colors[random.nextInt(colors.length)];// Default color, neutral card
         this.found = false;
         this.cardUrl = null;
+        this.cardView = null;
     }
 
     public Card(String cardName,String cardUrl) {
@@ -46,6 +48,7 @@ public class Card {
         this.cardColor = Color.WHITE;// Default color, neutral card
         this.found = false;
         this.cardUrl = cardUrl;
+        createCardView();
     }
     
     @JsonCreator
@@ -58,6 +61,7 @@ public class Card {
         this.cardColor = cardColor;
         this.found = found;
         this.cardUrl = cardUrl;
+        createCardView();
     }
 
     @JsonProperty("cardName")
@@ -87,13 +91,35 @@ public class Card {
         return cardUrl;
     }
 
+    public void setCardUrl(String cardUrl) {
+        this.cardUrl = cardUrl;
+        createCardView();
+    }
+    
     @JsonIgnore
-    public Node getCardView() {
+    public ImageView getCardView() {
+        if (cardView != null) {
+            return cardView;
+        }
+        return null;
+    }
+
+    private void createCardView() {
         if (cardUrl != null) {
             File file = new File(cardUrl);
             Image img = new Image(file.toURI().toString());
-            return new ImageView(img);
-        }
-        return new Label(cardName);
+            this.cardView = new ImageView(img);
+        } 
+    }
+
+    @JsonIgnore
+    public boolean isImage() {
+        return cardView != null;
+    }
+
+    @JsonIgnore
+    public boolean isGif() {
+        if (cardUrl == null) return false;
+        return cardUrl.endsWith(".gif");
     }
 }

@@ -18,10 +18,13 @@
 
                 <top>
                         <Label fx:id="gameTitle" text="LynguaCrypt" styleClass="game-title"
-                                BorderPane.alignment="CENTER">
+                                BorderPane.alignment="TOP_LEFT">
                                 <padding>
-                                        <Insets top="50.0" bottom="50.0" />
+                                        <Insets top="20.0" bottom="20.0" left="50.0" />
                                 </padding>
+                                <BorderPane.margin>
+                                        <Insets top="20.0" left="30.0" />
+                                </BorderPane.margin>
                         </Label>
                 </top>
 
@@ -33,31 +36,39 @@
                                 alignment="TOP_LEFT"
                                 spacing="20.0">
                                 <padding>
-                                        <Insets top="100.0" right="20.0" bottom="20.0" left="50.0" />
+                                        <Insets top="100.0" right="20.0" bottom="20.0" left="180.0" />
                                 </padding>
 
                                 <Button fx:id="buttonPlay"
                                         text="Jouer"
                                         styleClass="menu-button"
                                         onAction="#handlePlay"
+                                        focusTraversable="true"
+                                        onMouseEntered="#requestFocus"
                                 />
 
                                 <Button fx:id="buttonSettings"
                                         text="Options"
                                         styleClass="menu-button"
                                         onAction="#handleSettings"
+                                        focusTraversable="true"
+                                        onMouseEntered="#requestFocus"
                                 />
 
                                 <Button fx:id="buttonEditDecks"
-                                        text="Modifier les decks"
+                                        text="Decks"
                                         styleClass="menu-button"
                                         onAction="#handleEditDecks"
+                                        focusTraversable="true"
+                                        onMouseEntered="#requestFocus"
                                 />
 
                                 <Button fx:id="buttonQuitGame"
                                         text="Quitter"
                                         styleClass="menu-button"
                                         onAction="#handleQuit"
+                                        focusTraversable="true"
+                                        onMouseEntered="#requestFocus"
                                 />
                         </VBox>
                 </center>

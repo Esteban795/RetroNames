@@ -16,6 +16,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Glow;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -151,4 +153,11 @@ public class MenuSceneController {
         timeline.play();
     }
 
+    @FXML
+private void requestFocus(MouseEvent event) {
+    Node source = (Node) event.getSource();
+    if (source instanceof Button) {
+        ((Button) source).requestFocus();
+    }
+}
 }

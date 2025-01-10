@@ -356,7 +356,7 @@ public class EditDecksSceneController {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Choose an image for the card:");
             fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg","*.gif")
             );
 
             // Set initial directory if needed

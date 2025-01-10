@@ -5,38 +5,42 @@
 
 
 <VBox xmlns:fx="http://javafx.com/fxml"
-    prefHeight="600.0" prefWidth="800.0">
+    prefHeight="600.0" prefWidth="800.0"
+    styleClass="root"
+>
+
     <children>
-        <SplitPane dividerPositions="0.5" orientation="HORIZONTAL" VBox.vgrow="ALWAYS">
+        <SplitPane dividerPositions="0.5" orientation="HORIZONTAL" VBox.vgrow="ALWAYS"
+            styleClass="split-pane">
             <items>
                 <VBox>
                     <!-- Left side content -->
-                    <Button text="New Deck" onAction="#showNewDeckPopup" />
+                    <Button text="New Deck" onAction="#showNewDeckPopup" styleClass="deck-button" />
 
-                    <ScrollPane VBox.vgrow="ALWAYS">
-                        <VBox fx:id="deckList">
+                    <ScrollPane VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+                        <VBox fx:id="deckList" styleClass="panel">
                             <!-- Deck list -->
 
                         </VBox>
                     </ScrollPane>
                 </VBox>
-                <VBox>
+                <VBox styleClass="panel">
                     <!-- Right side content -->
                     <HBox spacing="10">
-                        <Button fx:id="newCardButton" text="New Card" onAction="#showNewCardPopup" />
+                        <Button fx:id="newCardButton" text="New Card" onAction="#showNewCardPopup"
+                            styleClass="card-button" />
                         <Button fx:id="duplicateDeckButton" text="Duplicate Deck"
-                            onAction="#showDuplicateDeckPopup" />
+                            onAction="#showDuplicateDeckPopup" styleClass="deck-button" />
                         <Button fx:id="deleteDeckButton" text="Delete Deck" onAction="#deleteDeck"
                             styleClass="delete-deck-button" />
                     </HBox>
 
-                    <ScrollPane VBox.vgrow="ALWAYS">
+                    <ScrollPane VBox.vgrow="ALWAYS" styleClass="scroll-pane">
                         <VBox fx:id="cardList">
                             <!-- Card list -->
                         </VBox>
                     </ScrollPane>
-                    <VBox fx:id="cardInfoBox" spacing="5"
-                        style="-fx-padding: 20; -fx-border-color: lightgray; -fx-border-width: 1 0 0 0;">
+                    <VBox fx:id="cardInfoBox" spacing="5" styleClass="card-info-box">
                         <HBox spacing="10">
                             <VBox spacing="5">
                                 <Label text="Card Information:" />
@@ -87,7 +91,11 @@
         </SplitPane>
         <VBox>
             <!-- Bottom content -->
-            <Button text="back" onAction="#goBack" />
+            <HBox alignment="CENTER_RIGHT" styleClass="panel">
+                <Button text="Back"
+                    onAction="#goBack"
+                    styleClass="menu-button" />
+            </HBox>
         </VBox>
     </children>
 </VBox>

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
 /**
  * Represents a card in the game with a name and a color.
  */
@@ -17,7 +18,7 @@ import javafx.scene.image.ImageView;
 public class Card {
     @JsonProperty("cardName")
     private String cardName;
-    
+
     @JsonProperty("cardColor")
     private Color cardColor;
 
@@ -32,7 +33,7 @@ public class Card {
 
     public Card(String cardName) {
         this.cardName = cardName;
-        //TEMPORAIRE POUR TESTER L'AFFICHAGE
+        // TEMPORAIRE POUR TESTER L'AFFICHAGE
         Random random = new Random();
         Color[] colors = Color.values();
         this.cardColor = colors[random.nextInt(colors.length)];// Default color, neutral card
@@ -41,20 +42,20 @@ public class Card {
         this.cardView = null;
     }
 
-    public Card(String cardName,String cardUrl) {
+    public Card(String cardName, String cardUrl) {
         this.cardName = cardName;
         this.cardColor = Color.WHITE;// Default color, neutral card
         this.found = false;
         this.cardUrl = cardUrl;
         createCardView();
     }
-    
+
     @JsonCreator
     public Card(
-        @JsonProperty("cardName") String cardName,
-        @JsonProperty("cardColor") Color cardColor,
-        @JsonProperty("found") boolean found,
-        @JsonProperty("cardUrl") String cardUrl){
+            @JsonProperty("cardName") String cardName,
+            @JsonProperty("cardColor") Color cardColor,
+            @JsonProperty("found") boolean found,
+            @JsonProperty("cardUrl") String cardUrl) {
         this.cardName = cardName;
         this.cardColor = cardColor;
         this.found = found;
@@ -93,7 +94,7 @@ public class Card {
         this.cardUrl = cardUrl;
         createCardView();
     }
-    
+
     @JsonIgnore
     public ImageView getCardView() {
         if (cardView != null) {
@@ -107,7 +108,7 @@ public class Card {
             File file = new File(cardUrl);
             Image img = new Image(file.toURI().toString());
             this.cardView = new ImageView(img);
-        } 
+        }
     }
 
     @JsonIgnore
@@ -117,7 +118,8 @@ public class Card {
 
     @JsonIgnore
     public boolean isGif() {
-        if (cardUrl == null) return false;
+        if (cardUrl == null)
+            return false;
         return cardUrl.endsWith(".gif");
     }
 }

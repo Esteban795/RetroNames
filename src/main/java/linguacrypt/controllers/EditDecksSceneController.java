@@ -50,6 +50,8 @@ public class EditDecksSceneController {
     private Deck selectedDeck;
     private Button selectedButton; // To track currently selected button
     private Card selectedCard;
+
+    @SuppressWarnings("unused")
     private Button addToAnotherDeckButton; // To track currently selected button
 
     @FXML
@@ -168,7 +170,7 @@ public class EditDecksSceneController {
                 model.getDeckManager().addDeck(newDeck);
                 reloadDeckList();
                 cardOrDeckAddedOrRemovesViaUI = true;
-                System.out.println("Deck created: " + deckName);
+                //// System.out.println("Deck created: " + deckName);
             }
         }
     }
@@ -321,15 +323,16 @@ public class EditDecksSceneController {
         showCardInfo(selectedCard);
     }
 
+    @SuppressWarnings("unused")
     private void deleteCard(Card card, HBox cardContainer) {
         if (selectedDeck != null) {
             selectedDeck.removeCard(card);
             model.getCardManager().deleteCard(card, selectedDeck);
             cardOrDeckAddedOrRemovesViaUI = true;
             cardList.getChildren().remove(cardContainer);
-            System.out.println("Card deleted from deck: " + selectedDeck.getName());
+            // System.out.println("Card deleted from deck: " + selectedDeck.getName());
         } else {
-            System.out.println("No deck selected!");
+            // System.out.println("No deck selected!");
         }
     }
 

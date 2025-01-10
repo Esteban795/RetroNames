@@ -24,7 +24,7 @@ public class SettingsScene extends ManagedScene {
             Parent root = loader.load();
             super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
         } catch (Exception e) {
-            System.out.println("Error loading Settings.fxml");
+            // System.out.println("Error loading Settings.fxml");
             sm.getPrimaryStage().close();
         }
     }

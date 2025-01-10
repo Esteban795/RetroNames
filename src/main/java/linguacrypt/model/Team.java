@@ -13,13 +13,13 @@ import java.util.ArrayList;
 public class Team {
     @JsonProperty("playerList")
     private ArrayList<Player> playerList;
-    
+
     @JsonProperty("teamName")
     private String teamName;
-    
+
     @JsonProperty("teamColor")
     private Color teamColor;
-    
+
     @JsonProperty("nbSpy")
     private int nbSpy;
 
@@ -28,8 +28,8 @@ public class Team {
 
     @JsonCreator
     public Team(
-        @JsonProperty("teamName") String teamName,
-        @JsonProperty("teamColor") Color teamColor) {
+            @JsonProperty("teamName") String teamName,
+            @JsonProperty("teamColor") Color teamColor) {
         this.teamName = teamName;
         this.teamColor = teamColor;
         this.playerList = new ArrayList<>();
@@ -43,6 +43,7 @@ public class Team {
 
     /*
      * Remove a player from the team
+     * 
      * @param player the player to remove
      * Will probably need some changes to adapt to the player equality check
      */

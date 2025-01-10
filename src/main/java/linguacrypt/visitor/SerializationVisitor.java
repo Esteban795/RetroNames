@@ -7,14 +7,14 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import linguacrypt.model.*;
 import java.io.*;
 
-
 public class SerializationVisitor implements Visitor {
     private final ObjectMapper objectMapper;
     private String jsonResult;
     private final String savePath;
-    private static final String LOG_FILE_PATH = "logs/serialization.log";
+    // Used for debugging
+    // private static final String LOG_FILE_PATH = "logs/serialization.log";
     private static final String DEFAULT_GAMES_PATH = "src/main/resources/saves/";
-    
+
     public SerializationVisitor() {
         this(DEFAULT_GAMES_PATH);
     }
@@ -39,7 +39,8 @@ public class SerializationVisitor implements Visitor {
     }
 
     /**
-     * Génère un nom de fichier unique pour la sauvegarde sous la forme gameX avec X un nombre.
+     * Génère un nom de fichier unique pour la sauvegarde sous la forme gameX avec X
+     * un nombre.
      */
     private String getUniqueFilename(String basePath, String baseName, String extension) {
         String filename = baseName + extension;
@@ -52,25 +53,26 @@ public class SerializationVisitor implements Visitor {
             count++;
         }
 
-        //log("Unique filename generated: " + filename);
+        // log("Unique filename generated: " + filename);
         return filename;
     }
 
     /**
      * Fonction de débugging pour écrire dans un fichier les logs.
      */
-    private void log(String message) {
-        File logDir = new File("logs");
-        logDir.mkdirs();
+    // private void log(String message) {
+    // File logDir = new File("logs");
+    // logDir.mkdirs();
 
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(LOG_FILE_PATH, true)))) {
-            out.println(message);
-        } catch (IOException e) {
-            System.err.println("Failed to write to log file: " + e.getMessage());
-        }
-    }
+    // try (PrintWriter out = new PrintWriter(new BufferedWriter(new
+    // FileWriter(LOG_FILE_PATH, true)))) {
+    // out.println(message);
+    // } catch (IOException e) {
+    // System.err.println("Failed to write to log file: " + e.getMessage());
+    // }
+    // }
 
-    @Override 
+    @Override
     public void visit(DeckManager deckManager) {
         try {
             jsonResult = objectMapper.writeValueAsString(deckManager);
@@ -82,11 +84,19 @@ public class SerializationVisitor implements Visitor {
         }
     }
 
+    // Méthodes visit non utilisées actuellement mais requises par l'interface et
+    // potentiellement utiles pour des extensions futures
+    @Override
+    public void visit(Player player) {
+    }
 
-    // Méthodes visit non utilisées actuellement mais requises par l'interface et potentiellement utiles pour des extensions futures
-    @Override public void visit(Player player) {}
-    @Override public void visit(Deck deck) {}
-        @Override public void visit(GameConfiguration config) {}
+    @Override
+    public void visit(Deck deck) {
+    }
+
+    @Override
+    public void visit(GameConfiguration config) {
+    }
 
     public String getResult() {
         return jsonResult;

@@ -49,6 +49,8 @@ public class EditDecksSceneController {
     private Deck selectedDeck;
     private Button selectedButton; // To track currently selected button
     private Card selectedCard;
+
+    @SuppressWarnings("unused")
     private Button addToAnotherDeckButton; // To track currently selected button
 
     @FXML
@@ -96,7 +98,8 @@ public class EditDecksSceneController {
             alert.setContentText("You have made changes to the decks. What would you like to do?");
 
             ButtonType saveAndLeave = new ButtonType("Save and Leave", ButtonBar.ButtonData.OK_DONE);
-            // ButtonType leaveWithoutSave = new ButtonType("Leave without saving", ButtonBar.ButtonData.NO);
+            // ButtonType leaveWithoutSave = new ButtonType("Leave without saving",
+            // ButtonBar.ButtonData.NO);
             ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
             // alert.getButtonTypes().setAll(saveAndLeave, leaveWithoutSave, cancel);
@@ -109,14 +112,14 @@ public class EditDecksSceneController {
                     sm.popScene();
                 }
                 // else if (result.get() == leaveWithoutSave) {
-                //     // Restore all deleted cards using CardManager
-                //     for (Card card : model.getCardManager().getDeletedCards()) {
-                //         ArrayList<Deck> decks = model.getCardManager().getDecks(card);
-                //         for (Deck deck : decks) {
-                //             model.getCardManager().restoreCard(card, deck);
-                //         }
-                //     }
-                //     sm.popScene();
+                // // Restore all deleted cards using CardManager
+                // for (Card card : model.getCardManager().getDeletedCards()) {
+                // ArrayList<Deck> decks = model.getCardManager().getDecks(card);
+                // for (Deck deck : decks) {
+                // model.getCardManager().restoreCard(card, deck);
+                // }
+                // }
+                // sm.popScene();
                 // }
             }
         } else {
@@ -147,7 +150,7 @@ public class EditDecksSceneController {
                 model.getDeckManager().addDeck(newDeck);
                 reloadDeckList();
                 cardOrDeckAddedOrRemovesViaUI = true;
-                System.out.println("Deck created: " + deckName);
+                //// System.out.println("Deck created: " + deckName);
             }
         }
     }
@@ -295,15 +298,16 @@ public class EditDecksSceneController {
         showCardInfo(selectedCard);
     }
 
+    @SuppressWarnings("unused")
     private void deleteCard(Card card, HBox cardContainer) {
         if (selectedDeck != null) {
             selectedDeck.removeCard(card);
             model.getCardManager().deleteCard(card, selectedDeck);
             cardOrDeckAddedOrRemovesViaUI = true;
             cardList.getChildren().remove(cardContainer);
-            System.out.println("Card deleted from deck: " + selectedDeck.getName());
+            // System.out.println("Card deleted from deck: " + selectedDeck.getName());
         } else {
-            System.out.println("No deck selected!");
+            // System.out.println("No deck selected!");
         }
     }
 
@@ -348,16 +352,14 @@ public class EditDecksSceneController {
         dialogContent.getChildren().addAll(
                 new Label("Card Name:"),
                 cardNameField,
-                cardUrlBox
-        );
+                cardUrlBox);
 
         // Setup image chooser
         openCardUrlButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Choose an image for the card:");
             fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg","*.gif")
-            );
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"));
 
             // Set initial directory if needed
             fileChooser.setInitialDirectory(new File("src/main/resources/images/"));

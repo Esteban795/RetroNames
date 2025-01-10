@@ -103,13 +103,13 @@ public class NewLoadSceneController {
         lobbyController.setSelectedDeck(randomDeck.getName());
 
         // Setup game with random deck
-        System.out.println("Try to setup game with random deck: " + randomDeck.getName());
+        //System.out.println("Try to setup game with random deck: " + randomDeck.getName());
         lobbyController.lobbyDone();
     }
 
     @FXML
     public void loadGame() throws IOException {
-        System.out.println("Load Game button clicked!");
+        //System.out.println("Load Game button clicked!");
         sm.pushScene(new LoadMenuScene(sm));
     }
 

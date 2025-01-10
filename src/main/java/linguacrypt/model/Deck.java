@@ -11,9 +11,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import linguacrypt.visitor.Visitable;
-import linguacrypt.visitor.Visitor;
-
 /**
  * Represents a deck of cards in the game.
  * Contains a list of cards and methods to manage them.
@@ -105,7 +102,8 @@ public class Deck implements Visitable {
     // Methods
     @JsonIgnore
     public void sortCards() { // Sort the cards in the deck
-        // Used when the deck is loaded from a file (it is possible that the cards are not sorted if the file was created or edited manually)
+        // Used when the deck is loaded from a file (it is possible that the cards are
+        // not sorted if the file was created or edited manually)
         boolean isSorted = true;
         for (int i = 0; i < cardList.size() - 1; i++) {
             if (cardList.get(i).getName().compareTo(cardList.get(i + 1).getName()) > 0) {
@@ -130,7 +128,7 @@ public class Deck implements Visitable {
     public ArrayList<Card> deepCopyCards() {
         ArrayList<Card> copy = new ArrayList<>();
         for (Card card : cardList) {
-            copy.add(new Card(card.getName(),card.getCardUrl()));
+            copy.add(new Card(card.getName(), card.getCardUrl()));
         }
         return copy;
     }

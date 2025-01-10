@@ -25,7 +25,7 @@ public class NewLoadScene extends ManagedScene {
             super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
             super.getScene().getStylesheets().add(getClass().getResource("/scenes/newLoad/style.css").toExternalForm());
         } catch (Exception e) {
-            System.out.println("Error loading NewLoad.fxml");
+            // System.out.println("Error loading NewLoad.fxml");
             sm.getPrimaryStage().close();
         }
     }

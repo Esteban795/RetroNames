@@ -41,7 +41,7 @@ public class EndGameSceneController {
     @FXML
     private VBox keyBox;
 
-    public EndGameSceneController(SceneManager sm,String winningTeam) {
+    public EndGameSceneController(SceneManager sm, String winningTeam) {
         this.sm = sm;
         this.winningTeam = winningTeam;
     }
@@ -50,7 +50,7 @@ public class EndGameSceneController {
     void initialize() {
         labelVictor.setText("L'équipe " + winningTeam + " a gagné !");
         setupGrid();
-        displayStats();   
+        displayStats();
     }
 
     public void setupGrid() {
@@ -73,14 +73,15 @@ public class EndGameSceneController {
                 if (color.equals("white") && expectedMap.get(i).get(j).isFound()) {
                     color = "beige";
                 }
-                pane.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: " + color + "; -fx-border-color: black;");
-                expectedMapGrid.add(pane, j,i);
+                pane.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: " + color
+                        + "; -fx-border-color: black;");
+                expectedMapGrid.add(pane, j, i);
 
                 Pane paneExpected = new Pane();
                 paneExpected.setPrefSize(cellSize, cellSize); // Set fixed size
                 paneExpected.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: "
                         + expectedMap.get(i).get(j).getColor().toString().toLowerCase() + "; -fx-border-color: black;");
-                keyGrid.add(paneExpected, j,i);
+                keyGrid.add(paneExpected, j, i);
             }
         }
 
@@ -95,11 +96,12 @@ public class EndGameSceneController {
     }
 
     public void displayStats() {
-        System.out.println("Displaying stats");
+        // System.out.println("Displaying stats");
         int[] blueTeamStats = sm.getModel().getGame().getStats().getBlueTeamStats();
         int[] redTeamStats = sm.getModel().getGame().getStats().getRedTeamStats();
 
-        String blueTeamAvgTimeAnswer = String.format("%.2f", sm.getModel().getGame().getStats().getBlueTeamAvgTimeToAnswer());
+        String blueTeamAvgTimeAnswer = String.format("%.2f",
+                sm.getModel().getGame().getStats().getBlueTeamAvgTimeToAnswer());
         blueTeamStatsLabel.setText("Statistiques de l'équipe bleue :\n"
                 + "   - Carte bleues découvertes : " + blueTeamStats[0] + "\n"
                 + "   - Carte rouges découvertes : " + blueTeamStats[1] + "\n"
@@ -108,7 +110,8 @@ public class EndGameSceneController {
                 + "   - Temps moyen pour répondre : " + blueTeamAvgTimeAnswer
                 + "s");
 
-        String redTeamAvgTimeAnswer = String.format("%.2f", sm.getModel().getGame().getStats().getRedTeamAvgTimeToAnswer());
+        String redTeamAvgTimeAnswer = String.format("%.2f",
+                sm.getModel().getGame().getStats().getRedTeamAvgTimeToAnswer());
 
         redTeamStatsLabel.setText("Statistiques de l'équipe rouge :\n"
                 + "   - Carte bleues découvertes : " + redTeamStats[0] + "\n"
@@ -128,7 +131,7 @@ public class EndGameSceneController {
     @FXML
     public void goToLobby() throws IOException {
         sm.getModel().setGame(new Game());
-        if(!sm.goToPreviousSceneType(LobbyScene.class)){
+        if (!sm.goToPreviousSceneType(LobbyScene.class)) {
             sm.pushScene(new LobbyScene(sm));
         }
     }

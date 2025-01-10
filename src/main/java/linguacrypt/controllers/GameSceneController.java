@@ -140,6 +140,7 @@ public class GameSceneController {
             setupGameGrid();
             setupTimers();
             setupHintControls();
+            updateHintUI();
             System.out.println("Game scene initialized");
             initializeProgress();
             updatePlayerLabels();
@@ -156,6 +157,16 @@ public class GameSceneController {
                 }
             });
             setupQRCode();
+            if (game.getConfig().isDuo()) {
+                // Get the active team and set initial UI
+                Team activeTeam = game.getCurrentTeam();
+                if (activeTeam.getColor() == Color.RED) {
+                    redTeamSpymaster.getParent().getStyleClass().add("current-play");
+                } else {
+                    redTeamSpymaster.getParent().getStyleClass().remove("current-play");
+                    blueTeamSpymaster.getParent().getStyleClass().add("current-play");
+                }
+            }
 
         } catch (Exception e) {
             System.err.println("Error during initialization: " + e.getMessage());
@@ -339,23 +350,55 @@ public class GameSceneController {
         }
     }
 
+    private void updateHintUI() {
+        if (game.getCurrentHint() != null && !game.getCurrentHint().isEmpty()) {
+            hintLabel.setText(game.getCurrentHint());
+            if (game.getRemainingGuesses() > 0) {
+                hintLabel.setText("Indice : " + game.getCurrentHint());
+                remainingGuessesLabel.setText("Essais restants : " + game.getRemainingGuesses());
+
+                hintInputBox.setVisible(false);
+                hintDisplayBox.setVisible(true);
+            } else {
+                hintInputBox.setVisible(true);
+                hintDisplayBox.setVisible(false);
+                endTurnButton.setDisable(true);
+            }
+        }
+    }
+
     @SuppressWarnings("unused")
     private void switchTeam() {
-        game.switchTeam();
         game.setBonusGuess(1);
         hintLabel.setText("");
         remainingGuessesLabel.setText("");
         hintInputBox.setVisible(true);
         hintDisplayBox.setVisible(false);
 
-        if (redTeamOperators.getParent().getStyleClass().contains("current-play")) {
-            redTeamOperators.getParent().getStyleClass().remove("current-play");
-            blueTeamSpymaster.getParent().getStyleClass().add("current-play");
-        } else {
-            blueTeamOperators.getParent().getStyleClass().remove("current-play");
-            redTeamSpymaster.getParent().getStyleClass().add("current-play");
+    }
+
+    //Update toujours l'UI dans le cas normal, et gère le cas operative -> spymaster dans le cas duo
+    private void updateTeamUI(boolean isDuo) {
+        if(!isDuo){
+            if (redTeamOperators.getParent().getStyleClass().contains("current-play")) {
+                redTeamOperators.getParent().getStyleClass().remove("current-play");
+                blueTeamSpymaster.getParent().getStyleClass().add("current-play");
+            } else {
+                blueTeamOperators.getParent().getStyleClass().remove("current-play");
+                redTeamSpymaster.getParent().getStyleClass().add("current-play");
+            }
+        }
+        else {
+            if(game.getBooleanCurrentTeam()){
+                redTeamSpymaster.getParent().getStyleClass().add("current-play");
+                redTeamOperators.getParent().getStyleClass().remove("current-play");
+            } else {
+                blueTeamSpymaster.getParent().getStyleClass().add("current-play");
+                blueTeamOperators.getParent().getStyleClass().remove("current-play");
+            }
         }
     }
+    
 
     /*
      * Handle a card click event.
@@ -408,7 +451,7 @@ public class GameSceneController {
                     if (game.getBonusGuess() > 0) {
                         game.setRemainingGuesses(game.getBonusGuess());
                         game.setBonusGuess(0);
-                        remainingGuessesLabel.setText("Essais Bonus : " + game.getRemainingGuesses());
+                        remainingGuessesLabel.setText("Essai Bonus : " + game.getRemainingGuesses());
                     } else {
                         endTurn();
                     }
@@ -422,10 +465,15 @@ public class GameSceneController {
         }
     }
 
+
     @FXML
     private void endTurn() {
-
-        game.switchTeam();
+        boolean isDuo = game.getConfig().isDuo();
+        // Don't switch team in duo mode
+        if (!isDuo) {
+            game.switchTeam();
+        }
+        
         game.setRemainingGuesses(0);
         game.setBonusGuess(1);
         hintField.setText("");
@@ -436,14 +484,7 @@ public class GameSceneController {
         updateTurnLabel();
         guessTimer.stop();
         hintTimerButton.setVisible(true);
-
-        if (redTeamOperators.getParent().getStyleClass().contains("current-play")) {
-            redTeamOperators.getParent().getStyleClass().remove("current-play");
-            blueTeamSpymaster.getParent().getStyleClass().add("current-play");
-        } else {
-            blueTeamOperators.getParent().getStyleClass().remove("current-play");
-            redTeamSpymaster.getParent().getStyleClass().add("current-play");
-        }
+        updateTeamUI(isDuo);
     }
 
     private void updateTurnLabel() {
@@ -485,13 +526,17 @@ public class GameSceneController {
             hintInputBox.setVisible(false);
             hintDisplayBox.setVisible(true);
 
-            if (redTeamSpymaster.getParent().getStyleClass().contains("current-play")) {
+        if (!game.getConfig().isDuo()) {
+            updateHintUI();
+        } else {
+            if(game.getBooleanCurrentTeam()){
                 redTeamSpymaster.getParent().getStyleClass().remove("current-play");
                 redTeamOperators.getParent().getStyleClass().add("current-play");
             } else {
                 blueTeamSpymaster.getParent().getStyleClass().remove("current-play");
                 blueTeamOperators.getParent().getStyleClass().add("current-play");
             }
+        }
             hintTimer.stop();
             guessTimer.start();
         } catch (NumberFormatException e) {
@@ -661,7 +706,10 @@ public class GameSceneController {
     private void handleTeamSelect() {
         showSaveDialog(() -> {
             try {
-                sm.pushScene(new LobbyScene(sm));
+                sm.getModel().setGame(new Game());
+                if(!sm.goToPreviousSceneType(LobbyScene.class)){
+                    sm.pushScene(new LobbyScene(sm));
+                }
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

@@ -3,6 +3,9 @@ package linguacrypt.model;
 import linguacrypt.visitor.Visitable;
 import linguacrypt.visitor.Visitor;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -122,5 +125,13 @@ public class Deck implements Visitable {
 
     public boolean containsCard(Card selectedCard) {
         return cardList.contains(selectedCard);
+    }
+
+    public ArrayList<Card> deepCopyCards() {
+        ArrayList<Card> copy = new ArrayList<>();
+        for (Card card : cardList) {
+            copy.add(new Card(card.getName(),card.getCardUrl()));
+        }
+        return copy;
     }
 }

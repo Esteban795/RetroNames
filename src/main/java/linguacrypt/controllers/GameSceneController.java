@@ -76,7 +76,7 @@ public class GameSceneController {
     private Pane redTeamPanel;
     @FXML
     private Pane blueTeamPanel;
-    
+
     private final DoubleProperty redTeamProgress = new SimpleDoubleProperty(0);
     private final DoubleProperty blueTeamProgress = new SimpleDoubleProperty(0);
     @FXML
@@ -169,7 +169,7 @@ public class GameSceneController {
      * Initialize the grid with the cards of the game's deck.
      */
     private void setupGameGrid() {
-        if(!game.hasStarted()){
+        if (!game.hasStarted()) {
             game.initGrid();
         }
         System.out.println("Game grid loaded with cards");
@@ -241,7 +241,6 @@ public class GameSceneController {
         }
     }
 
-    
     private void initializeProgress() {
         if (redTeamPanel != null && blueTeamPanel != null) {
             Rectangle rectangle = new Rectangle();
@@ -254,13 +253,12 @@ public class GameSceneController {
             rectangle.layoutYProperty().bind(blueTeamPanel.heightProperty().subtract(rectangle.heightProperty()));
             blueTeamPanel.getChildren().add(rectangle);
 
-
             Rectangle rectangle2 = new Rectangle();
             rectangle2.setFill(javafx.scene.paint.Color.valueOf("#8c0b0b"));
             rectangle2.getStyleClass().add("progress-bar");
-            
+
             rectangle2.widthProperty().bind(redTeamPanel.widthProperty()); // Full width
-            rectangle2.heightProperty().bind(redTeamPanel.heightProperty().multiply(redTeamProgress)); 
+            rectangle2.heightProperty().bind(redTeamPanel.heightProperty().multiply(redTeamProgress));
             rectangle2.layoutYProperty().bind(redTeamPanel.heightProperty().subtract(rectangle2.heightProperty()));
             redTeamPanel.getChildren().add(rectangle2);
             updateProgress();
@@ -317,6 +315,7 @@ public class GameSceneController {
         }
     }
 
+    @SuppressWarnings("unused")
     private void switchTeam() {
         game.switchTeam();
         game.setBonusGuess(1);
@@ -423,7 +422,8 @@ public class GameSceneController {
         String bgColor = isRedTeam ? "#ffcccc" : "#ccccff";
 
         if (isRedTeam) {
-            mainBorderPane.setStyle("-fx-background-color: radial-gradient(center 20% 50%, radius 120%, #ff9696, #8c0b0b);");
+            mainBorderPane
+                    .setStyle("-fx-background-color: radial-gradient(center 20% 50%, radius 120%, #ff9696, #8c0b0b);");
         } else {
             mainBorderPane.setStyle("radial-gradient(center 50% 20%, radius 120%, #A8CAEE, #0A246A)");
         }
@@ -466,7 +466,6 @@ public class GameSceneController {
         }
     }
 
-
     private void updateProgress() {
         System.out.println("Updating progress bars");
         int redFound = (int) game.getGrid().stream()
@@ -488,10 +487,17 @@ public class GameSceneController {
                 .flatMap(ArrayList::stream)
                 .filter(c -> c.getColor() == Color.BLUE)
                 .count();
-        
+
         Timeline timeline = new Timeline(
-            new KeyFrame(Duration.ZERO, new KeyValue(redTeamProgress, redTeamProgress.getValue()), new KeyValue(blueTeamProgress, blueTeamProgress.getValue())), // Start at 0
-            new KeyFrame(Duration.seconds(0.5), new KeyValue(redTeamProgress, (double) redFound / redTotal, Interpolator.EASE_OUT), new KeyValue(blueTeamProgress, (double) blueFound / blueTotal, Interpolator.EASE_OUT)) // Fill to 100% in 3 seconds
+                new KeyFrame(Duration.ZERO, new KeyValue(redTeamProgress, redTeamProgress.getValue()),
+                        new KeyValue(blueTeamProgress, blueTeamProgress.getValue())), // Start at 0
+                new KeyFrame(Duration.seconds(0.5),
+                        new KeyValue(redTeamProgress, (double) redFound / redTotal, Interpolator.EASE_OUT),
+                        new KeyValue(blueTeamProgress, (double) blueFound / blueTotal, Interpolator.EASE_OUT)) // Fill
+                                                                                                               // to
+                                                                                                               // 100%
+                                                                                                               // in 3
+                                                                                                               // seconds
         );
         timeline.play();
     }
@@ -595,7 +601,8 @@ public class GameSceneController {
                     // guessTimerProperty is remaining time, so you have to save maxGuessTime
                     // - guessTimerProperty
                     Game game = sm.getModel().getGame();
-                    game.getStats().updateAvgTimeToAnswer(game.getBooleanCurrentTeam(), maxGuessTime - guessTimerProperty.get());
+                    game.getStats().updateAvgTimeToAnswer(game.getBooleanCurrentTeam(),
+                            maxGuessTime - guessTimerProperty.get());
                     guessTimerProperty.set(maxGuessTime);
                     lastUpdate = 0;
                 }
@@ -705,7 +712,8 @@ public class GameSceneController {
         Dialog<ImageView> dialog = new Dialog<>();
         dialog.setTitle("Scannez ce QR Code pour accéder à la clé de la partie.");
         dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE);
-        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(), "src/main/resources/imgs/qrcode_resized.png");
+        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(),
+                "src/main/resources/imgs/qrcode_resized.png");
         if (res == 0) {
             System.out.println("QR Code generated successfully");
             File fileImg = new File("src/main/resources/imgs/qrcode_resized.png");
@@ -735,20 +743,22 @@ public class GameSceneController {
         Timeline timeline = new Timeline();
         timeline.setCycleCount(1);
 
-        final javafx.animation.KeyValue scaleKey = new javafx.animation.KeyValue(button.scaleYProperty(), 0, Interpolator.EASE_OUT);
-        final javafx.animation.KeyValue scaleKey2 = new javafx.animation.KeyValue(button.scaleYProperty(), 1, Interpolator.EASE_IN);
+        final javafx.animation.KeyValue scaleKey = new javafx.animation.KeyValue(button.scaleYProperty(), 0,
+                Interpolator.EASE_OUT);
+        final javafx.animation.KeyValue scaleKey2 = new javafx.animation.KeyValue(button.scaleYProperty(), 1,
+                Interpolator.EASE_IN);
 
         BackgroundFill bgcolor = button.backgroundProperty().get().getFills().get(0);
-        BackgroundFill newFill = new BackgroundFill(fillColor, bgcolor.getRadii() , bgcolor.getInsets());
+        BackgroundFill newFill = new BackgroundFill(fillColor, bgcolor.getRadii(), bgcolor.getInsets());
         Background newBackground = new Background(newFill);
-        
 
-        final javafx.animation.KeyValue colorKey = new javafx.animation.KeyValue(button.backgroundProperty(), newBackground, Interpolator.DISCRETE);
-        
+        final javafx.animation.KeyValue colorKey = new javafx.animation.KeyValue(button.backgroundProperty(),
+                newBackground, Interpolator.DISCRETE);
+
         final KeyFrame kf1 = new KeyFrame(Duration.millis(250), scaleKey, colorKey);
 
         final KeyFrame kf2 = new KeyFrame(Duration.millis(500), scaleKey2);
-        timeline.getKeyFrames().addAll(kf1,kf2);
+        timeline.getKeyFrames().addAll(kf1, kf2);
 
         System.out.println("Playing animation");
         timeline.play();

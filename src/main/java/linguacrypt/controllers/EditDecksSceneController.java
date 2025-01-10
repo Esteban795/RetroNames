@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import linguacrypt.model.Card;
@@ -91,16 +92,34 @@ public class EditDecksSceneController {
     public void goBack() {
         if (cardOrDeckAddedOrRemovesViaUI) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane");
+
             alert.setTitle("Save Changes");
             alert.setHeaderText(null);
             alert.setContentText("You have made changes to the decks. What would you like to do?");
 
             ButtonType saveAndLeave = new ButtonType("Save and Leave", ButtonBar.ButtonData.OK_DONE);
-            // ButtonType leaveWithoutSave = new ButtonType("Leave without saving", ButtonBar.ButtonData.NO);
+            // ButtonType leaveWithoutSave = new ButtonType("Leave without saving",
+            // ButtonBar.ButtonData.NO);
             ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
             // alert.getButtonTypes().setAll(saveAndLeave, leaveWithoutSave, cancel);
             alert.getButtonTypes().setAll(saveAndLeave, cancel);
+            // Style the buttons
+            alert.getDialogPane().lookupButton(saveAndLeave).getStyleClass().add("dialog-button");
+            alert.getDialogPane().lookupButton(cancel).getStyleClass().add("dialog-button");
+
+            // Style the buttons
+            alert.getDialogPane().lookupButton(saveAndLeave).getStyleClass().add("dialog-button");
+            alert.getDialogPane().lookupButton(cancel).getStyleClass().add("dialog-button");
+
+
+            alert.setTitle("Save Changes");
+            alert.setHeaderText(null);
+            alert.setContentText("You have made changes to the decks. What would you like to do?");
+
+
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent()) {
@@ -109,14 +128,14 @@ public class EditDecksSceneController {
                     sm.popScene();
                 }
                 // else if (result.get() == leaveWithoutSave) {
-                //     // Restore all deleted cards using CardManager
-                //     for (Card card : model.getCardManager().getDeletedCards()) {
-                //         ArrayList<Deck> decks = model.getCardManager().getDecks(card);
-                //         for (Deck deck : decks) {
-                //             model.getCardManager().restoreCard(card, deck);
-                //         }
-                //     }
-                //     sm.popScene();
+                // // Restore all deleted cards using CardManager
+                // for (Card card : model.getCardManager().getDeletedCards()) {
+                // ArrayList<Deck> decks = model.getCardManager().getDecks(card);
+                // for (Deck deck : decks) {
+                // model.getCardManager().restoreCard(card, deck);
+                // }
+                // }
+                // sm.popScene();
                 // }
             }
         } else {
@@ -127,6 +146,8 @@ public class EditDecksSceneController {
     @FXML
     public void showNewDeckPopup() {
         deckNameField.setText("");
+        newDeckDialog.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
+        newDeckDialog.getDialogPane().getStyleClass().add("dialog-pane");
         Optional<ButtonType> result = newDeckDialog.showAndWait();
 
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
@@ -161,31 +182,32 @@ public class EditDecksSceneController {
 
     private void addDeckToUI(Deck deck) {
         HBox deckContainer = new HBox(10);
-        deckContainer.setPadding(new Insets(5)); // Add padding around container
+        deckContainer.setPadding(new Insets(5));
+        deckContainer.getStyleClass().add("panel");
+
         Button deckButton = new Button(deck.getName());
         deckButton.getStyleClass().add("deck-button");
+        deckButton.setPrefWidth(200);
+        deckButton.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(deckButton, Priority.ALWAYS);
 
         deckButton.setOnAction(e -> {
-            // Reset previous selection
             if (selectedButton != null) {
                 selectedButton.getStyleClass().remove("selected");
             }
 
-            // Update selection
             selectedDeck = deck;
             selectedButton = deckButton;
-            deckButton.getStyleClass().add("selected");
+            deckButton.getStyleClass().addAll("selected", "deck-button-selected");
             newCardButton.setDisable(false);
             deleteDeckButton.setDisable(false);
             duplicateDeckButton.setDisable(false);
 
-            // Show cards
             showDeckCards(deck);
         });
 
         deckContainer.getChildren().add(deckButton);
         deckList.getChildren().add(deckContainer);
-
     }
 
     @FXML
@@ -202,20 +224,18 @@ public class EditDecksSceneController {
 
     private void showDeckCards(Deck deck) {
         cardList.getChildren().clear();
-        cardInfoBox.setVisible(false);
 
         FlowPane cardFlow = new FlowPane();
-        cardFlow.setHgap(5); // reduced horizontal gap
-        cardFlow.setVgap(5); // add vertical gap
-        cardFlow.setPadding(new Insets(5));
-        cardFlow.setPrefWrapLength(sm.getPrimaryStage().getWidth() / 2 - 20); // maximize width
-        cardFlow.setStyle("-fx-alignment: center;"); // Center alignment both horizontally and vertically
+        cardFlow.setHgap(10);
+        cardFlow.setVgap(10);
+        cardFlow.setPadding(new Insets(10));
+        cardFlow.getStyleClass().add("panel");
 
         for (Card card : deck.getCardList()) {
             Button cardButton = new Button(card.getName());
-            cardButton.getStyleClass().add("embassy-button");
-            cardButton.setMaxWidth(Double.MAX_VALUE);
-            cardButton.setMinHeight(50);
+            cardButton.getStyleClass().add("card-button");
+            cardButton.setPrefWidth(150);
+            cardButton.setMinHeight(40);
             cardButton.setOnAction(event -> showCardInfo(card));
             cardFlow.getChildren().add(cardButton);
         }
@@ -250,6 +270,7 @@ public class EditDecksSceneController {
         });
 
         Button addToAnotherDeckButton = new Button("Add to Another Deck");
+        addToAnotherDeckButton.getStyleClass().add("card-button");
         addToAnotherDeckButton.setOnAction(e -> showAddToAnotherDeckDialog());
 
         buttonBox.getChildren().addAll(addToAnotherDeckButton, deleteCardButton);
@@ -268,19 +289,24 @@ public class EditDecksSceneController {
     @FXML
     private void showAddToAnotherDeckDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("dialog-pane"); // Added style class
         dialog.setTitle("Add to Another Deck");
+        dialog.setHeaderText("Select a deck to add the card to:");
 
+        VBox content = new VBox(10);
+        content.getStyleClass().add("panel"); // Added style class
         ComboBox<String> deckComboBox = new ComboBox<>();
         deckComboBox.setPromptText("Select a deck");
+        deckComboBox.getStyleClass().add("combo-box"); // Added style class
         for (Deck deck : model.getDeckManager().getDeckList()) {
-            model.getCardManager().getDecks(selectedCard);
             if (deck != selectedDeck && !model.getCardManager().getDecks(selectedCard).contains(deck)) {
                 deckComboBox.getItems().add(deck.getName());
             }
         }
 
-        dialog.getDialogPane().getChildren().add(deckComboBox);
-
+        content.getChildren().add(deckComboBox);
+        dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         Optional<ButtonType> result = dialog.showAndWait();
@@ -331,7 +357,9 @@ public class EditDecksSceneController {
         ButtonType confirmButtonType = ButtonType.OK;
         ButtonType cancelButtonType = ButtonType.CANCEL;
         newCardDialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
-
+        // Set dialog style
+        newCardDialog.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
+        newCardDialog.getDialogPane().getStyleClass().add("dialog-pane");
         VBox dialogContent = new VBox(10); // 10 is spacing between elements
 
         // Create image selection box
@@ -348,16 +376,14 @@ public class EditDecksSceneController {
         dialogContent.getChildren().addAll(
                 new Label("Card Name:"),
                 cardNameField,
-                cardUrlBox
-        );
+                cardUrlBox);
 
         // Setup image chooser
         openCardUrlButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Choose an image for the card:");
             fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg","*.gif")
-            );
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"));
 
             // Set initial directory if needed
             fileChooser.setInitialDirectory(new File("src/main/resources/images/"));
@@ -421,6 +447,7 @@ public class EditDecksSceneController {
         TextField nameField = new TextField();
         dialog.getDialogPane().setContent(nameField);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
 
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {

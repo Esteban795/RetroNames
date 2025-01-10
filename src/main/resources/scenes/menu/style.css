@@ -1,15 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Tiny5&display=swap');
 
 @font-face {
-    font-family: 'Pixel Operator Mono';
+    font-family: 'Pixel Operator Mono Bold';
     src: url('file:src/main/resources/fonts/PixelOperatorMono-Bold.ttf');
-    font-weight: bold;
 }
 
 @font-face {
     font-family: 'Pixel Operator Mono';
     src: url('file:src/main/resources/fonts/PixelOperatorMono.ttf');
-    font-weight: normal;
 }
 /* MENU STYLE */
 .menu-background {
@@ -195,7 +193,7 @@
     -fx-font-size: 30px;
     -fx-text-fill: rgb(255, 255, 255);
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
-    -fx-font-style: bold;
+    -fx-font-weight: bold;
     -fx-text-wrap: true;
     -fx-text-alignment: center;
 }

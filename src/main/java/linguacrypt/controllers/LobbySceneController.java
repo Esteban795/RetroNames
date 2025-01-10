@@ -308,12 +308,15 @@ public class LobbySceneController {
         sm.goToPreviousSceneType(MenuScene.class);
     }
 
-    private void printSelectedCards(ArrayList<Card> selectedCards) {
-        for (int i = 0; i < selectedCards.size(); i++) {
-            System.out.println(
-                    "Name : " + selectedCards.get(i).getName() + " (color : " + selectedCards.get(i).getColor() + ")");
-        }
-    }
+    /*
+     * Debugging method to print selected cards
+     */
+    // private void printSelectedCards(ArrayList<Card> selectedCards) {
+    //     for (int i = 0; i < selectedCards.size(); i++) {
+    //         System.out.println(
+    //                 "Name : " + selectedCards.get(i).getName() + " (color : " + selectedCards.get(i).getColor() + ")");
+    //     }
+    // }
 
     public void setSelectedDeck(String deckName) {
         decksSelector.setValue(deckName);

@@ -20,8 +20,7 @@ public class TeamManager {
     @JsonCreator
     public TeamManager(
         @JsonProperty("blueTeam") Team blueTeam,
-        @JsonProperty("redTeam") Team redTeam,
-        @JsonProperty("teamsList") ArrayList<Team> teamsList) {
+        @JsonProperty("redTeam") Team redTeam) {
         this.blueTeam = blueTeam;
         this.redTeam = redTeam;
     }
@@ -45,6 +44,13 @@ public class TeamManager {
         } else if (team.equals(redTeam)) {
             redTeam = null;
         }
+    }
+
+    public void clearTeams() {
+        blueTeam = null;
+        redTeam = null;
+        blueTeam = new Team("Blue Team", Color.BLUE);
+        redTeam = new Team("Red Team", Color.RED);
     }
 
     public Team getBlueTeam() { return blueTeam; }

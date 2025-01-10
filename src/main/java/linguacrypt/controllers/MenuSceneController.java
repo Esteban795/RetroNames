@@ -189,7 +189,7 @@ public class MenuSceneController {
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(50), e -> {
             particles.forEach(particle -> {
                 particle.setCenterY(particle.getCenterY() - random.nextDouble() * 2);
-                particle.setCenterX(particle.getCenterX() + (random.nextDouble() - 0.5) * 2);
+                particle.setCenterX(particle.getCenterX() + (random.nextDouble() ) * 2);
                 particle.setOpacity(particle.getOpacity() - 0.01);
 
                 if (particle.getOpacity() <= 0) {

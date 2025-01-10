@@ -23,8 +23,8 @@ public class EditDecksScene extends ManagedScene {
         loader.setController(controller);
         try {
             Parent root = loader.load();
-            super.setScene(new Scene(root, 1600, 900));
-            super.getScene().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+            super.setScene(new Scene(root, 1600,900));
+            super.getScene().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
         } catch (Exception e) {
             // System.out.println("Error loading EditDecksScene.fxml");
             sm.getPrimaryStage().close();

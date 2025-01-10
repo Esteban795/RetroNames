@@ -40,6 +40,9 @@ public class EditDecksSceneController {
     private Button deleteDeckButton;
 
     @FXML
+    private Button duplicateDeckButton;
+    
+    @FXML
     private TextField cardNameField;
 
     @FXML
@@ -86,6 +89,7 @@ public class EditDecksSceneController {
         newCardButton.setDisable(true); // Disable initially
         deleteDeckButton.setDisable(true); // Disable by default
         cardInfoBox.setVisible(false); // Hide initially
+        duplicateDeckButton.setDisable(true); // Disable initially
     }
 
     @FXML
@@ -97,26 +101,28 @@ public class EditDecksSceneController {
             alert.setContentText("You have made changes to the decks. What would you like to do?");
 
             ButtonType saveAndLeave = new ButtonType("Save and Leave", ButtonBar.ButtonData.OK_DONE);
-            ButtonType leaveWithoutSave = new ButtonType("Leave without saving", ButtonBar.ButtonData.NO);
+            // ButtonType leaveWithoutSave = new ButtonType("Leave without saving", ButtonBar.ButtonData.NO);
             ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-            alert.getButtonTypes().setAll(saveAndLeave, leaveWithoutSave, cancel);
+            // alert.getButtonTypes().setAll(saveAndLeave, leaveWithoutSave, cancel);
+            alert.getButtonTypes().setAll(saveAndLeave, cancel);
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent()) {
                 if (result.get() == saveAndLeave) {
                     model.getDeckManager().saveDeckManager();
                     sm.popScene();
-                } else if (result.get() == leaveWithoutSave) {
-                    // Restore all deleted cards using CardManager
-                    for (Card card : model.getCardManager().getDeletedCards()) {
-                        ArrayList<Deck> decks = model.getCardManager().getDecks(card);
-                        for (Deck deck : decks) {
-                            model.getCardManager().restoreCard(card, deck);
-                        }
-                    }
-                    sm.popScene();
-                }
+                } 
+                // else if (result.get() == leaveWithoutSave) {
+                //     // Restore all deleted cards using CardManager
+                //     for (Card card : model.getCardManager().getDeletedCards()) {
+                //         ArrayList<Deck> decks = model.getCardManager().getDecks(card);
+                //         for (Deck deck : decks) {
+                //             model.getCardManager().restoreCard(card, deck);
+                //         }
+                //     }
+                //     sm.popScene();
+                // }
             }
         } else {
             sm.popScene();
@@ -176,7 +182,7 @@ public class EditDecksSceneController {
             deckButton.getStyleClass().add("selected");
             newCardButton.setDisable(false);
             deleteDeckButton.setDisable(false);
-            showDeckCards(deck);
+            duplicateDeckButton.setDisable(false);
 
             // Show cards
             showDeckCards(deck);
@@ -246,6 +252,7 @@ public class EditDecksSceneController {
         Button deleteCardButton = new Button("Delete Card");
         deleteCardButton.getStyleClass().add("delete-card-button");
         deleteCardButton.setOnAction(e -> {
+            deleteCard(selectedCard);
             cardInfoBox.setVisible(false);
         });
 
@@ -360,6 +367,53 @@ public class EditDecksSceneController {
         }
     }
 
+    @FXML
+    public void showDuplicateDeckPopup() {
+        if (selectedDeck == null)
+            return;
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Duplicate Deck");
+        dialog.setHeaderText("Enter name for duplicated deck:");
+
+        TextField nameField = new TextField();
+        dialog.getDialogPane().setContent(nameField);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            String newDeckName = nameField.getText().trim();
+            if (!newDeckName.isEmpty()) {
+                if (model.getDeckManager().getDeck(newDeckName) != null) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Duplicate Name");
+                    alert.setHeaderText(null);
+                    alert.setContentText("A deck with name '" + newDeckName + "' already exists!");
+                    alert.showAndWait();
+                    return;
+                }
+
+                Deck newDeck = new Deck();
+                newDeck.setDeckName(newDeckName);
+
+                // Explore every cards of and add them to newDeck
+                for (Card card : selectedDeck.getCardList()){
+                    newDeck.addCard(card);
+                    model.getCardManager().addCard(card, newDeck);
+                }
+
+                model.getDeckManager().addDeck(newDeck);
+                reloadDeckList();
+                cardOrDeckAddedOrRemovesViaUI = true;
+            }
+        }
+
+        // Reload card display if a deck is selected
+        if (selectedDeck != null) {
+            showDeckCards(selectedDeck);
+        }
+    }
+    
     @FXML
     public boolean wasCardOrDeckAddedOrRemovesViaUI() {
         return cardOrDeckAddedOrRemovesViaUI;

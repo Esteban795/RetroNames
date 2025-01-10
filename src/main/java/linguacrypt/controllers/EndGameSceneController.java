@@ -3,12 +3,15 @@ package linguacrypt.controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javafx.animation.RotateTransition;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import linguacrypt.model.Card;
 import linguacrypt.model.Game;
 import linguacrypt.scenes.LobbyScene;
@@ -41,7 +44,10 @@ public class EndGameSceneController {
     @FXML
     private VBox keyBox;
 
-    public EndGameSceneController(SceneManager sm, String winningTeam) {
+    @FXML
+    private VBox mainVBox;
+
+    public EndGameSceneController(SceneManager sm,  String winningTeam) {
         this.sm = sm;
         this.winningTeam = winningTeam;
     }
@@ -49,6 +55,20 @@ public class EndGameSceneController {
     @FXML
     void initialize() {
         labelVictor.setText("L'équipe " + winningTeam + " a gagné !");
+        labelVictor.getStyleClass().add(winningTeam.toLowerCase().split(" ")[0] + "-team");
+        TranslateTransition tt = new TranslateTransition(Duration.millis(200), labelVictor);
+        RotateTransition rt = new RotateTransition(Duration.millis(400), labelVictor);
+        labelVictor.setTranslateX(5);
+        labelVictor.setRotate(-5);
+        tt.setByY(10);
+        rt.setByAngle(10);
+        tt.setAutoReverse(true);
+        rt.setAutoReverse(true);
+        tt.setCycleCount(TranslateTransition.INDEFINITE);
+        rt.setCycleCount(RotateTransition.INDEFINITE);
+        tt.play();
+        rt.play();
+        mainVBox.getStyleClass().add(winningTeam.toLowerCase().split(" ")[0] + "-main");
         setupGrid();
         displayStats();
     }
@@ -59,9 +79,10 @@ public class EndGameSceneController {
 
         GridPane expectedMapGrid = new GridPane();
         GridPane keyGrid = new GridPane();
-        int cellSize = 75 - 5 * (size - 3);
+        int cellSize = 70 - 5 * (size - 3);
         expectedMapGrid.setStyle(
-                "-fx-max-width:" + (cellSize) * (size + 1) + "; -fx-max-height:" + (cellSize) * (size + 1) + ";");
+                "-fx-max-width:" + (cellSize) * (size + 1) + "; -fx-max-height:"
+                        + (cellSize) * (size + 1) + ";");
         keyGrid.setStyle(
                 "-fx-max-width:" + (cellSize) * (size + 1) + "; -fx-max-height:" + (cellSize) * (size + 1) + ";");
         for (int i = 0; i < size; i++) {
@@ -73,20 +94,18 @@ public class EndGameSceneController {
                 if (color.equals("white") && expectedMap.get(i).get(j).isFound()) {
                     color = "beige";
                 }
-                pane.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: " + color
+                pane.setStyle("-fx-max-width:70;-fx-max-height:70;-fx-background-color: " + color
+                       
                         + "; -fx-border-color: black;");
-                expectedMapGrid.add(pane, j, i);
+                expectedMapGrid.add(pane, j,  i);
 
                 Pane paneExpected = new Pane();
                 paneExpected.setPrefSize(cellSize, cellSize); // Set fixed size
-                paneExpected.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: "
+                paneExpected.setStyle("-fx-max-width:70;-fx-max-height:70;-fx-background-color: "
                         + expectedMap.get(i).get(j).getColor().toString().toLowerCase() + "; -fx-border-color: black;");
                 keyGrid.add(paneExpected, j, i);
             }
         }
-
-        expectedMapBox.setAlignment(Pos.BASELINE_CENTER);
-        keyBox.setAlignment(Pos.BASELINE_CENTER);
 
         expectedMapGrid.setAlignment(Pos.CENTER);
         keyGrid.setAlignment(Pos.CENTER);
@@ -101,9 +120,9 @@ public class EndGameSceneController {
         int[] redTeamStats = sm.getModel().getGame().getStats().getRedTeamStats();
 
         String blueTeamAvgTimeAnswer = String.format("%.2f",
+               
                 sm.getModel().getGame().getStats().getBlueTeamAvgTimeToAnswer());
-        blueTeamStatsLabel.setText("Statistiques de l'équipe bleue :\n"
-                + "   - Carte bleues découvertes : " + blueTeamStats[0] + "\n"
+        blueTeamStatsLabel.setText("   - Carte bleues découvertes : " + blueTeamStats[0] + "\n"
                 + "   - Carte rouges découvertes : " + blueTeamStats[1] + "\n"
                 + "   - Carte noires découvertes : " + blueTeamStats[2] + "\n"
                 + "   - Carte blanches découvertes : " + blueTeamStats[3] + "\n"
@@ -113,8 +132,7 @@ public class EndGameSceneController {
         String redTeamAvgTimeAnswer = String.format("%.2f",
                 sm.getModel().getGame().getStats().getRedTeamAvgTimeToAnswer());
 
-        redTeamStatsLabel.setText("Statistiques de l'équipe rouge :\n"
-                + "   - Carte bleues découvertes : " + redTeamStats[0] + "\n"
+        redTeamStatsLabel.setText("   - Carte bleues découvertes : " + redTeamStats[0] + "\n"
                 + "   - Carte rouges découvertes : " + redTeamStats[1] + "\n"
                 + "   - Carte noires découvertes : " + redTeamStats[2] + "\n"
                 + "   - Carte blanches découvertes : " + redTeamStats[3] + "\n"

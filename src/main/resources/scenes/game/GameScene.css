@@ -1,13 +1,11 @@
 @font-face {
-    font-family: 'Pixel Operator Mono';
+    font-family: 'Pixel Operator Mono Bold';
     src: url('file:src/main/resources/fonts/PixelOperatorMono-Bold.ttf');
-    font-weight: bold;
 }
 
 @font-face {
     font-family: 'Pixel Operator Mono';
     src: url('file:src/main/resources/fonts/PixelOperatorMono.ttf');
-    font-weight: normal;
 }
 
 

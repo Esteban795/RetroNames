@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="193.0" prefWidth="1280.0" text="Paramètres">
@@ -24,7 +23,7 @@
             </Label>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <CheckBox mnemonicParsing="false" />
+                  <CheckBox fx:id="audioCheckbox" mnemonicParsing="false" onAction="#handleAudioCheckbox" />
                   <Label text="Audio actif">
                      <font>
                         <Font size="15.0" />
@@ -32,7 +31,7 @@
                   </Label>
                </children>
             </VBox>
-            <Slider snapToTicks="true" />
+            <Slider fx:id="volumeSlider" snapToTicks="true" />
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="116.0" prefWidth="1280.0" spacing="30.0">

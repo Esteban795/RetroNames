@@ -92,6 +92,9 @@ public class EditDecksSceneController {
     public void goBack() {
         if (cardOrDeckAddedOrRemovesViaUI) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane");
+
             alert.setTitle("Save Changes");
             alert.setHeaderText(null);
             alert.setContentText("You have made changes to the decks. What would you like to do?");
@@ -103,6 +106,20 @@ public class EditDecksSceneController {
 
             // alert.getButtonTypes().setAll(saveAndLeave, leaveWithoutSave, cancel);
             alert.getButtonTypes().setAll(saveAndLeave, cancel);
+            // Style the buttons
+            alert.getDialogPane().lookupButton(saveAndLeave).getStyleClass().add("dialog-button");
+            alert.getDialogPane().lookupButton(cancel).getStyleClass().add("dialog-button");
+
+            // Style the buttons
+            alert.getDialogPane().lookupButton(saveAndLeave).getStyleClass().add("dialog-button");
+            alert.getDialogPane().lookupButton(cancel).getStyleClass().add("dialog-button");
+
+
+            alert.setTitle("Save Changes");
+            alert.setHeaderText(null);
+            alert.setContentText("You have made changes to the decks. What would you like to do?");
+
+
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent()) {

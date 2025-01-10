@@ -114,3 +114,21 @@
     -fx-background-color: #c0c0c0;
     -fx-border-color: #808080 #ffffff #ffffff #808080;
 }
+
+.dialog-button {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-border-width: 2;
+    -fx-background-radius: 0;
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+}
+
+.dialog-button:hover {
+    -fx-background-color: #d4d4d4;
+}
+
+.dialog-button:pressed {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #808080 #ffffff #ffffff #808080;
+}

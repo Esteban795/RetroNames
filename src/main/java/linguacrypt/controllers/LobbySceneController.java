@@ -228,6 +228,11 @@ public class LobbySceneController {
         GameConfiguration config = sm.getModel().getGame().getConfig();
         Deck deck = dm.getDeck(deckName);
 
+        if (deck.getCardList().size() < gridSize * gridSize) {
+            errorLabel.setText("Le deck sélectionné ne contient pas assez de cartes pour la grille.");
+            return;
+        }
+        
         config.setCurrentDeck(deck);
 
         sm.pushScene(new GameScene(sm));

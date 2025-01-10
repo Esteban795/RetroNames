@@ -1,14 +1,8 @@
 package linguacrypt.controllers;
 
-import javafx.scene.control.Label;
+import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Optional;
-
-import linguacrypt.scenes.SceneManager;
-import linguacrypt.model.Card;
-import linguacrypt.model.Deck;
-import linguacrypt.model.Model;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -18,12 +12,16 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
+import linguacrypt.model.Card;
+import linguacrypt.model.Deck;
+import linguacrypt.model.Model;
+import linguacrypt.scenes.SceneManager;
 
 public class EditDecksSceneController {
 
@@ -34,9 +32,6 @@ public class EditDecksSceneController {
     private Button buttonBack;
 
     @FXML
-    private Dialog<ButtonType> newCardDialog;
-
-    @FXML
     private Button deleteDeckButton;
 
     @FXML
@@ -45,6 +40,7 @@ public class EditDecksSceneController {
     @FXML
     private TextField cardNameField;
 
+    
     @FXML
     private Dialog<ButtonType> newDeckDialog;
 
@@ -287,7 +283,8 @@ public class EditDecksSceneController {
             }
         }
 
-        dialog.getDialogPane().setContent(deckComboBox);
+        dialog.getDialogPane().getChildren().add(deckComboBox);
+        
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         Optional<ButtonType> result = dialog.showAndWait();
@@ -329,8 +326,26 @@ public class EditDecksSceneController {
             alert.showAndWait();
             return;
         }
+        Dialog newCardDialog = new Dialog();
+        
+        HBox cardUrlBox = new HBox();
+        Label cardUrlPath = new Label("");
+        Button openCardUrlButton = new Button("...");
+        openCardUrlButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Choisissez une image à intégrer au deck :");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+            File selectedFile = fileChooser.showOpenDialog(sm.getPrimaryStage());
+            if (selectedFile != null) {
+                cardUrlPath.setText(selectedFile.getAbsolutePath());
+            }
+            cardUrlPath.setText(selectedFile.getAbsolutePath());
+        });
 
-        cardNameField.setText("");
+        cardNameField.setText("test");
+        newCardDialog.getDialogPane().getChildren().add(cardUrlBox);
+        newCardDialog.getDialogPane().getChildren().add(cardNameField);
+        
         Optional<ButtonType> result = newCardDialog.showAndWait();
 
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {

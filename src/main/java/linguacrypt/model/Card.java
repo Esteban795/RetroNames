@@ -112,6 +112,7 @@ public class Card {
         } 
     }
 
+    @JsonIgnore
     public boolean isImage() {
         return cardView != null;
     }

@@ -267,4 +267,8 @@ public class Game implements Visitable {
     public void setCurrentHint(String currentHint) {
         this.currentHint = currentHint;
     }
+
+    public void setHasStarted(boolean hasStarted) {
+        this.hasStarted = hasStarted;
+    }
 }

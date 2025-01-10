@@ -175,13 +175,13 @@ public class GameSceneController {
         System.out.println("Game grid loaded with cards");
 
         // Testing purposes
-        for (int i = 0; i < size; i++){
-            for (int j = 0; j < size; j++){
-                if ((i + j) % 4 == 0 ) {
-                    game.getGrid().get(i).get(j).setCardUrl("./src/main/resources/imgs/icons/check-0.png");
-                }
-            }
-        }       
+        // for (int i = 0; i < size; i++){
+        //     for (int j = 0; j < size; j++){
+        //         if ((i + j) % 4 == 0 ) {
+        //             game.getGrid().get(i).get(j).setCardUrl("./src/main/resources/imgs/icons/check-0.png");
+        //         }
+        //     }
+        // }       
          
         updateGrid();
         updateTurnLabel();

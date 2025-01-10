@@ -170,7 +170,7 @@ public class GameSceneController {
             }
 
         } catch (Exception e) {
-            System.err.println("Error during initialization: " + e.getMessage());
+            //System.err.println("Error during initialization: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -325,7 +325,7 @@ public class GameSceneController {
                         imgView.setFitHeight(125);
                         cardButton.setGraphic(imgView);
                     } catch (Exception e) {
-                        System.err.println("Error loading card image: " + e.getMessage());
+                        //System.err.println("Error loading card image: " + e.getMessage());
                         e.printStackTrace();
                     }
                 } else {
@@ -540,7 +540,7 @@ public class GameSceneController {
             hintTimer.stop();
             guessTimer.start();
         } catch (NumberFormatException e) {
-            System.err.println("Invalid number choice");
+            //System.err.println("Invalid number choice");
         }
     }
 

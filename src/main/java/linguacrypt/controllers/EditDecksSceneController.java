@@ -97,31 +97,16 @@ public class EditDecksSceneController {
             alert.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
             alert.getDialogPane().getStyleClass().add("dialog-pane");
 
-            alert.setTitle("Save Changes");
+            alert.setTitle("Sauvegarder les changements");
             alert.setHeaderText(null);
-            alert.setContentText("You have made changes to the decks. What would you like to do?");
+            alert.setContentText("Vous avez modifié les decks, voulez-vous sauvegarder les changements ?");
 
-            ButtonType saveAndLeave = new ButtonType("Save and Leave", ButtonBar.ButtonData.OK_DONE);
-            // ButtonType leaveWithoutSave = new ButtonType("Leave without saving",
-            // ButtonBar.ButtonData.NO);
-            ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-            // alert.getButtonTypes().setAll(saveAndLeave, leaveWithoutSave, cancel);
+            ButtonType saveAndLeave = new ButtonType("Sauvegarder et quitter", ButtonBar.ButtonData.OK_DONE);
+            ButtonType cancel = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
             alert.getButtonTypes().setAll(saveAndLeave, cancel);
             // Style the buttons
             alert.getDialogPane().lookupButton(saveAndLeave).getStyleClass().add("dialog-button");
             alert.getDialogPane().lookupButton(cancel).getStyleClass().add("dialog-button");
-
-            // Style the buttons
-            alert.getDialogPane().lookupButton(saveAndLeave).getStyleClass().add("dialog-button");
-            alert.getDialogPane().lookupButton(cancel).getStyleClass().add("dialog-button");
-
-
-            alert.setTitle("Save Changes");
-            alert.setHeaderText(null);
-            alert.setContentText("You have made changes to the decks. What would you like to do?");
-
-
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent()) {
@@ -129,16 +114,6 @@ public class EditDecksSceneController {
                     model.getDeckManager().saveDeckManager();
                     sm.popScene();
                 }
-                // else if (result.get() == leaveWithoutSave) {
-                // // Restore all deleted cards using CardManager
-                // for (Card card : model.getCardManager().getDeletedCards()) {
-                // ArrayList<Deck> decks = model.getCardManager().getDecks(card);
-                // for (Deck deck : decks) {
-                // model.getCardManager().restoreCard(card, deck);
-                // }
-                // }
-                // sm.popScene();
-                // }
             }
         } else {
             sm.popScene();
@@ -160,9 +135,9 @@ public class EditDecksSceneController {
 
                 if (model.getDeckManager().getDeck(deckName) != null) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Duplicate Deck Name");
+                    alert.setTitle("Nom du deck dupliqué");
                     alert.setHeaderText(null);
-                    alert.setContentText("A deck with name '" + deckName + "' already exists!");
+                    alert.setContentText("Un deck" + deckName + "existe déjà !");
                     alert.showAndWait();
                     return;
                 }
@@ -170,7 +145,6 @@ public class EditDecksSceneController {
                 model.getDeckManager().addDeck(newDeck);
                 reloadDeckList();
                 cardOrDeckAddedOrRemovesViaUI = true;
-                //// System.out.println("Deck created: " + deckName);
             }
         }
     }
@@ -253,25 +227,25 @@ public class EditDecksSceneController {
         ArrayList<Deck> decks = model.getCardManager().getDecks(card);
         String deckNames = decks != null
                 ? String.join(", ", decks.stream().map(Deck::getName).toList())
-                : "No decks";
+                : "Pas de deck";
 
         VBox infoLabels = new VBox(5);
         infoLabels.getChildren().addAll(
-                new Label("Card Information:"),
-                new Label("Card Name: " + card.getName()),
+                new Label("Infos de la carte:"),
+                new Label("Nom de la carte: " + card.getName()),
                 new Label("Decks: " + deckNames));
 
         HBox buttonBox = new HBox(10);
         infoLabels.setPadding(new Insets(10));
         buttonBox.setPadding(new Insets(10));
-        Button deleteCardButton = new Button("Delete Card");
+        Button deleteCardButton = new Button("Supprimer la carte");
         deleteCardButton.getStyleClass().add("delete-card-button");
         deleteCardButton.setOnAction(e -> {
             deleteCard(selectedCard);
             cardInfoBox.setVisible(false);
         });
 
-        Button addToAnotherDeckButton = new Button("Add to Another Deck");
+        Button addToAnotherDeckButton = new Button("Ajouter à un autre deck");
         addToAnotherDeckButton.getStyleClass().add("card-button");
         addToAnotherDeckButton.setOnAction(e -> showAddToAnotherDeckDialog());
 
@@ -292,15 +266,15 @@ public class EditDecksSceneController {
     private void showAddToAnotherDeckDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
-        dialog.getDialogPane().getStyleClass().add("dialog-pane"); // Added style class
-        dialog.setTitle("Add to Another Deck");
-        dialog.setHeaderText("Select a deck to add the card to:");
+        dialog.getDialogPane().getStyleClass().add("dialog-pane"); 
+        dialog.setTitle("Ajouter à un autre deck");
+        dialog.setHeaderText("Sélectionnez un deck pour ajouter la carte :");
 
         VBox content = new VBox(10);
-        content.getStyleClass().add("panel"); // Added style class
+        content.getStyleClass().add("panel"); 
         ComboBox<String> deckComboBox = new ComboBox<>();
-        deckComboBox.setPromptText("Select a deck");
-        deckComboBox.getStyleClass().add("combo-box"); // Added style class
+        deckComboBox.setPromptText("Sélectionner un deck");
+        deckComboBox.getStyleClass().add("combo-box"); 
         for (Deck deck : model.getDeckManager().getDeckList()) {
             if (deck != selectedDeck && !model.getCardManager().getDecks(selectedCard).contains(deck)) {
                 deckComboBox.getItems().add(deck.getName());
@@ -330,61 +304,54 @@ public class EditDecksSceneController {
             model.getCardManager().deleteCard(card, selectedDeck);
             cardOrDeckAddedOrRemovesViaUI = true;
             cardList.getChildren().remove(cardContainer);
-            // System.out.println("Card deleted from deck: " + selectedDeck.getName());
-        } else {
-            // System.out.println("No deck selected!");
         }
-    }
-
-    @FXML
-    public void createCard() {
-
     }
 
     @FXML
     private void showNewCardPopup() {
         if (selectedDeck == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("No Deck Selected");
+            alert.setTitle("Pas de deck sélectionné");
             alert.setHeaderText(null);
-            alert.setContentText("Please select a deck first!");
+            alert.setContentText("Sélectionnez d'abord un deck !");
             alert.showAndWait();
             return;
         }
 
         // Config dialog
         Dialog<ButtonType> newCardDialog = new Dialog<>();
-        newCardDialog.setTitle("Add New Card");
-        newCardDialog.setHeaderText("Enter card details");
+        newCardDialog.setTitle("Ajouter une nouvelle carte");
+        newCardDialog.setHeaderText("Entrez les détails de la carte :");
 
         ButtonType confirmButtonType = ButtonType.OK;
         ButtonType cancelButtonType = ButtonType.CANCEL;
         newCardDialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
+
         // Set dialog style
         newCardDialog.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
         newCardDialog.getDialogPane().getStyleClass().add("dialog-pane");
-        VBox dialogContent = new VBox(10); // 10 is spacing between elements
+        VBox dialogContent = new VBox(10);
 
         // Create image selection box
-        HBox cardUrlBox = new HBox(10); // 10 is spacing
-        Label cardUrlPath = new Label("No image selected.");
+        HBox cardUrlBox = new HBox(10);
+        Label cardUrlPath = new Label("Pas d'image sélectionnée.");
         Button openCardUrlButton = new Button("...");
         cardUrlBox.getChildren().addAll(new Label("Image: "), cardUrlPath, openCardUrlButton);
 
         // Create name input field
         TextField cardNameField = new TextField();
-        cardNameField.setPromptText("Enter card name");
+        cardNameField.setPromptText("Entrez le nom de la carte");
 
         // Add components to dialog
         dialogContent.getChildren().addAll(
-                new Label("Card Name:"),
+                new Label("Nom de la carte :"),
                 cardNameField,
                 cardUrlBox);
 
         // Setup image chooser
         openCardUrlButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Choose an image for the card:");
+            fileChooser.setTitle("Choisissez une image pour la carte :");
             fileChooser.getExtensionFilters().add(
                     new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"));
 
@@ -407,16 +374,16 @@ public class EditDecksSceneController {
             String imagePath = cardUrlPath.getText();
 
             if (cardName.isEmpty()) {
-                showError("Card name cannot be empty");
+                showError("Veuillez entrer un nom pour la carte !");
                 return;
             }
 
             // Check for duplicate card
             if (selectedDeck.getCard(cardName) != null) {
-                showError("A card with name '" + cardName + "' already exists in this deck!");
+                showError("Une carte '" + cardName + "' existe déjà dans ce deck !");
                 return;
             }
-            if (imagePath.equals("No image selected.")) {
+            if (imagePath.equals("Pas d'image sélectionnée.")) {
                 imagePath = null;
             }
 
@@ -431,7 +398,7 @@ public class EditDecksSceneController {
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
+        alert.setTitle("Erreur");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
@@ -444,8 +411,8 @@ public class EditDecksSceneController {
         }
 
         Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Duplicate Deck");
-        dialog.setHeaderText("Enter name for duplicated deck:");
+        dialog.setTitle("Dupliquer le deck");
+        dialog.setHeaderText("Entrez un nom pour le nouveau deck :");
 
         TextField nameField = new TextField();
         dialog.getDialogPane().setContent(nameField);
@@ -458,9 +425,9 @@ public class EditDecksSceneController {
             if (!newDeckName.isEmpty()) {
                 if (model.getDeckManager().getDeck(newDeckName) != null) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Duplicate Name");
+                    alert.setTitle("Nom du duplicata");
                     alert.setHeaderText(null);
-                    alert.setContentText("A deck with name '" + newDeckName + "' already exists!");
+                    alert.setContentText("Un deck '" + newDeckName + "' existe déjà !");
                     alert.showAndWait();
                     return;
                 }

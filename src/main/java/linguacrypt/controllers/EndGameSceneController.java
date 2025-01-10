@@ -70,6 +70,9 @@ public class EndGameSceneController {
                 pane.setPrefSize(cellSize, cellSize); // Set fixed size
                 String color = expectedMap.get(i).get(j).isFound() ? expectedMap.get(i).get(j).getColor().toString()
                         .toLowerCase() : "white";
+                if (color.equals("white") && expectedMap.get(i).get(j).isFound()) {
+                    color = "beige";
+                }
                 pane.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: " + color + "; -fx-border-color: black;");
                 expectedMapGrid.add(pane, j,i);
 

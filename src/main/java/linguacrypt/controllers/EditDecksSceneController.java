@@ -129,6 +129,8 @@ public class EditDecksSceneController {
     @FXML
     public void showNewDeckPopup() {
         deckNameField.setText("");
+        newDeckDialog.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
+        newDeckDialog.getDialogPane().getStyleClass().add("dialog-pane");
         Optional<ButtonType> result = newDeckDialog.showAndWait();
 
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
@@ -334,7 +336,9 @@ public class EditDecksSceneController {
         ButtonType confirmButtonType = ButtonType.OK;
         ButtonType cancelButtonType = ButtonType.CANCEL;
         newCardDialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
-
+        // Set dialog style
+        newCardDialog.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
+        newCardDialog.getDialogPane().getStyleClass().add("dialog-pane");
         VBox dialogContent = new VBox(10); // 10 is spacing between elements
 
         // Create image selection box
@@ -422,6 +426,7 @@ public class EditDecksSceneController {
         TextField nameField = new TextField();
         dialog.getDialogPane().setContent(nameField);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
 
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {

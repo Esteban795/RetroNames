@@ -5,7 +5,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -15,22 +21,27 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 import linguacrypt.QRCode.QRCodeGenerator;
 import linguacrypt.exception.CorruptedSaveException;
 import linguacrypt.model.Card;
@@ -55,15 +66,21 @@ public class GameSceneController {
     private int remainingGuesses = 0;
     private int bonusGuess = 1;
 
+    @FXML
+    private BorderPane mainBorderPane;
+
     // FXML attributes for the game grid
     @FXML
     private GridPane gameGrid;
     @FXML
     private Label teamTurnLabel;
     @FXML
-    private ProgressBar redTeamProgress;
+    private Pane redTeamPanel;
     @FXML
-    private ProgressBar blueTeamProgress;
+    private Pane blueTeamPanel;
+    
+    private final DoubleProperty redTeamProgress = new SimpleDoubleProperty(0);
+    private final DoubleProperty blueTeamProgress = new SimpleDoubleProperty(0);
     @FXML
     private Label redTeamSpymaster;
     @FXML
@@ -109,8 +126,10 @@ public class GameSceneController {
         try {
             setupGameGrid();
             setupHintControls();
+            System.out.println("Game scene initialized");
             initializeProgress();
             updatePlayerLabels();
+            redTeamSpymaster.getParent().getStyleClass().add("current-play");
             // Permet de gérer l'appui sur la touche entrée pour valider l'indice
             hintField.setOnKeyPressed(event -> {
                 if (event.getCode() == KeyCode.ENTER) {
@@ -157,12 +176,6 @@ public class GameSceneController {
         hintDisplayBox.setVisible(false);
     }
 
-    private void initializeProgress() {
-        if (redTeamProgress != null && blueTeamProgress != null) {
-            updateProgress();
-        }
-    }
-
     private void updatePlayerLabels() {
         Team redTeam = game.getConfig().getTeamManager().getRedTeam();
         Team blueTeam = game.getConfig().getTeamManager().getBlueTeam();
@@ -177,7 +190,7 @@ public class GameSceneController {
                 redTeamSpymaster.setText(p.getName());
             } else {
                 Label operatorLabel = new Label(p.getName());
-                operatorLabel.setStyle("-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5); -fx-padding: 5;");
+                operatorLabel.setStyle("-fx-text-fill: black; -fx-padding: 5;");
                 redTeamOperators.getChildren().add(operatorLabel);
             }
         }
@@ -188,7 +201,7 @@ public class GameSceneController {
                 blueTeamSpymaster.setText(p.getName());
             } else {
                 Label operatorLabel = new Label(p.getName());
-                operatorLabel.setStyle("-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5); -fx-padding: 5;");
+                operatorLabel.setStyle("-fx-text-fill: black; -fx-padding: 5;");
                 blueTeamOperators.getChildren().add(operatorLabel);
             }
         }
@@ -212,6 +225,32 @@ public class GameSceneController {
         }
     }
 
+    
+    private void initializeProgress() {
+        if (redTeamPanel != null && blueTeamPanel != null) {
+            Rectangle rectangle = new Rectangle();
+            rectangle.setFill(javafx.scene.paint.Color.valueOf("#0A246A"));
+            rectangle.getStyleClass().add("progress-bar");
+
+            rectangle.widthProperty().bind(blueTeamPanel.widthProperty()); // Full width
+            rectangle.setStyle("-fx-padding: 10; -fx-margin: 5;");
+            rectangle.heightProperty().bind(blueTeamPanel.heightProperty().multiply(blueTeamProgress));
+            rectangle.layoutYProperty().bind(blueTeamPanel.heightProperty().subtract(rectangle.heightProperty()));
+            blueTeamPanel.getChildren().add(rectangle);
+
+
+            Rectangle rectangle2 = new Rectangle();
+            rectangle2.setFill(javafx.scene.paint.Color.valueOf("#8c0b0b"));
+            rectangle2.getStyleClass().add("progress-bar");
+            
+            rectangle2.widthProperty().bind(redTeamPanel.widthProperty()); // Full width
+            rectangle2.heightProperty().bind(redTeamPanel.heightProperty().multiply(redTeamProgress)); 
+            rectangle2.layoutYProperty().bind(redTeamPanel.heightProperty().subtract(rectangle2.heightProperty()));
+            redTeamPanel.getChildren().add(rectangle2);
+            updateProgress();
+        }
+    }
+
     // END INITIALIZATION METHODS
     /*
      * Update the grid with the current state of the game.
@@ -223,6 +262,8 @@ public class GameSceneController {
         // Set fixed column constraints to have a regular grid
         gameGrid.getRowConstraints().clear();
         gameGrid.getColumnConstraints().clear();
+        gameGrid.setVgap(10);
+        gameGrid.setHgap(10);
         for (int i = 0; i < size; i++) {
             ColumnConstraints column = new ColumnConstraints();
             column.setPrefWidth(100); // Fixed width for each column
@@ -234,27 +275,20 @@ public class GameSceneController {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 Button cardButton = new Button();
-                cardButton.setPrefSize(100, 100);
+                cardButton.getStyleClass().add("card-button");
+                cardButton.setPrefSize(150, 100);
                 cardButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
                 Card card = game.getGrid().get(i).get(j);
-                cardButton.setText(card.getName());
+                cardButton.setText(card.getName().toUpperCase());
 
                 // Set button style based on card state
                 if (card.isFound()) {
                     switch (card.getColor()) {
-                        case RED:
-                            cardButton.setStyle("-fx-background-color: #ffcccc; -fx-text-fill: #cc0000;");
-                            break;
-                        case BLUE:
-                            cardButton.setStyle("-fx-background-color: #ccccff; -fx-text-fill: #0000cc;");
-                            break;
-                        case WHITE:
-                            cardButton.setStyle("-fx-background-color: #e6e6e6; -fx-text-fill: #666666;");
-                            break;
-                        case BLACK:
-                            cardButton.setStyle("-fx-background-color: #000000; -fx-text-fill: #ffffff;");
-                            break;
+                        case RED -> cardButton.setStyle("-fx-background-color: #ffcccc; -fx-text-fill: #cc0000;");
+                        case BLUE -> cardButton.setStyle("-fx-background-color: #ccccff; -fx-text-fill: #0000cc;");
+                        case WHITE -> cardButton.setStyle("-fx-background-color: #e6e6e6; -fx-text-fill: #666666;");
+                        case BLACK -> cardButton.setStyle("-fx-background-color: #000000; -fx-text-fill: #ffffff;");
                     }
                 }
 
@@ -274,6 +308,14 @@ public class GameSceneController {
         remainingGuessesLabel.setText("");
         hintInputBox.setVisible(true);
         hintDisplayBox.setVisible(false);
+
+        if (redTeamOperators.getParent().getStyleClass().contains("current-play")) {
+            redTeamOperators.getParent().getStyleClass().remove("current-play");
+            blueTeamSpymaster.getParent().getStyleClass().add("current-play");
+        } else {
+            blueTeamOperators.getParent().getStyleClass().remove("current-play");
+            redTeamSpymaster.getParent().getStyleClass().add("current-play");
+        }
     }
 
     /*
@@ -284,6 +326,8 @@ public class GameSceneController {
         if (remainingGuesses > 0 && !game.getGrid().get(row).get(col).isFound()) {
             Card card = game.getGrid().get(row).get(col);
             game.revealCard(card);
+            Button revealedCard = (Button) gameGrid.getChildren().get(row * size + col);
+            animate(revealedCard, card.getColor());
             if (game.hasBlueTeamWon()) {
                 System.out.println("Blue team has won!");
                 try {
@@ -319,7 +363,7 @@ public class GameSceneController {
                     }
                 }
 
-                updateGrid();
+                // updateGrid();
                 updateTurnLabel();
                 updateProgress();
             }
@@ -334,14 +378,18 @@ public class GameSceneController {
         String color = isRedTeam ? "#cc0000" : "#0000cc";
         String bgColor = isRedTeam ? "#ffcccc" : "#ccccff";
 
+        if (isRedTeam) {
+            mainBorderPane.setStyle("-fx-background-color: radial-gradient(center 20% 50%, radius 120%, #ff9696, #8c0b0b);");
+        } else {
+            mainBorderPane.setStyle("radial-gradient(center 50% 20%, radius 120%, #A8CAEE, #0A246A)");
+        }
         teamTurnLabel.setText(teamName);
         teamTurnLabel.setStyle(String.format(
                 "-fx-font-size: 24px; "
                         + "-fx-font-weight: bold; "
                         + "-fx-background-color: %s; "
                         + "-fx-text-fill: %s; "
-                        + "-fx-padding: 5px 15px; "
-                        + "-fx-background-radius: 5px;",
+                        + "-fx-padding: 5px 15px; ",
                 bgColor, color));
     }
 
@@ -359,12 +407,22 @@ public class GameSceneController {
 
             hintInputBox.setVisible(false);
             hintDisplayBox.setVisible(true);
+
+            if (redTeamSpymaster.getParent().getStyleClass().contains("current-play")) {
+                redTeamSpymaster.getParent().getStyleClass().remove("current-play");
+                redTeamOperators.getParent().getStyleClass().add("current-play");
+            } else {
+                blueTeamSpymaster.getParent().getStyleClass().remove("current-play");
+                blueTeamOperators.getParent().getStyleClass().add("current-play");
+            }
         } catch (NumberFormatException e) {
             System.err.println("Invalid number choice");
         }
     }
 
+
     private void updateProgress() {
+        System.out.println("Updating progress bars");
         int redFound = (int) game.getGrid().stream()
                 .flatMap(ArrayList::stream)
                 .filter(c -> c.isFound() && c.getColor() == Color.RED)
@@ -384,9 +442,12 @@ public class GameSceneController {
                 .flatMap(ArrayList::stream)
                 .filter(c -> c.getColor() == Color.BLUE)
                 .count();
-
-        redTeamProgress.setProgress((double) redFound / redTotal);
-        blueTeamProgress.setProgress((double) blueFound / blueTotal);
+        
+        Timeline timeline = new Timeline(
+            new KeyFrame(Duration.ZERO, new KeyValue(redTeamProgress, redTeamProgress.getValue()), new KeyValue(blueTeamProgress, blueTeamProgress.getValue())), // Start at 0
+            new KeyFrame(Duration.seconds(0.5), new KeyValue(redTeamProgress, (double) redFound / redTotal, Interpolator.EASE_OUT), new KeyValue(blueTeamProgress, (double) blueFound / blueTotal, Interpolator.EASE_OUT)) // Fill to 100% in 3 seconds
+        );
+        timeline.play();
     }
 
     @FXML
@@ -497,5 +558,39 @@ public class GameSceneController {
             dialog.getDialogPane().setMinHeight(height);
             dialog.show();
         }
+    }
+
+    public void animate(Button button, Color color) {
+        System.out.println("Animating button with color: " + color);
+        Paint fillColor;
+        fillColor = switch (color) {
+            case RED -> Paint.valueOf("#8c0b0b");
+            case BLUE -> Paint.valueOf("#0A246A");
+            case BLACK -> Paint.valueOf("#000000");
+            default -> Paint.valueOf("#ffffdd");
+        };
+
+        System.out.println("Transitioning button color");
+
+        Timeline timeline = new Timeline();
+        timeline.setCycleCount(1);
+
+        final javafx.animation.KeyValue scaleKey = new javafx.animation.KeyValue(button.scaleYProperty(), 0, Interpolator.EASE_OUT);
+        final javafx.animation.KeyValue scaleKey2 = new javafx.animation.KeyValue(button.scaleYProperty(), 1, Interpolator.EASE_IN);
+
+        BackgroundFill bgcolor = button.backgroundProperty().get().getFills().get(0);
+        BackgroundFill newFill = new BackgroundFill(fillColor, bgcolor.getRadii() , bgcolor.getInsets());
+        Background newBackground = new Background(newFill);
+        
+
+        final javafx.animation.KeyValue colorKey = new javafx.animation.KeyValue(button.backgroundProperty(), newBackground, Interpolator.DISCRETE);
+        
+        final KeyFrame kf1 = new KeyFrame(Duration.millis(250), scaleKey, colorKey);
+
+        final KeyFrame kf2 = new KeyFrame(Duration.millis(500), scaleKey2);
+        timeline.getKeyFrames().addAll(kf1,kf2);
+
+        System.out.println("Playing animation");
+        timeline.play();
     }
 }

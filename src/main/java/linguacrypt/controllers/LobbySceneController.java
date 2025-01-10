@@ -5,15 +5,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DisplacementMap;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.FloatMap;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+import javafx.scene.layout.FlowPane;
+
 import linguacrypt.model.Card;
 import linguacrypt.model.Color;
 import linguacrypt.model.Deck;
@@ -46,7 +54,7 @@ public class LobbySceneController {
     private VBox redTeamOperative;
 
     @FXML
-    private VBox pseudoVB;
+    private FlowPane pseudoFP;
 
     @FXML
     private Label errorLabel;
@@ -57,21 +65,64 @@ public class LobbySceneController {
     @FXML
     private ComboBox<String> gridSizeSelector;
 
+    @FXML
+    private Label titleWobble;
+
     public LobbySceneController(SceneManager sm) {
         this.sm = sm;
     }
 
     @FXML
     public void initialize() {
-        setupDragAndDrop(pseudoVB);
+        setupDragAndDrop(pseudoFP);
         setupDragAndDrop(blueTeamOperative);
         setupDragAndDrop(blueTeamSpy);
         setupDragAndDrop(redTeamSpy);
         setupDragAndDrop(redTeamOperative);
         setupListeners();
 
+        setupTitle();
+
         setupDeckChoices();
         setupGridSizeChoices();
+    }
+
+    private void setupTitle() {
+        // Create a FloatMap for DisplacementMap
+        FloatMap floatMap = new FloatMap();
+        floatMap.setWidth(200);
+        floatMap.setHeight(50); // Adjust to match the size of the Label
+
+        // Create a DisplacementMap using the FloatMap
+        DisplacementMap displacementMap = new DisplacementMap(floatMap);
+
+        // Apply the DisplacementMap effect to the Label
+        titleWobble.setEffect(displacementMap);
+
+        // Create a Timeline to animate the FloatMap
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(40), event -> {
+            // Update the FloatMap dynamically
+            for (int x = 0; x < 200; x++) {
+                for (int y = 0; y < 50; y++) {
+                    // Create a wobble effect based on time
+                    double time = System.currentTimeMillis() / 1000.0;
+                    float dy = (float) Math.sin(x * 0.1 + time) * 0.12f;
+                    floatMap.setSamples(x, y, 0, dy);
+                }
+            }
+        }));
+
+        // Set the timeline to run indefinitely
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setColor(javafx.scene.paint.Color.GRAY);
+        dropShadow.setRadius(10);
+
+        // Chain the effects: Apply DropShadow after DisplacementMap
+        dropShadow.setInput(displacementMap);
+        titleWobble.setEffect(dropShadow);
     }
 
     private void setupListeners() {
@@ -136,8 +187,8 @@ public class LobbySceneController {
     }
 
     private Label createDraggableLabel(String text) {
-        Label label = new Label(text);
-        label.setStyle("-fx-padding: 5; -fx-background-color: white; -fx-border-color: black;");
+        Label label = new Label(text.toUpperCase());
+        label.getStyleClass().add("draggable-label");
 
         label.setOnDragDetected(event -> {
             Dragboard db = label.startDragAndDrop(TransferMode.MOVE);
@@ -148,12 +199,51 @@ public class LobbySceneController {
 
         label.setOnDragDone(event -> {
             if (event.getTransferMode() == TransferMode.MOVE) {
-                VBox parent = (VBox) label.getParent();
-                parent.getChildren().remove(label);
+                if (label.getParent() instanceof VBox) {
+                    VBox parent = (VBox) label.getParent();
+                    parent.getChildren().remove(label);
+                } else if (label.getParent() instanceof FlowPane) {
+                    FlowPane parent = (FlowPane) label.getParent();
+                    parent.getChildren().remove(label);
+                }
             }
         });
 
         return label;
+    }
+
+    private void setupDragAndDrop(FlowPane pseudoFP) {
+        pseudoFP.setOnDragOver(event -> {
+            if (event.getGestureSource() != pseudoFP
+                    && event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+        });
+
+        pseudoFP.setOnDragEntered(event -> {
+            if (event.getGestureSource() != pseudoFP
+                    && event.getDragboard().hasString()) {
+            }
+        });
+
+        pseudoFP.setOnDragExited(event -> {
+            event.consume();
+        });
+
+        pseudoFP.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+
+            if (db.hasString()) {
+                Label newLabel = createDraggableLabel(db.getString());
+                pseudoFP.getChildren().add(newLabel);
+                success = true;
+            }
+
+            event.setDropCompleted(success);
+            event.consume();
+        });
+
     }
 
     private void setupDragAndDrop(VBox vbox) {
@@ -168,6 +258,10 @@ public class LobbySceneController {
             if (event.getGestureSource() != vbox
                     && event.getDragboard().hasString()) {
             }
+        });
+
+        vbox.setOnDragExited(event -> {
+            event.consume();
         });
 
         vbox.setOnDragDropped(event -> {
@@ -195,7 +289,7 @@ public class LobbySceneController {
         pseudoTextField.setText("");
 
         Label pseudoLabel = createDraggableLabel(pseudoString);
-        pseudoVB.getChildren().add(pseudoLabel);
+        pseudoFP.getChildren().add(pseudoLabel);
     }
 
     @FXML
@@ -303,19 +397,15 @@ public class LobbySceneController {
         sm.getModel().getGame().setGrid(selectedCards);
     }
 
-    @FXML
-    public void goToMenu() {
-        sm.goToPreviousSceneType(MenuScene.class);
-    }
-
     /*
      * Debugging method to print selected cards
      */
     // private void printSelectedCards(ArrayList<Card> selectedCards) {
-    //     for (int i = 0; i < selectedCards.size(); i++) {
-    //         System.out.println(
-    //                 "Name : " + selectedCards.get(i).getName() + " (color : " + selectedCards.get(i).getColor() + ")");
-    //     }
+    // for (int i = 0; i < selectedCards.size(); i++) {
+    // System.out.println(
+    // "Name : " + selectedCards.get(i).getName() + " (color : " +
+    // selectedCards.get(i).getColor() + ")");
+    // }
     // }
 
     public void setSelectedDeck(String deckName) {

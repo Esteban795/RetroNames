@@ -1,0 +1,82 @@
+@font-face {
+    font-family: 'Pixel Operator Mono';
+    src: url('file:src/main/resources/fonts/PixelOperatorMono-Bold.ttf');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'Pixel Operator Mono';
+    src: url('file:src/main/resources/fonts/PixelOperatorMono.ttf');
+    font-weight: normal;
+}
+
+
+* {
+    -fx-font-family: 'Pixel Operator Mono';
+    -fx-font-size: 20px;
+}
+
+.main {
+    -fx-background-color: radial-gradient(center 20% 50%, radius 120%, #ff9696, #8c0b0b);
+    -fx-background-color: radial-gradient(center 50% 20%, radius 120%, #A8CAEE, #0A246A);
+}
+
+.middle {
+    -fx-background-color: #808080;
+}
+
+/* Panel */
+.panel {
+    -fx-background-color: #e6e6e6;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-border-width: 2;
+}
+
+.hole {
+    -fx-border-color: #808080 #ffffff #ffffff #808080;
+    -fx-border-width: 2;
+}
+
+.draggable-label {
+    -fx-background-color: #e6e6e6;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-border-width: 2;
+    -fx-text-size: 24px;
+    -fx-text-fill: black;
+    -fx-padding: 4 8 4 8;
+}
+
+
+/* Text Field */
+
+.title-wobble {
+    -fx-font-family: 'Impact';
+    -fx-font-size: 70px;
+    -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #0000ff, #ff00ff);
+}
+
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #808080 #ffffff #ffffff #808080;
+    -fx-border-width: 2;
+    -fx-text-fill: black;
+}
+
+.red-title {
+    -fx-background-color: linear-gradient(to right, #8c0b0b, #ff9696);
+}
+
+.blue-title {
+    -fx-background-color: linear-gradient(to right, #0A246A, #A8CAEE);
+}
+
+/* Button */
+.button {
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    /* 3D bevel border */
+    -fx-border-width: 2;
+    -fx-text-fill: black;
+    -fx-font-size: 25px;
+    -fx-padding: 4 8 4 8;
+}

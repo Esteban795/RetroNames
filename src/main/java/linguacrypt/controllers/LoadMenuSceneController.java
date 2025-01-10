@@ -188,7 +188,6 @@ public class LoadMenuSceneController {
     private void loadGame(Game loadedGame) {
         sm.getModel().setGame(loadedGame);
         try {
-            System.out.println("Loading game scene...");
             sm.pushScene(new GameScene(sm));
         } catch (IOException e) {
             System.err.println("Error loading game scene: " + e.getMessage());

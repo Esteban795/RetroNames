@@ -63,9 +63,6 @@ public class GameSceneController {
     private final SceneManager sm;
     private Game game;
     private final int size;
-    private String currentHint = "";
-    private int remainingGuesses = 0;
-    private int bonusGuess = 1;
 
     @FXML
     private BorderPane mainBorderPane;
@@ -79,7 +76,7 @@ public class GameSceneController {
     private Pane redTeamPanel;
     @FXML
     private Pane blueTeamPanel;
-    
+
     private final DoubleProperty redTeamProgress = new SimpleDoubleProperty(0);
     private final DoubleProperty blueTeamProgress = new SimpleDoubleProperty(0);
     @FXML
@@ -172,8 +169,20 @@ public class GameSceneController {
      * Initialize the grid with the cards of the game's deck.
      */
     private void setupGameGrid() {
-        game.loadGrid();
+        if (!game.hasStarted()) {
+            game.initGrid();
+        }
         System.out.println("Game grid loaded with cards");
+
+        // Testing purposes
+        for (int i = 0; i < size; i++){
+            for (int j = 0; j < size; j++){
+                if ((i + j) % 4 == 0 ) {
+                    game.getGrid().get(i).get(j).setCardUrl("./src/main/resources/imgs/icons/check-0.png");
+                }
+            }
+        }       
+         
         updateGrid();
         updateTurnLabel();
     }
@@ -242,7 +251,6 @@ public class GameSceneController {
         }
     }
 
-    
     private void initializeProgress() {
         if (redTeamPanel != null && blueTeamPanel != null) {
             Rectangle rectangle = new Rectangle();
@@ -255,13 +263,12 @@ public class GameSceneController {
             rectangle.layoutYProperty().bind(blueTeamPanel.heightProperty().subtract(rectangle.heightProperty()));
             blueTeamPanel.getChildren().add(rectangle);
 
-
             Rectangle rectangle2 = new Rectangle();
             rectangle2.setFill(javafx.scene.paint.Color.valueOf("#8c0b0b"));
             rectangle2.getStyleClass().add("progress-bar");
-            
+
             rectangle2.widthProperty().bind(redTeamPanel.widthProperty()); // Full width
-            rectangle2.heightProperty().bind(redTeamPanel.heightProperty().multiply(redTeamProgress)); 
+            rectangle2.heightProperty().bind(redTeamPanel.heightProperty().multiply(redTeamProgress));
             rectangle2.layoutYProperty().bind(redTeamPanel.heightProperty().subtract(rectangle2.heightProperty()));
             redTeamPanel.getChildren().add(rectangle2);
             updateProgress();
@@ -297,7 +304,21 @@ public class GameSceneController {
                 cardButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
                 Card card = game.getGrid().get(i).get(j);
-                cardButton.setText(card.getName().toUpperCase());
+
+                if (card.isImage()) {
+                    try {
+                        ImageView imgView = card.getCardView();
+                        imgView.setPreserveRatio(true);
+                        imgView.setFitWidth(75);
+                        imgView.setFitHeight(75);
+                        cardButton.setGraphic(imgView);
+                    } catch (Exception e) {
+                        System.err.println("Error loading card image: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                } else {
+                    cardButton.setText(card.getName());
+                }
 
                 // Set button style based on card state
                 if (card.isFound()) {
@@ -318,12 +339,30 @@ public class GameSceneController {
         }
     }
 
+    @SuppressWarnings("unused")
+    private void switchTeam() {
+        game.switchTeam();
+        game.setBonusGuess(1);
+        hintLabel.setText("");
+        remainingGuessesLabel.setText("");
+        hintInputBox.setVisible(true);
+        hintDisplayBox.setVisible(false);
+
+        if (redTeamOperators.getParent().getStyleClass().contains("current-play")) {
+            redTeamOperators.getParent().getStyleClass().remove("current-play");
+            blueTeamSpymaster.getParent().getStyleClass().add("current-play");
+        } else {
+            blueTeamOperators.getParent().getStyleClass().remove("current-play");
+            redTeamSpymaster.getParent().getStyleClass().add("current-play");
+        }
+    }
+
     /*
      * Handle a card click event.
      * Reveals the card and updates the game state.
      */
     private void handleCardClick(int row, int col) {
-        if (remainingGuesses > 0 && !game.getGrid().get(row).get(col).isFound()) {
+        if (game.getRemainingGuesses() > 0 && !game.getGrid().get(row).get(col).isFound()) {
             if (endTurnButton.isDisabled()) {
                 endTurnButton.setDisable(false);
             }
@@ -347,8 +386,8 @@ public class GameSceneController {
                     e.printStackTrace();
                 }
             } else {
-                remainingGuesses--;
-                remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
+                game.setRemainingGuesses(game.getRemainingGuesses() - 1);
+                remainingGuessesLabel.setText("Essais restants : " + game.getRemainingGuesses());
                 if (card.getColor() == Color.BLACK) { // game is lost
                     try {
                         sm.pushScene(new EndGameScene(sm, game.getOppositeTeam().getName()));
@@ -357,11 +396,11 @@ public class GameSceneController {
                     }
                 }
 
-                if (remainingGuesses == 0) {
-                    if (bonusGuess > 0) {
-                        remainingGuesses = bonusGuess;
-                        bonusGuess = 0;
-                        remainingGuessesLabel.setText("Essais Bonus : " + remainingGuesses);
+                if (game.getRemainingGuesses() == 0) {
+                    if (game.getBonusGuess() > 0) {
+                        game.setRemainingGuesses(game.getBonusGuess());
+                        game.setBonusGuess(0);
+                        remainingGuessesLabel.setText("Essais Bonus : " + game.getRemainingGuesses());
                     } else {
                         endTurn();
                     }
@@ -379,8 +418,8 @@ public class GameSceneController {
     private void endTurn() {
 
         game.switchTeam();
-        remainingGuesses = 0;
-        bonusGuess = 1;
+        game.setRemainingGuesses(0);
+        game.setBonusGuess(1);
         hintField.setText("");
         remainingGuessesLabel.setText("");
         hintInputBox.setVisible(true);
@@ -407,17 +446,19 @@ public class GameSceneController {
         String bgColor = isRedTeam ? "#ffcccc" : "#ccccff";
 
         if (isRedTeam) {
-            mainBorderPane.setStyle("-fx-background-color: radial-gradient(center 20% 50%, radius 120%, #ff9696, #8c0b0b);");
+            mainBorderPane
+                    .setStyle("-fx-background-color: radial-gradient(center 20% 50%, radius 120%, #ff9696, #8c0b0b);");
         } else {
             mainBorderPane.setStyle("radial-gradient(center 50% 20%, radius 120%, #A8CAEE, #0A246A)");
         }
         teamTurnLabel.setText(teamName);
         teamTurnLabel.setStyle(String.format(
                 "-fx-font-size: 24px; "
-                        + "-fx-font-weight: bold; "
-                        + "-fx-background-color: %s; "
-                        + "-fx-text-fill: %s; "
-                        + "-fx-padding: 5px 15px; ",
+                + "-fx-font-weight: bold; "
+                + "-fx-background-color: %s; "
+                + "-fx-text-fill: %s; "
+                + "-fx-padding: 5px 15px; "
+                + "-fx-background-radius: 5px;",
                 bgColor, color));
     }
 
@@ -427,11 +468,11 @@ public class GameSceneController {
             return;
         }
 
-        currentHint = hintField.getText();
+        game.setCurrentHint(hintField.getText());
         try {
-            remainingGuesses = Integer.parseInt(numberChoice.getText());
-            hintLabel.setText("Indice : " + currentHint);
-            remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
+            game.setRemainingGuesses(Integer.parseInt(numberChoice.getText()));
+            hintLabel.setText("Indice : " + game.getCurrentHint());
+            remainingGuessesLabel.setText("Essais restants : " + game.getRemainingGuesses());
 
             hintInputBox.setVisible(false);
             hintDisplayBox.setVisible(true);
@@ -449,7 +490,6 @@ public class GameSceneController {
             System.err.println("Invalid number choice");
         }
     }
-
 
     private void updateProgress() {
         System.out.println("Updating progress bars");
@@ -472,10 +512,17 @@ public class GameSceneController {
                 .flatMap(ArrayList::stream)
                 .filter(c -> c.getColor() == Color.BLUE)
                 .count();
-        
+
         Timeline timeline = new Timeline(
-            new KeyFrame(Duration.ZERO, new KeyValue(redTeamProgress, redTeamProgress.getValue()), new KeyValue(blueTeamProgress, blueTeamProgress.getValue())), // Start at 0
-            new KeyFrame(Duration.seconds(0.5), new KeyValue(redTeamProgress, (double) redFound / redTotal, Interpolator.EASE_OUT), new KeyValue(blueTeamProgress, (double) blueFound / blueTotal, Interpolator.EASE_OUT)) // Fill to 100% in 3 seconds
+                new KeyFrame(Duration.ZERO, new KeyValue(redTeamProgress, redTeamProgress.getValue()),
+                        new KeyValue(blueTeamProgress, blueTeamProgress.getValue())), // Start at 0
+                new KeyFrame(Duration.seconds(0.5),
+                        new KeyValue(redTeamProgress, (double) redFound / redTotal, Interpolator.EASE_OUT),
+                        new KeyValue(blueTeamProgress, (double) blueFound / blueTotal, Interpolator.EASE_OUT)) // Fill
+                                                                                                               // to
+                                                                                                               // 100%
+                                                                                                               // in 3
+                                                                                                               // seconds
         );
         timeline.play();
     }
@@ -579,7 +626,8 @@ public class GameSceneController {
                     // guessTimerProperty is remaining time, so you have to save maxGuessTime
                     // - guessTimerProperty
                     Game game = sm.getModel().getGame();
-                    game.getStats().updateAvgTimeToAnswer(game.getBooleanCurrentTeam(), maxGuessTime - guessTimerProperty.get());
+                    game.getStats().updateAvgTimeToAnswer(game.getBooleanCurrentTeam(),
+                            maxGuessTime - guessTimerProperty.get());
                     guessTimerProperty.set(maxGuessTime);
                     lastUpdate = 0;
                 }
@@ -689,7 +737,8 @@ public class GameSceneController {
         Dialog<ImageView> dialog = new Dialog<>();
         dialog.setTitle("Scannez ce QR Code pour accéder à la clé de la partie.");
         dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE);
-        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(), "src/main/resources/imgs/qrcode_resized.png");
+        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(),
+                "src/main/resources/imgs/qrcode_resized.png");
         if (res == 0) {
             System.out.println("QR Code generated successfully");
             File fileImg = new File("src/main/resources/imgs/qrcode_resized.png");
@@ -719,22 +768,33 @@ public class GameSceneController {
         Timeline timeline = new Timeline();
         timeline.setCycleCount(1);
 
-        final javafx.animation.KeyValue scaleKey = new javafx.animation.KeyValue(button.scaleYProperty(), 0, Interpolator.EASE_OUT);
-        final javafx.animation.KeyValue scaleKey2 = new javafx.animation.KeyValue(button.scaleYProperty(), 1, Interpolator.EASE_IN);
+        final javafx.animation.KeyValue scaleKey = new javafx.animation.KeyValue(button.scaleYProperty(), 0,
+                Interpolator.EASE_OUT);
+        final javafx.animation.KeyValue scaleKey2 = new javafx.animation.KeyValue(button.scaleYProperty(), 1,
+                Interpolator.EASE_IN);
 
         BackgroundFill bgcolor = button.backgroundProperty().get().getFills().get(0);
-        BackgroundFill newFill = new BackgroundFill(fillColor, bgcolor.getRadii() , bgcolor.getInsets());
+        BackgroundFill newFill = new BackgroundFill(fillColor, bgcolor.getRadii(), bgcolor.getInsets());
         Background newBackground = new Background(newFill);
-        
 
-        final javafx.animation.KeyValue colorKey = new javafx.animation.KeyValue(button.backgroundProperty(), newBackground, Interpolator.DISCRETE);
-        
+        final javafx.animation.KeyValue colorKey = new javafx.animation.KeyValue(button.backgroundProperty(),
+                newBackground, Interpolator.DISCRETE);
+
         final KeyFrame kf1 = new KeyFrame(Duration.millis(250), scaleKey, colorKey);
 
         final KeyFrame kf2 = new KeyFrame(Duration.millis(500), scaleKey2);
-        timeline.getKeyFrames().addAll(kf1,kf2);
+        timeline.getKeyFrames().addAll(kf1, kf2);
 
         System.out.println("Playing animation");
         timeline.play();
+    }
+
+    private void printGrid() {
+        for (ArrayList<Card> row : game.getGrid()) {
+            for (Card card : row) {
+                System.out.print(card.getName() + "(" + card.getColor() + ")[" + card.getCardUrl() + "] ");
+            }
+            System.out.println();
+        }
     }
 }

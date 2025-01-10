@@ -1,8 +1,12 @@
 package linguacrypt.model;
 
+import linguacrypt.visitor.Visitable;
+import linguacrypt.visitor.Visitor;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,6 +18,7 @@ import linguacrypt.visitor.Visitor;
  * Represents a deck of cards in the game.
  * Contains a list of cards and methods to manage them.
  */
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Deck implements Visitable {
     @JsonProperty("deckName")
     private String deckName;
@@ -41,10 +46,12 @@ public class Deck implements Visitable {
 
     @JsonIgnore
     // Getters and Setters
+    @JsonProperty("deckName")
     public String getName() {
         return deckName;
     }
 
+    @JsonProperty("deckName")
     public void setDeckName(String deckName) {
         this.deckName = deckName;
     }
@@ -98,6 +105,7 @@ public class Deck implements Visitable {
     // Methods
     @JsonIgnore
     public void sortCards() { // Sort the cards in the deck
+        // Used when the deck is loaded from a file (it is possible that the cards are not sorted if the file was created or edited manually)
         boolean isSorted = true;
         for (int i = 0; i < cardList.size() - 1; i++) {
             if (cardList.get(i).getName().compareTo(cardList.get(i + 1).getName()) > 0) {
@@ -113,6 +121,10 @@ public class Deck implements Visitable {
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    public boolean containsCard(Card selectedCard) {
+        return cardList.contains(selectedCard);
     }
 
     public ArrayList<Card> deepCopyCards() {

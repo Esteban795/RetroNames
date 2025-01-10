@@ -3,7 +3,9 @@ package linguacrypt.model;
 import java.io.File;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Random;
@@ -58,12 +60,13 @@ public class Card {
         this.cardUrl = cardUrl;
     }
 
-    @JsonIgnore
+    @JsonProperty("cardName")
     public String getName() {
         return cardName;
     }
 
     @JsonIgnore
+
     public Color getColor() {
         return cardColor;
     }

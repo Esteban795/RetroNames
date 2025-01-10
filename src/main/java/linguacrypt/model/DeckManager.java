@@ -3,6 +3,7 @@ package linguacrypt.model;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,6 +13,7 @@ import linguacrypt.visitor.SerializationVisitor;
 import linguacrypt.visitor.Visitable;
 import linguacrypt.visitor.Visitor;
 
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE)
 public class DeckManager implements Visitable {
     @JsonProperty("deckList")
     private ArrayList<Deck> deckList;
@@ -21,9 +23,20 @@ public class DeckManager implements Visitable {
         this.deckList = new ArrayList<>();
     }
 
-    public Boolean addDeck(Deck deck) {
+    public Boolean addDeck(Deck deck) { 
         if (getDeck(deck.getName()) == null) {
-            deckList.add(deck);
+            int index = 0;
+            for (Deck d : deckList) {
+                if (d.getName().compareTo(deck.getName()) > 0) {
+                    break;
+                }
+                index++;
+            }
+            deckList.add(index, deck);
+            
+            // int index = Collections.binarySearch(deckList, deck, (d1, d2) -> d1.getName().compareTo(d2.getName()));
+            // if (index < 0) index = -index - 1;
+            // deckList.add(deck);
             return true;
         } else {
             return false;
@@ -76,9 +89,14 @@ public class DeckManager implements Visitable {
     }
 
 
-    public ArrayList<Card> shuffleDeck(Deck deck) {
-        ArrayList<Card> cards = new ArrayList<>(deck.getCardList());
-        Collections.shuffle(cards);
-        return cards;
+    public void sortDecks() {
+        boolean isSorted = true;
+        for (int i = 0; i < deckList.size() - 1; i++) {
+            if (deckList.get(i).getName().compareTo(deckList.get(i + 1).getName()) > 0) {
+                isSorted = false;
+                break;
+            }
+        }
+        Collections.sort(deckList, (d1, d2) -> d1.getName().compareTo(d2.getName()));
     }
 }

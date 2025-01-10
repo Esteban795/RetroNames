@@ -205,13 +205,13 @@ public class EditDecksSceneController {
 
     private void showDeckCards(Deck deck) {
         cardList.getChildren().clear();
-        
+
         FlowPane cardFlow = new FlowPane();
         cardFlow.setHgap(10);
         cardFlow.setVgap(10);
         cardFlow.setPadding(new Insets(10));
         cardFlow.getStyleClass().add("panel");
-        
+
         for (Card card : deck.getCardList()) {
             Button cardButton = new Button(card.getName());
             cardButton.getStyleClass().add("card-button");
@@ -220,7 +220,7 @@ public class EditDecksSceneController {
             cardButton.setOnAction(event -> showCardInfo(card));
             cardFlow.getChildren().add(cardButton);
         }
-        
+
         cardList.getChildren().add(cardFlow);
     }
 
@@ -251,7 +251,7 @@ public class EditDecksSceneController {
         });
 
         Button addToAnotherDeckButton = new Button("Add to Another Deck");
-        addToAnotherDeckButton.getStyleClass().add("add-card-button");
+        addToAnotherDeckButton.getStyleClass().add("card-button");
         addToAnotherDeckButton.setOnAction(e -> showAddToAnotherDeckDialog());
 
         buttonBox.getChildren().addAll(addToAnotherDeckButton, deleteCardButton);
@@ -271,18 +271,19 @@ public class EditDecksSceneController {
     private void showAddToAnotherDeckDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Add to Another Deck");
+        dialog.setHeaderText("Select a deck to add the card to:");
 
+        VBox content = new VBox(10);
         ComboBox<String> deckComboBox = new ComboBox<>();
         deckComboBox.setPromptText("Select a deck");
         for (Deck deck : model.getDeckManager().getDeckList()) {
-            model.getCardManager().getDecks(selectedCard);
             if (deck != selectedDeck && !model.getCardManager().getDecks(selectedCard).contains(deck)) {
                 deckComboBox.getItems().add(deck.getName());
             }
         }
 
-        dialog.getDialogPane().getChildren().add(deckComboBox);
-
+        content.getChildren().add(deckComboBox);
+        dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         Optional<ButtonType> result = dialog.showAndWait();

@@ -86,3 +86,31 @@
     -fx-background-color: #c0c0c0;
     -fx-border-color: #808080 #ffffff #ffffff #808080;
 }
+
+
+/* Dialog styles */
+.custom-dialog {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-border-width: 2;
+}
+
+.dialog-content {
+    -fx-background-color: #c0c0c0;
+    -fx-padding: 10;
+}
+
+.combo-box {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-border-width: 2;
+}
+
+.combo-box:hover {
+    -fx-background-color: #d4d4d4;
+}
+
+.combo-box:pressed {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #808080 #ffffff #ffffff #808080;
+}

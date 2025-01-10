@@ -124,7 +124,11 @@ public class Game implements Visitable {
     public void switchTeam() {
         currentTeam = !currentTeam;
     }
-
+ 
+    public boolean getBooleanCurrentTeam() {
+        return currentTeam;
+    }
+    
     public ArrayList<ArrayList<Card>> getKey() {
         return key;
     }

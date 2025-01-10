@@ -206,7 +206,7 @@ public class GameSceneController {
         game.switchTeam();
         remainingGuesses = 0;
         bonusGuess = 1;
-        hintLabel.setText("");
+        hintField.setText("");
         remainingGuessesLabel.setText("");
         hintInputBox.setVisible(true);
         endTurnButton.setDisable(true);
@@ -353,7 +353,8 @@ public class GameSceneController {
                 @Override
                 public void stop() {
                     super.stop();
-                    // TODO : update guess time stats
+                    Game game = sm.getModel().getGame();
+                    game.getStats().updateAvgTimeToAnswer(game.getBooleanCurrentTeam(), guessTimerProperty.get());
                     guessTimerProperty.set(0);
                     lastUpdate = 0;
                 }
@@ -391,6 +392,8 @@ public class GameSceneController {
                     // TODO : update guess time stats (average time to answer)
                     // guessTimerProperty is remaining time, so you have to save maxGuessTime
                     // - guessTimerProperty
+                    Game game = sm.getModel().getGame();
+                    game.getStats().updateAvgTimeToAnswer(game.getBooleanCurrentTeam(), maxGuessTime - guessTimerProperty.get());
                     guessTimerProperty.set(maxGuessTime);
                     lastUpdate = 0;
                 }

@@ -297,17 +297,32 @@ public class LobbySceneController {
         int count = blueTeamOperative.getChildren().size() + blueTeamSpy.getChildren().size()
                 + redTeamOperative.getChildren().size() + redTeamSpy.getChildren().size();
         String deckName = decksSelector.getValue();
+        GameConfiguration config = sm.getModel().getGame().getConfig();
 
-        if (count < 4) {
+        if (count < 2) {
             errorLabel.setText("Pas assez de joueurs.");
             return;
         }
 
-        if (blueTeamSpy.getChildren().size() != 1 || redTeamSpy.getChildren().size() != 1) {
-            errorLabel.setText("Il doit y avoir exactement un espion par équipe.");
-            return;
+        if(count == 2){
+            if(!hasCompleteTeam()){
+                errorLabel.setText("Les deux joueurs doivent être de la même équipe");
+            }
+            config.setGameMode(true);
+            if(blueTeamSpy.getChildren().size() == 1){
+                config.setFirstTeam(false);
+                sm.getModel().getGame().switchTeam();
+            }
+            else{
+                config.setFirstTeam(true);
+            }
         }
-
+        else {
+            if (blueTeamSpy.getChildren().size() != 1 || redTeamSpy.getChildren().size() != 1) {
+                errorLabel.setText("Il doit y avoir exactement un espion par équipe.");
+                return;
+            }
+        }
         if (deckName == null) {
             errorLabel.setText("Il est nécessaire de sélectionner un deck avant de pouvoir démarrer la partie.");
             return;
@@ -319,7 +334,6 @@ public class LobbySceneController {
         addPlayersToTeams();
 
         DeckManager dm = sm.getModel().getDeckManager();
-        GameConfiguration config = sm.getModel().getGame().getConfig();
         Deck deck = dm.getDeck(deckName);
 
         if (deck.getCardList().size() < gridSize * gridSize) {
@@ -332,21 +346,57 @@ public class LobbySceneController {
         sm.pushScene(new GameScene(sm));
     }
 
+    private boolean hasCompleteTeam(){
+        return ((blueTeamSpy.getChildren().size() == 1 && blueTeamOperative.getChildren().size() == 1)
+        || (redTeamSpy.getChildren().size() == 1 && redTeamOperative.getChildren().size() == 1));
+    }
+
     private void addPlayersToTeams() {
+        if (sm.getModel().getGame().getConfig().isDuo()) {
+            addPlayersToDuoMode();
+        } else {
+            addPlayersToNormalMode();
+        }
+    }
+    
+    private void addPlayersToDuoMode() {
+        Team activeTeam;
+        // Determine which team is being used (the one that has players)
+        if (!blueTeamSpy.getChildren().isEmpty()) {
+            activeTeam = sm.getModel().getGame().getConfig().getTeamManager().getBlueTeam();
+            // Add spy
+            Label spy = (Label) blueTeamSpy.getChildren().get(0);
+            activeTeam.addPlayer(new Player(spy.getText(), true));
+            // Add operative
+            Label op = (Label) blueTeamOperative.getChildren().get(0);
+            activeTeam.addPlayer(new Player(op.getText(), false));
+        } else {
+            activeTeam = sm.getModel().getGame().getConfig().getTeamManager().getRedTeam();
+            // Add spy
+            Label spy = (Label) redTeamSpy.getChildren().get(0);
+            activeTeam.addPlayer(new Player(spy.getText(), true));
+            // Add operative
+            Label op = (Label) redTeamOperative.getChildren().get(0);
+            activeTeam.addPlayer(new Player(op.getText(), false));
+        }
+    }
+    
+    private void addPlayersToNormalMode() {
         Team blueTeam = sm.getModel().getGame().getConfig().getTeamManager().getBlueTeam();
         Team redTeam = sm.getModel().getGame().getConfig().getTeamManager().getRedTeam();
-
-        // Adding spies, they should be alone in their team
+    
+        // Adding spies
         Label blueSpy = (Label) blueTeamSpy.getChildren().get(0);
         Label redSpy = (Label) redTeamSpy.getChildren().get(0);
         blueTeam.addPlayer(new Player(blueSpy.getText(), true));
         redTeam.addPlayer(new Player(redSpy.getText(), true));
-
+    
+        // Adding operatives
         blueTeamOperative.getChildren().forEach(player -> {
             Label label = (Label) player;
             blueTeam.addPlayer(new Player(label.getText(), false));
         });
-
+    
         redTeamOperative.getChildren().forEach(player -> {
             Label label = (Label) player;
             redTeam.addPlayer(new Player(label.getText(), false));

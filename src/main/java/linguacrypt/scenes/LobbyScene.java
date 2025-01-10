@@ -7,7 +7,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import linguacrypt.controllers.LobbySceneController;
-public class LobbyScene extends ManagedScene { 
+
+public class LobbyScene extends ManagedScene {
 
     private LobbySceneController controller;
 
@@ -22,8 +23,11 @@ public class LobbyScene extends ManagedScene {
         try {
             Parent root = loader.load();
             super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
+            super.getScene().getStylesheets()
+                    .add(getClass().getResource("/scenes/lobby/LobbyScene.css").toExternalForm());
+
         } catch (Exception e) {
-            System.out.println("Error loading LobbyScene.fxml");
+            // System.out.println("Error loading LobbyScene.fxml");
             sm.getPrimaryStage().close();
         }
     }
@@ -61,5 +65,5 @@ public class LobbyScene extends ManagedScene {
     public LobbySceneController getController() {
         return controller;
     }
-    
+
 }

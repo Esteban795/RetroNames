@@ -2,39 +2,64 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
 
 
 <VBox xmlns:fx="http://javafx.com/fxml"
-    prefHeight="600.0" prefWidth="800.0">
+    prefHeight="600.0" prefWidth="800.0"
+    styleClass="root"
+>
+
     <children>
-        <SplitPane dividerPositions="0.5" orientation="HORIZONTAL" VBox.vgrow="ALWAYS">
+        <SplitPane dividerPositions="0.5" orientation="HORIZONTAL" VBox.vgrow="ALWAYS"
+            styleClass="split-pane">
             <items>
                 <VBox>
                     <!-- Left side content -->
-                    <Button text="New Deck" onAction="#showNewDeckPopup" />
+                    <Button text="Nouveau Deck" onAction="#showNewDeckPopup" styleClass="deck-button" />
 
-                    <ScrollPane VBox.vgrow="ALWAYS">
-                        <VBox fx:id="deckList">
+                    <ScrollPane VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+                        <VBox fx:id="deckList" styleClass="panel">
                             <!-- Deck list -->
 
                         </VBox>
                     </ScrollPane>
                 </VBox>
-                <VBox>
+                <VBox styleClass="panel">
                     <!-- Right side content -->
-                    <Button text="New Card" onAction="#showNewCardPopup" />
-                    <ScrollPane VBox.vgrow="ALWAYS">
+                    <HBox spacing="10">
+                        <Button fx:id="newCardButton" text="Nouvelle Carte" onAction="#showNewCardPopup"
+                            styleClass="card-button" />
+                        <Button fx:id="duplicateDeckButton" text="Dupliquer le Deck"
+                            onAction="#showDuplicateDeckPopup" styleClass="deck-button" />
+                        <Button fx:id="deleteDeckButton" text="Supprimer le Deck" onAction="#deleteDeck"
+                            styleClass="delete-deck-button" />
+                    </HBox>
+
+                    <ScrollPane VBox.vgrow="ALWAYS" styleClass="scroll-pane">
                         <VBox fx:id="cardList">
                             <!-- Card list -->
                         </VBox>
                     </ScrollPane>
+                    <VBox fx:id="cardInfoBox" spacing="5" styleClass="card-info-box">
+                        <HBox spacing="10">
+                            <VBox spacing="5">
+                                <Label text="Card Information:" />
+                                <Label text="Card Name:" />
+                                <Label text="Deck:" />
+                            </VBox>
+                            <Button fx:id="addToAnotherDeckButton" text="Add to Another Deck"
+                                onAction="#showAddToAnotherDeckDialog" />
+                        </HBox>
+                    </VBox>
                     <fx:define>
-                        <Dialog fx:id="newCardDialog" title="New Card">
+                        <Dialog fx:id="newCardDialog" title="Nouvelle Carte">
                             <dialogPane>
                                 <DialogPane>
                                     <content>
                                         <VBox spacing="10">
-                                            <Label text="Card Name:" />
+                                            <Label text="Nom de la carte :" />
                                             <TextField fx:id="cardNameField" />
                                         </VBox>
                                     </content>
@@ -66,9 +91,36 @@
                 </VBox>
             </items>
         </SplitPane>
-        <VBox>
-            <!-- Bottom content -->
-            <Button text="back" onAction="#goBack" />
-        </VBox>
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="panel">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10" />
+            </padding>
+
+            <Button alignment="CENTER" cancelButton="true" graphicTextGap="25.0"
+                mnemonicParsing="false" onAction="#goBack" prefHeight="40.0"
+                style="-fx-font-size: 20;" text="Retour au menu"
+                styleClass="menu-button">
+                <graphic>
+                    <ImageView fitHeight="48.0" fitWidth="48.0"
+                        pickOnBounds="true"
+                        preserveRatio="true">
+                        <Image url="@../../imgs/icons/msg_error-0.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+        </HBox>
+
+        <fx:define>
+            <Dialog fx:id="newDeckDialog">
+                <dialogPane>
+                    <DialogPane>
+                        <buttonTypes>
+                            <ButtonType fx:constant="OK" />
+                            <ButtonType fx:constant="CANCEL" />
+                        </buttonTypes>
+                    </DialogPane>
+                </dialogPane>
+            </Dialog>
+        </fx:define>
     </children>
 </VBox>

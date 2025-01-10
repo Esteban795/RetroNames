@@ -12,10 +12,10 @@ public class EndGameScene extends ManagedScene {
 
     private EndGameSceneController controller;
 
-    public EndGameScene(SceneManager sm,String winningTeam) throws IOException {
+    public EndGameScene(SceneManager sm, String winningTeam) throws IOException {
         super(sm);
         super.setFXMLPath("/scenes/end/EndGameScene.fxml");
-        controller = new EndGameSceneController(sm,winningTeam);
+        controller = new EndGameSceneController(sm, winningTeam);
         FXMLLoader loader = new FXMLLoader();
         URL fxmlURL = getClass().getResource(super.getFXMLPath());
         loader.setLocation(fxmlURL);
@@ -23,8 +23,10 @@ public class EndGameScene extends ManagedScene {
         try {
             Parent root = loader.load();
             super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
+            super.getScene().getStylesheets()
+                    .add(getClass().getResource("/scenes/end/EndGameScene.css").toExternalForm());
         } catch (Exception e) {
-            System.out.println("Error loading EndGameScene.fxml");
+            // System.out.println("Error loading EndGameScene.fxml");
             sm.getPrimaryStage().close();
         }
     }

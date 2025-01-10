@@ -11,12 +11,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import linguacrypt.visitor.Visitable;
 import linguacrypt.visitor.Visitor;
+
 /**
  * Représente une partie de LinguaCrypt. Cette classe est le point central du
  * jeu, gérant : - La grille de jeu (matrice de cartes) - La configuration de la
  * partie (GameConfiguration)
  */
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Game implements Visitable {
 
     @JsonProperty("grid")
@@ -37,10 +38,19 @@ public class Game implements Visitable {
     @JsonProperty("hasStarted")
     private boolean hasStarted;
 
+    @JsonProperty("currentHint")
+    private String currentHint;
+
+    @JsonProperty("remainingGuesses")
+    private int remainingGuesses;
+
+    @JsonProperty("bonusGuess")
+    private int bonusGuess;
+
     /**
      * Constructeur par défaut. Initialise une nouvelle partie avec : - Une
      * grille vide - Une configuration par défaut
-     * currentTeam = true --> red team is playing 
+     * currentTeam = true --> red team is playing
      */
     public Game() {
         this.grid = new ArrayList<>();
@@ -49,12 +59,15 @@ public class Game implements Visitable {
         this.nbTurn = 0;
         this.currentTeam = true;
         this.hasStarted = false;
+        this.currentHint = "";
+        this.remainingGuesses = 0;
+        this.bonusGuess = 1;
     }
 
     /**
      * Constructeur pour la désérialisation JSON.
      *
-     * @param grid La grille de jeu
+     * @param grid   La grille de jeu
      * @param config La configuration
      * @param nbTurn Le nombre de tours joués
      */
@@ -65,34 +78,19 @@ public class Game implements Visitable {
             @JsonProperty("nbTurn") int nbTurn,
             @JsonProperty("currentTeam") boolean currentTeam,
             @JsonProperty("stats") GameStatistics stats,
-            @JsonProperty("hasStarted") boolean hasStarted) {
+            @JsonProperty("hasStarted") boolean hasStarted,
+            @JsonProperty("currentHint") String currentHint,
+            @JsonProperty("remainingGuesses") int remainingGuesses,
+            @JsonProperty("bonusGuess") int bonusGuess) {
         this.grid = grid;
         this.config = config;
         this.nbTurn = nbTurn;
         this.currentTeam = currentTeam;
         this.stats = stats;
         this.hasStarted = hasStarted;
-    }
-
-    /**
-     * Initialise une nouvelle grille vide avec la taille définie dans la
-     * configuration. La grille est une matrice carrée (ex: 5x5).
-     */
-    public void initGrid() {
-        int size = config.getGridSize();
-        grid = new ArrayList<>();
-
-        for (int i = 0; i < size; i++) {
-            ArrayList<Card> row = new ArrayList<>();
-            for (int j = 0; j < size; j++) {
-                row.add(null);
-            }
-            grid.add(row);
-        }
-        if (this.config.getCurrentDeck() != null) {
-            // System.out.println("On charge la grille");
-            loadGrid();
-        }
+        this.currentHint = currentHint;
+        this.remainingGuesses = remainingGuesses;
+        this.bonusGuess = bonusGuess;
     }
 
     private void fillRange(List<Card> cards, int start, int end, Color color) {
@@ -102,11 +100,14 @@ public class Game implements Visitable {
     }
 
     /**
+     * 
+     * Initialise une nouvelle grille vide avec la taille définie dans la
+     * configuration. La grille est une matrice carrée (ex: 5x5).
      * Charge les cartes du deck dans la grille. Les cartes sont placées
      * séquentiellement dans la grille, de gauche à droite et de haut en bas.
-     * Cette méthode est appelée après initGrid().
+     * Les cartes sont mélangées avant d'être placées dans la grille.
      */
-    public void loadGrid() {
+    public void initGrid() {
         Deck deck = config.getCurrentDeck();
         if (grid == null || deck == null) {
             System.err.println("Grid or deck is null");
@@ -137,6 +138,58 @@ public class Game implements Visitable {
 
     public void switchTeam() {
         currentTeam = !currentTeam;
+    }
+
+    public boolean getBooleanCurrentTeam() {
+        return currentTeam;
+    }
+
+    public void setGrid(List<Card> key) {
+        ArrayList<ArrayList<Card>> keyMatrix = new ArrayList<>();
+        int size = config.getGridSize();
+        int keyIndex = 0;
+
+        for (int i = 0; i < size; i++) {
+            ArrayList<Card> row = new ArrayList<>();
+            for (int j = 0; j < size; j++) {
+                row.add(key.get(keyIndex++));
+            }
+            keyMatrix.add(row);
+        }
+        this.grid = keyMatrix;
+    }
+
+    public int revealCard(Card card) {
+        card.reveal();
+        Team redTeam = config.getTeamManager().getRedTeam();
+        Team blueTeam = config.getTeamManager().getBlueTeam();
+
+        if (card.getColor() == Color.RED) {
+            redTeam.setNbFoundCards(redTeam.getNbFoundCards() + 1);
+            // System.out.println("Red team found " + redTeam.getNbFoundCards() + " cards");
+            return 0;
+        } else if (card.getColor() == Color.BLUE) {
+            blueTeam.setNbFoundCards(blueTeam.getNbFoundCards() + 1);
+            return 0;
+        } else if (card.getColor() == Color.WHITE) {
+            return 0;
+        } else {
+            return 1;
+        }
+
+    }
+
+    public boolean hasBlueTeamWon() {
+        return config.getTeamManager().getBlueTeam().getNbFoundCards() == config.getNbCardsGoal();
+    }
+
+    public boolean hasRedTeamWon() {
+        return config.getTeamManager().getRedTeam().getNbFoundCards() == config.getNbCardsGoal() + 1;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
 
     // Getters and Setters
@@ -174,55 +227,37 @@ public class Game implements Visitable {
         return stats;
     }
 
-    public void setGrid(List<Card> key) {
-        ArrayList<ArrayList<Card>> keyMatrix = new ArrayList<>();
-        int size = config.getGridSize();
-        int keyIndex = 0;
-
-        for (int i = 0; i < size; i++) {
-            ArrayList<Card> row = new ArrayList<>();
-            for (int j = 0; j < size; j++) {
-                row.add(key.get(keyIndex++));
-            }
-            keyMatrix.add(row);
-        }
-        this.grid = keyMatrix;
+    public boolean hasStarted() {
+        return hasStarted;
     }
 
-    public int revealCard(Card card) {
-        card.reveal();
-        Team redTeam = config.getTeamManager().getRedTeam();
-        Team blueTeam = config.getTeamManager().getBlueTeam();
-        
-        if (card.getColor() == Color.RED) {
-            redTeam.setNbFoundCards(redTeam.getNbFoundCards() + 1);
-            System.out.println("Red team found " + redTeam.getNbFoundCards() + " cards");
-            return 0;
-        } else if (card.getColor() == Color.BLUE) {
-            blueTeam.setNbFoundCards(blueTeam.getNbFoundCards() + 1);
-            return 0;
-        } else if (card.getColor() == Color.WHITE) {
-            return 0;
-        } else {
-            return 1;
-        }
-        
+    public String getCurrentHint() {
+        return currentHint;
     }
 
-    public boolean hasBlueTeamWon() {
-        return config.getTeamManager().getBlueTeam().getNbFoundCards() == config.getNbCardsGoal();
+    public int getRemainingGuesses() {
+        return remainingGuesses;
     }
 
-    public boolean hasRedTeamWon() {
-        return config.getTeamManager().getRedTeam().getNbFoundCards() == config.getNbCardsGoal() + 1;
+    public int getBonusGuess() {
+        return bonusGuess;
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
+    public int setRemainingGuesses(int remainingGuesses) {
+        this.remainingGuesses = remainingGuesses;
+        return this.remainingGuesses;
     }
 
-    public void resetGame() {
-        
+    public int setBonusGuess(int bonusGuess) {
+        this.bonusGuess = bonusGuess;
+        return this.bonusGuess;
+    }
+
+    public void setCurrentHint(String currentHint) {
+        this.currentHint = currentHint;
+    }
+
+    public void setHasStarted(boolean hasStarted) {
+        this.hasStarted = hasStarted;
     }
 }

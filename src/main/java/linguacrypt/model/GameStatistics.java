@@ -27,8 +27,8 @@ public class GameStatistics {
         this.nbRounds = 0;
     }
 
-    public void updateStats(boolean blueTeam, Color cardColor) {
-        int[] teamStats = blueTeam ? blueTeamStats : redTeamStats;
+    public void updateStats(boolean redTeam, Color cardColor) {
+        int[] teamStats = redTeam ? redTeamStats : blueTeamStats;
         switch (cardColor) {
             case BLUE:
                 teamStats[0]++;
@@ -45,11 +45,11 @@ public class GameStatistics {
         }
     }
 
-    public void updateAvgTimeToAnswer(boolean blueTeam, double time) {
-        if (blueTeam) {
-            blueTeamAvgTimeToAnswer = (blueTeamAvgTimeToAnswer * nbRounds + time) / (nbRounds + 1);
-        } else {
+    public void updateAvgTimeToAnswer(boolean redTeam, double time) {
+        if (redTeam) {
             redTeamAvgTimeToAnswer = (redTeamAvgTimeToAnswer * nbRounds + time) / (nbRounds + 1);
+        } else {
+            blueTeamAvgTimeToAnswer = (blueTeamAvgTimeToAnswer * nbRounds + time) / (nbRounds + 1);
         }
     }
 

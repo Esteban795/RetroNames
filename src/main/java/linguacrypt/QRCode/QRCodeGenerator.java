@@ -32,19 +32,19 @@ public class QRCodeGenerator {
                 Card card = grid.get(i).get(j);
                 switch (card.getColor()) {
                     case RED:
-                        image.setRGB(j,i, 0xFF0000);
+                        image.setRGB(j, i, 0xFF0000);
                         break;
                     case BLUE:
-                        image.setRGB(j,i, 0x0000FF);
+                        image.setRGB(j, i, 0x0000FF);
                         break;
                     case WHITE:
-                        image.setRGB(j,i, 0xFFFFDD);
+                        image.setRGB(j, i, 0xFFFFDD);
                         break;
                     case BLACK:
-                        image.setRGB(j,i, 0x000000);
+                        image.setRGB(j, i, 0x000000);
                         break;
                     default:
-                        image.setRGB(j,i, 0xFFFFFF);
+                        image.setRGB(j, i, 0xFFFFFF);
                         break;
                 }
             }
@@ -103,7 +103,8 @@ public class QRCodeGenerator {
             }
         }
 
-        System.out.println("minX: " + minX + " maxX: " + maxX + " minY: " + minY + " maxY: " + maxY);
+        // System.out.println("minX: " + minX + " maxX: " + maxX + " minY: " + minY + "
+        // maxY: " + maxY);
 
         BufferedImage copyImg = deepCopy(image);
         BufferedImage resizedImg = copyImg.getSubimage(minX - 10, minY - 10, maxX - minX + 20, maxY - minY + 20);

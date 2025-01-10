@@ -25,8 +25,10 @@ public class LoadMenuScene extends ManagedScene {
             Parent root = loader.load();
             super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
             super.getScene().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+            super.getScene().getStylesheets()
+                    .add(getClass().getResource("/scenes/newLoad/load/style.css").toExternalForm());
         } catch (Exception e) {
-            System.out.println("Error loading LoadMenuScene.fxml");
+            // System.out.println("Error loading LoadMenuScene.fxml");
             sm.getPrimaryStage().close();
         }
 

@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Tiny5&display=swap');
+
+@font-face {
+    font-family: 'Pixel Operator Mono Bold';
+    src: url('file:src/main/resources/fonts/PixelOperatorMono-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'Pixel Operator Mono';
+    src: url('file:src/main/resources/fonts/PixelOperatorMono.ttf');
+}
+
+/* MENU STYLE */
+.menu-background {
+    -fx-background-image: url("/scenes/menu/background.png");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+.particle-pane {
+    -fx-background-color: transparent;
+    -fx-min-width: 100%;
+    -fx-min-height: 100%;
+    -fx-max-width: infinity;
+    -fx-max-height: infinity;
+}
+
+
+.game-title {
+    -fx-font-family: "Tiny5", serif;
+    -fx-font-size: 96px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
+}
+
+/* MENU BUTTONS */
+.menu-button {
+    -fx-font-family: 'Pixel Operator Mono';
+    -fx-font-size: 40px;
+    -fx-background-color: #c0c0c0;
+    -fx-text-fill: black;
+    -fx-background-radius: 0;
+    -fx-border-style: solid;
+    -fx-border-width: 2px;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-pref-width: 300px;
+    -fx-pref-height: 60px;
+    -fx-effect: none;
+    -fx-wrap-text: true;
+}
+
+.menu-button-long {
+    -fx-font-family: 'Pixel Operator Mono';
+    -fx-font-size: 40px;
+    -fx-background-color: #c0c0c0;
+    -fx-text-fill: black;
+    -fx-background-radius: 0;
+    -fx-border-style: solid;
+    -fx-border-width: 2px;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-pref-width: 300px;
+    -fx-min-height: 120px;
+    -fx-effect: none;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+.menu-button:hover,
+.menu-button:focused,
+.menu-button-long:hover,
+.menu-button-long:focused {
+    -fx-background-color: #d4d4d4;
+    -fx-border-color: #808080;
+    -fx-border-width: 2px;
+    -fx-cursor: hand;
+}
+
+.menu-button:pressed,
+.menu-button-long:pressed {
+    -fx-background-color: #c0c0c0;
+    -fx-border-color: #808080 #ffffff #ffffff #808080;
+    -fx-translate-y: 1px;
+    -fx-translate-x: 1px;
+}
+
+.credits-label {
+    -fx-font-family: 'Doto', sans-serif;
+    -fx-font-size: 40px;
+    -fx-text-fill: black;
+    -fx-font-style: italic;
+}

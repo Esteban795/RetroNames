@@ -116,4 +116,10 @@ public class Card {
     public boolean isImage() {
         return cardView != null;
     }
+
+    @JsonIgnore
+    public boolean isGif() {
+        if (cardUrl == null) return false;
+        return cardUrl.endsWith(".gif");
+    }
 }

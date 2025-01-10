@@ -318,23 +318,6 @@ public class GameSceneController {
         }
     }
 
-    private void switchTeam() {
-        game.switchTeam();
-        bonusGuess = 1;
-        hintLabel.setText("");
-        remainingGuessesLabel.setText("");
-        hintInputBox.setVisible(true);
-        hintDisplayBox.setVisible(false);
-
-        if (redTeamOperators.getParent().getStyleClass().contains("current-play")) {
-            redTeamOperators.getParent().getStyleClass().remove("current-play");
-            blueTeamSpymaster.getParent().getStyleClass().add("current-play");
-        } else {
-            blueTeamOperators.getParent().getStyleClass().remove("current-play");
-            redTeamSpymaster.getParent().getStyleClass().add("current-play");
-        }
-    }
-
     /*
      * Handle a card click event.
      * Reveals the card and updates the game state.
@@ -380,7 +363,7 @@ public class GameSceneController {
                         bonusGuess = 0;
                         remainingGuessesLabel.setText("Essais Bonus : " + remainingGuesses);
                     } else {
-                        switchTeam();
+                        endTurn();
                     }
                 }
 
@@ -401,12 +384,19 @@ public class GameSceneController {
         hintField.setText("");
         remainingGuessesLabel.setText("");
         hintInputBox.setVisible(true);
-        endTurnButton.setDisable(true);
         hintDisplayBox.setVisible(false);
+        endTurnButton.setDisable(true);
         updateTurnLabel();
         guessTimer.stop();
         hintTimerButton.setVisible(true);
 
+        if (redTeamOperators.getParent().getStyleClass().contains("current-play")) {
+            redTeamOperators.getParent().getStyleClass().remove("current-play");
+            blueTeamSpymaster.getParent().getStyleClass().add("current-play");
+        } else {
+            blueTeamOperators.getParent().getStyleClass().remove("current-play");
+            redTeamSpymaster.getParent().getStyleClass().add("current-play");
+        }
     }
 
     private void updateTurnLabel() {

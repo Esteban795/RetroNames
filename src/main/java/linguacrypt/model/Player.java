@@ -16,11 +16,10 @@ public class Player {
     private String name;
     private boolean role;
 
-    public Player(String name, boolean role) { 
+    public Player(String name, boolean role) {
         this.name = name;
         this.role = role;
     }
-     
 
     @JsonCreator
     public Player(@JsonProperty("name") String name) {

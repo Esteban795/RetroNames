@@ -34,7 +34,7 @@ public class SceneManager {
     public int getHeight() {
         return height;
     }
-    
+
     public ManagedScene pushScene(ManagedScene scene, boolean resize) {
         double width = primaryStage.getScene().getWidth();
         double height = primaryStage.getScene().getHeight();

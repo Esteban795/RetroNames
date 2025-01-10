@@ -30,7 +30,6 @@ import linguacrypt.model.GameConfiguration;
 import linguacrypt.model.Player;
 import linguacrypt.model.Team;
 import linguacrypt.scenes.GameScene;
-import linguacrypt.scenes.MenuScene;
 import linguacrypt.scenes.SceneManager;
 import linguacrypt.scenes.SettingsScene;
 
@@ -304,20 +303,18 @@ public class LobbySceneController {
             return;
         }
 
-        if(count == 2){
-            if(!hasCompleteTeam()){
+        if (count == 2) {
+            if (!hasCompleteTeam()) {
                 errorLabel.setText("Les deux joueurs doivent être de la même équipe");
             }
             config.setGameMode(true);
-            if(blueTeamSpy.getChildren().size() == 1){
+            if (blueTeamSpy.getChildren().size() == 1) {
                 config.setFirstTeam(false);
                 sm.getModel().getGame().switchTeam();
-            }
-            else{
+            } else {
                 config.setFirstTeam(true);
             }
-        }
-        else {
+        } else {
             if (blueTeamSpy.getChildren().size() != 1 || redTeamSpy.getChildren().size() != 1) {
                 errorLabel.setText("Il doit y avoir exactement un espion par équipe.");
                 return;
@@ -340,15 +337,15 @@ public class LobbySceneController {
             errorLabel.setText("Le deck sélectionné ne contient pas assez de cartes pour la grille.");
             return;
         }
-        
+
         config.setCurrentDeck(deck);
 
         sm.pushScene(new GameScene(sm));
     }
 
-    private boolean hasCompleteTeam(){
+    private boolean hasCompleteTeam() {
         return ((blueTeamSpy.getChildren().size() == 1 && blueTeamOperative.getChildren().size() == 1)
-        || (redTeamSpy.getChildren().size() == 1 && redTeamOperative.getChildren().size() == 1));
+                || (redTeamSpy.getChildren().size() == 1 && redTeamOperative.getChildren().size() == 1));
     }
 
     private void addPlayersToTeams() {
@@ -358,7 +355,7 @@ public class LobbySceneController {
             addPlayersToNormalMode();
         }
     }
-    
+
     private void addPlayersToDuoMode() {
         Team activeTeam;
         // Determine which team is being used (the one that has players)
@@ -380,23 +377,23 @@ public class LobbySceneController {
             activeTeam.addPlayer(new Player(op.getText(), false));
         }
     }
-    
+
     private void addPlayersToNormalMode() {
         Team blueTeam = sm.getModel().getGame().getConfig().getTeamManager().getBlueTeam();
         Team redTeam = sm.getModel().getGame().getConfig().getTeamManager().getRedTeam();
-    
+
         // Adding spies
         Label blueSpy = (Label) blueTeamSpy.getChildren().get(0);
         Label redSpy = (Label) redTeamSpy.getChildren().get(0);
         blueTeam.addPlayer(new Player(blueSpy.getText(), true));
         redTeam.addPlayer(new Player(redSpy.getText(), true));
-    
+
         // Adding operatives
         blueTeamOperative.getChildren().forEach(player -> {
             Label label = (Label) player;
             blueTeam.addPlayer(new Player(label.getText(), false));
         });
-    
+
         redTeamOperative.getChildren().forEach(player -> {
             Label label = (Label) player;
             redTeam.addPlayer(new Player(label.getText(), false));
@@ -457,7 +454,7 @@ public class LobbySceneController {
      */
     // private void printSelectedCards(ArrayList<Card> selectedCards) {
     // for (int i = 0; i < selectedCards.size(); i++) {
-    // System.out.println(
+    // //System.out.println(
     // "Name : " + selectedCards.get(i).getName() + " (color : " +
     // selectedCards.get(i).getColor() + ")");
     // }

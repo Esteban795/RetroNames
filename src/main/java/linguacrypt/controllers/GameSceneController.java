@@ -310,6 +310,7 @@ public class GameSceneController {
                         ImageView imgView = card.getCardView();
                         imgView.setPreserveRatio(true);
                         imgView.setFitWidth(75);
+                        imgView.setFitHeight(75);
                         cardButton.setGraphic(imgView);
                     } catch (Exception e) {
                         System.err.println("Error loading card image: " + e.getMessage());

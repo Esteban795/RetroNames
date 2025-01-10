@@ -37,6 +37,9 @@ public class EditDecksSceneController {
     private Dialog<ButtonType> newCardDialog;
 
     @FXML
+    private Button deleteDeckButton;
+
+    @FXML
     private TextField cardNameField;
 
     @FXML
@@ -81,6 +84,7 @@ public class EditDecksSceneController {
             addDeckToUI(deck);
         }
         newCardButton.setDisable(true); // Disable initially
+        deleteDeckButton.setDisable(true); // Disable by default
         cardInfoBox.setVisible(false); // Hide initially
     }
 
@@ -160,8 +164,6 @@ public class EditDecksSceneController {
         Button deckButton = new Button(deck.getName());
         deckButton.getStyleClass().add("deck-button");
 
-        // Style for selected state
-
         deckButton.setOnAction(e -> {
             // Reset previous selection
             if (selectedButton != null) {
@@ -173,28 +175,30 @@ public class EditDecksSceneController {
             selectedButton = deckButton;
             deckButton.getStyleClass().add("selected");
             newCardButton.setDisable(false);
+            deleteDeckButton.setDisable(false);
+            showDeckCards(deck);
 
             // Show cards
             showDeckCards(deck);
         });
 
-        Button deleteDeckButton = new Button("X");
-        deleteDeckButton.getStyleClass().add("delete-deck-button");
-        deleteDeckButton.setOnAction(e -> deleteDeck(deck, deckContainer));
-
-        deckContainer.getChildren().addAll(deckButton, deleteDeckButton);
+        deckContainer.getChildren().add(deckButton);
         deckList.getChildren().add(deckContainer);
+
     }
 
-    private void deleteDeck(Deck deck, HBox deckContainer) {
-        model.getDeckManager().removeDeck(deck);
-        deckList.getChildren().remove(deckContainer);
-        if (selectedDeck == deck) {
+    @FXML
+    public void deleteDeck() {
+        if (selectedDeck != null) {
+            model.getDeckManager().removeDeck(selectedDeck);
+            reloadDeckList();
+            cardOrDeckAddedOrRemovesViaUI = true;
             selectedDeck = null;
             newCardButton.setDisable(true);
+            deleteDeckButton.setDisable(true);
         }
-        cardOrDeckAddedOrRemovesViaUI = true;
     }
+
 
     private void showDeckCards(Deck deck) {
         cardList.getChildren().clear();

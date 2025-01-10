@@ -23,11 +23,11 @@ public class EndGameSceneController {
     @FXML
     private Label labelVictor;
 
-    @FXML
-    private GridPane keyGrid;
+    // @FXML
+    // private GridPane keyGrid;
 
-    @FXML
-    private GridPane expectedMapGrid;
+    // @FXML
+    // private GridPane expectedMapGrid;
 
     @FXML
     private Label blueTeamStatsLabel;
@@ -57,6 +57,8 @@ public class EndGameSceneController {
         int size = sm.getModel().getGame().getGrid().size();
         ArrayList<ArrayList<Card>> expectedMap = sm.getModel().getGame().getGrid();
 
+        GridPane expectedMapGrid = new GridPane();
+        GridPane keyGrid = new GridPane();
         int cellSize = 75 - 5 * (size - 3);
         expectedMapGrid.setStyle(
                 "-fx-max-width:" + (cellSize) * (size + 1) + "; -fx-max-height:" + (cellSize) * (size + 1) + ";");
@@ -68,6 +70,9 @@ public class EndGameSceneController {
                 pane.setPrefSize(cellSize, cellSize); // Set fixed size
                 String color = expectedMap.get(i).get(j).isFound() ? expectedMap.get(i).get(j).getColor().toString()
                         .toLowerCase() : "white";
+                if (color.equals("white") && expectedMap.get(i).get(j).isFound()) {
+                    color = "beige";
+                }
                 pane.setStyle("-fx-max-width:75;-fx-max-height:75;-fx-background-color: " + color + "; -fx-border-color: black;");
                 expectedMapGrid.add(pane, j,i);
 
@@ -82,6 +87,11 @@ public class EndGameSceneController {
         expectedMapBox.setAlignment(Pos.BASELINE_CENTER);
         keyBox.setAlignment(Pos.BASELINE_CENTER);
 
+        expectedMapGrid.setAlignment(Pos.CENTER);
+        keyGrid.setAlignment(Pos.CENTER);
+
+        expectedMapBox.getChildren().add(expectedMapGrid);
+        keyBox.getChildren().add(keyGrid);
     }
 
     public void displayStats() {
@@ -89,20 +99,23 @@ public class EndGameSceneController {
         int[] blueTeamStats = sm.getModel().getGame().getStats().getBlueTeamStats();
         int[] redTeamStats = sm.getModel().getGame().getStats().getRedTeamStats();
 
+        String blueTeamAvgTimeAnswer = String.format("%.2f", sm.getModel().getGame().getStats().getBlueTeamAvgTimeToAnswer());
         blueTeamStatsLabel.setText("Statistiques de l'équipe bleue :\n"
                 + "   - Carte bleues découvertes : " + blueTeamStats[0] + "\n"
                 + "   - Carte rouges découvertes : " + blueTeamStats[1] + "\n"
                 + "   - Carte noires découvertes : " + blueTeamStats[2] + "\n"
                 + "   - Carte blanches découvertes : " + blueTeamStats[3] + "\n"
-                + "   - Temps moyen pour répondre : " + sm.getModel().getGame().getStats().getBlueTeamAvgTimeToAnswer()
+                + "   - Temps moyen pour répondre : " + blueTeamAvgTimeAnswer
                 + "s");
+
+        String redTeamAvgTimeAnswer = String.format("%.2f", sm.getModel().getGame().getStats().getRedTeamAvgTimeToAnswer());
 
         redTeamStatsLabel.setText("Statistiques de l'équipe rouge :\n"
                 + "   - Carte bleues découvertes : " + redTeamStats[0] + "\n"
                 + "   - Carte rouges découvertes : " + redTeamStats[1] + "\n"
                 + "   - Carte noires découvertes : " + redTeamStats[2] + "\n"
                 + "   - Carte blanches découvertes : " + redTeamStats[3] + "\n"
-                + "   - Temps moyen pour répondre : " + sm.getModel().getGame().getStats().getRedTeamAvgTimeToAnswer()
+                + "   - Temps moyen pour répondre : " + redTeamAvgTimeAnswer
                 + "s");
     }
 

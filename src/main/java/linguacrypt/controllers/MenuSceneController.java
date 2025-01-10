@@ -41,13 +41,6 @@ public class MenuSceneController {
     private Random random = new Random();
     private List<Circle> particles = new ArrayList<>();
 
-    @FXML
-    private Button button1;
-    @FXML
-    private Button button2;
-    @FXML
-    private Button button3;
-
     private final String[] subtitles = {
             "Tu connais le jeu \n de la patate chaude ?",
             "Absolute cinema",

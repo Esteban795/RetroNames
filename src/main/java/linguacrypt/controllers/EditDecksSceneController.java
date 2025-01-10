@@ -36,11 +36,10 @@ public class EditDecksSceneController {
 
     @FXML
     private Button duplicateDeckButton;
-    
+
     @FXML
     private TextField cardNameField;
 
-    
     @FXML
     private Dialog<ButtonType> newDeckDialog;
 
@@ -108,7 +107,7 @@ public class EditDecksSceneController {
                 if (result.get() == saveAndLeave) {
                     model.getDeckManager().saveDeckManager();
                     sm.popScene();
-                } 
+                }
                 // else if (result.get() == leaveWithoutSave) {
                 //     // Restore all deleted cards using CardManager
                 //     for (Card card : model.getCardManager().getDeletedCards()) {
@@ -201,7 +200,6 @@ public class EditDecksSceneController {
         }
     }
 
-
     private void showDeckCards(Deck deck) {
         cardList.getChildren().clear();
         cardInfoBox.setVisible(false);
@@ -229,18 +227,17 @@ public class EditDecksSceneController {
         selectedCard = card;
         cardInfoBox.setVisible(true);
         cardInfoBox.getChildren().clear();
-    
+
         ArrayList<Deck> decks = model.getCardManager().getDecks(card);
-        String deckNames = decks != null ? 
-            String.join(", ", decks.stream().map(Deck::getName).toList()) :
-            "No decks";
-    
+        String deckNames = decks != null
+                ? String.join(", ", decks.stream().map(Deck::getName).toList())
+                : "No decks";
+
         VBox infoLabels = new VBox(5);
         infoLabels.getChildren().addAll(
                 new Label("Card Information:"),
                 new Label("Card Name: " + card.getName()),
                 new Label("Decks: " + deckNames));
-        
 
         HBox buttonBox = new HBox(10);
         infoLabels.setPadding(new Insets(10));
@@ -258,7 +255,6 @@ public class EditDecksSceneController {
         buttonBox.getChildren().addAll(addToAnotherDeckButton, deleteCardButton);
         cardInfoBox.getChildren().addAll(infoLabels, buttonBox);
     }
-
 
     private void deleteCard(Card card) {
         if (selectedDeck != null) {
@@ -284,7 +280,7 @@ public class EditDecksSceneController {
         }
 
         dialog.getDialogPane().getChildren().add(deckComboBox);
-        
+
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         Optional<ButtonType> result = dialog.showAndWait();
@@ -326,66 +322,97 @@ public class EditDecksSceneController {
             alert.showAndWait();
             return;
         }
-        Dialog newCardDialog = new Dialog();
-        
-        HBox cardUrlBox = new HBox();
-        Label cardUrlPath = new Label("");
+
+        // Config dialog
+        Dialog<ButtonType> newCardDialog = new Dialog<>();
+        newCardDialog.setTitle("Add New Card");
+        newCardDialog.setHeaderText("Enter card details");
+
+        ButtonType confirmButtonType = ButtonType.OK;
+        ButtonType cancelButtonType = ButtonType.CANCEL;
+        newCardDialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
+
+        VBox dialogContent = new VBox(10); // 10 is spacing between elements
+
+        // Create image selection box
+        HBox cardUrlBox = new HBox(10); // 10 is spacing
+        Label cardUrlPath = new Label("No image selected.");
         Button openCardUrlButton = new Button("...");
+        cardUrlBox.getChildren().addAll(new Label("Image: "), cardUrlPath, openCardUrlButton);
+
+        // Create name input field
+        TextField cardNameField = new TextField();
+        cardNameField.setPromptText("Enter card name");
+
+        // Add components to dialog
+        dialogContent.getChildren().addAll(
+                new Label("Card Name:"),
+                cardNameField,
+                cardUrlBox
+        );
+
+        // Setup image chooser
         openCardUrlButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Choisissez une image à intégrer au deck :");
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+            fileChooser.setTitle("Choose an image for the card:");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+            );
+
+            // Set initial directory if needed
+            fileChooser.setInitialDirectory(new File("src/main/resources/images/"));
+
             File selectedFile = fileChooser.showOpenDialog(sm.getPrimaryStage());
             if (selectedFile != null) {
                 cardUrlPath.setText(selectedFile.getAbsolutePath());
             }
-            cardUrlPath.setText(selectedFile.getAbsolutePath());
         });
 
-        cardNameField.setText("test");
-        newCardDialog.getDialogPane().getChildren().add(cardUrlBox);
-        newCardDialog.getDialogPane().getChildren().add(cardNameField);
-        
+        newCardDialog.getDialogPane().setContent(dialogContent);
+
+        // Show dialog and process result
         Optional<ButtonType> result = newCardDialog.showAndWait();
 
-        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+        if (result.isPresent() && result.get() == confirmButtonType) {
             String cardName = cardNameField.getText().trim();
-            if (!cardName.isEmpty()) {
-                // Check if card exists in current deck
-                if (selectedDeck.getCard(cardName) != null) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Duplicate Card Name");
-                    alert.setHeaderText(null);
-                    alert.setContentText("A card with name '" + cardName + "' already exists in this deck!");
-                    alert.showAndWait();
-                    return;
-                }
+            String imagePath = cardUrlPath.getText();
 
-                // Check if card exists in CardManager
-                Card existingCard = model.getCardManager().getCard(cardName);
-                if (existingCard != null) {
-                    selectedDeck.addCard(existingCard);
-                    model.getCardManager().addCard(existingCard, selectedDeck);
-                    showDeckCards(selectedDeck);
-                    cardOrDeckAddedOrRemovesViaUI = true;
-                    System.out.println("Existing card added to deck: " + cardName);
-                    return;
-                }
-
-                Card newCard = new Card(cardName);
-                selectedDeck.addCard(newCard);
-                model.getCardManager().addCard(newCard, selectedDeck);
-                showDeckCards(selectedDeck);
-                cardOrDeckAddedOrRemovesViaUI = true;
-                System.out.println("Card added: " + cardName);
+            if (cardName.isEmpty()) {
+                showError("Card name cannot be empty");
+                return;
             }
+
+            // Check for duplicate card
+            if (selectedDeck.getCard(cardName) != null) {
+                showError("A card with name '" + cardName + "' already exists in this deck!");
+                return;
+            }
+            if (imagePath.equals("No image selected.")) {
+                imagePath = null;
+            }
+
+            // Create and add card
+            Card newCard = new Card(cardName, imagePath);
+            selectedDeck.addCard(newCard);
+            model.getCardManager().addCard(newCard, selectedDeck);
+            showDeckCards(selectedDeck);
+            cardOrDeckAddedOrRemovesViaUI = true;
         }
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML
     public void showDuplicateDeckPopup() {
-        if (selectedDeck == null)
+        if (selectedDeck == null) {
             return;
+        }
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Duplicate Deck");
@@ -412,7 +439,7 @@ public class EditDecksSceneController {
                 newDeck.setDeckName(newDeckName);
 
                 // Explore every cards of and add them to newDeck
-                for (Card card : selectedDeck.getCardList()){
+                for (Card card : selectedDeck.getCardList()) {
                     newDeck.addCard(card);
                     model.getCardManager().addCard(card, newDeck);
                 }
@@ -428,7 +455,7 @@ public class EditDecksSceneController {
             showDeckCards(selectedDeck);
         }
     }
-    
+
     @FXML
     public boolean wasCardOrDeckAddedOrRemovesViaUI() {
         return cardOrDeckAddedOrRemovesViaUI;

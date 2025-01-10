@@ -62,9 +62,6 @@ public class GameSceneController {
     private final SceneManager sm;
     private Game game;
     private final int size;
-    private String currentHint = "";
-    private int remainingGuesses = 0;
-    private int bonusGuess = 1;
 
     @FXML
     private BorderPane mainBorderPane;
@@ -155,7 +152,9 @@ public class GameSceneController {
      * Initialize the grid with the cards of the game's deck.
      */
     private void setupGameGrid() {
-        game.loadGrid();
+        if(!game.hasStarted()){
+            game.initGrid();
+        }
         System.out.println("Game grid loaded with cards");
         updateGrid();
         updateTurnLabel();
@@ -303,7 +302,7 @@ public class GameSceneController {
 
     private void switchTeam() {
         game.switchTeam();
-        bonusGuess = 1;
+        game.setBonusGuess(1);
         hintLabel.setText("");
         remainingGuessesLabel.setText("");
         hintInputBox.setVisible(true);
@@ -323,7 +322,7 @@ public class GameSceneController {
      * Reveals the card and updates the game state.
      */
     private void handleCardClick(int row, int col) {
-        if (remainingGuesses > 0 && !game.getGrid().get(row).get(col).isFound()) {
+        if (game.getRemainingGuesses() > 0 && !game.getGrid().get(row).get(col).isFound()) {
             Card card = game.getGrid().get(row).get(col);
             game.revealCard(card);
             Button revealedCard = (Button) gameGrid.getChildren().get(row * size + col);
@@ -343,8 +342,8 @@ public class GameSceneController {
                     e.printStackTrace();
                 }
             } else {
-                remainingGuesses--;
-                remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
+                game.setRemainingGuesses(game.getRemainingGuesses() - 1);
+                remainingGuessesLabel.setText("Essais restants : " + game.getRemainingGuesses());
                 if (card.getColor() == Color.BLACK) { // game is lost
                     try {
                         sm.pushScene(new EndGameScene(sm, game.getOppositeTeam().getName()));
@@ -353,11 +352,11 @@ public class GameSceneController {
                     }
                 }
 
-                if (remainingGuesses == 0) {
-                    if (bonusGuess > 0) {
-                        remainingGuesses = bonusGuess;
-                        bonusGuess = 0;
-                        remainingGuessesLabel.setText("Essais Bonus : " + remainingGuesses);
+                if (game.getRemainingGuesses() == 0) {
+                    if (game.getBonusGuess() > 0) {
+                        game.setRemainingGuesses(game.getBonusGuess());
+                        game.setBonusGuess(0);
+                        remainingGuessesLabel.setText("Essais Bonus : " + game.getRemainingGuesses());
                     } else {
                         switchTeam();
                     }
@@ -399,11 +398,11 @@ public class GameSceneController {
             return;
         }
 
-        currentHint = hintField.getText();
+        game.setCurrentHint(hintField.getText());
         try {
-            remainingGuesses = Integer.parseInt(numberChoice.getText());
-            hintLabel.setText("Indice : " + currentHint);
-            remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
+            game.setRemainingGuesses(Integer.parseInt(numberChoice.getText()));
+            hintLabel.setText("Indice : " + game.getCurrentHint());
+            remainingGuessesLabel.setText("Essais restants : " + game.getRemainingGuesses());
 
             hintInputBox.setVisible(false);
             hintDisplayBox.setVisible(true);

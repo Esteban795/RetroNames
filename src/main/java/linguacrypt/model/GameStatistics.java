@@ -27,8 +27,8 @@ public class GameStatistics {
         this.nbRounds = 0;
     }
 
-    public void updateStats(boolean blueTeam, Color cardColor) {
-        int[] teamStats = blueTeam ? blueTeamStats : redTeamStats;
+    public void updateStats(boolean redTeam, Color cardColor) {
+        int[] teamStats = redTeam ? redTeamStats : blueTeamStats;
         switch (cardColor) {
             case BLUE:
                 teamStats[0]++;

@@ -1,14 +1,12 @@
 package linguacrypt.model;
 
-import java.util.ArrayList;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TeamManager {
     @JsonProperty("blueTeam")
     private Team blueTeam;
-    
+
     @JsonProperty("redTeam")
     private Team redTeam;
 
@@ -19,16 +17,16 @@ public class TeamManager {
 
     @JsonCreator
     public TeamManager(
-        @JsonProperty("blueTeam") Team blueTeam,
-        @JsonProperty("redTeam") Team redTeam) {
+            @JsonProperty("blueTeam") Team blueTeam,
+            @JsonProperty("redTeam") Team redTeam) {
         this.blueTeam = blueTeam;
         this.redTeam = redTeam;
     }
 
-
     public void addTeam(Team team) {
-        if (team == null) return;
-        
+        if (team == null)
+            return;
+
         if (team.getColor() == Color.BLUE) {
             this.blueTeam = team;
         } else if (team.getColor() == Color.RED) {
@@ -37,8 +35,9 @@ public class TeamManager {
     }
 
     public void removeTeam(Team team) {
-        if (team == null) return;
-        
+        if (team == null)
+            return;
+
         if (team.equals(blueTeam)) {
             blueTeam = null;
         } else if (team.equals(redTeam)) {
@@ -53,6 +52,11 @@ public class TeamManager {
         redTeam = new Team("Red Team", Color.RED);
     }
 
-    public Team getBlueTeam() { return blueTeam; }
-    public Team getRedTeam() { return redTeam; }
+    public Team getBlueTeam() {
+        return blueTeam;
+    }
+
+    public Team getRedTeam() {
+        return redTeam;
+    }
 }

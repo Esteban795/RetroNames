@@ -82,7 +82,7 @@ public class GameConfiguration implements Visitable {
         this.gamemode = gamemode;
     }
 
-    public void resetConfig(){
+    public void resetConfig() {
         this.teamManager.clearTeams();
 
     }
@@ -160,14 +160,13 @@ public class GameConfiguration implements Visitable {
         this.teamManager = teamManager;
     }
 
-    public boolean isDuo(){
+    public boolean isDuo() {
         return gamemode;
     }
 
-    public void setGameMode(boolean gamemode){
+    public void setGameMode(boolean gamemode) {
         this.gamemode = gamemode;
     }
-
 
     @Override
     public void accept(Visitor visitor) {

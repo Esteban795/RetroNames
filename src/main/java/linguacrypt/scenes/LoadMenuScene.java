@@ -3,13 +3,9 @@ package linguacrypt.scenes;
 import java.io.IOException;
 import java.net.URL;
 
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import linguacrypt.controllers.LoadMenuSceneController;
 
 public class LoadMenuScene extends ManagedScene {
@@ -29,9 +25,10 @@ public class LoadMenuScene extends ManagedScene {
             Parent root = loader.load();
             super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
             super.getScene().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
-            super.getScene().getStylesheets().add(getClass().getResource("/scenes/newLoad/load/style.css").toExternalForm());
+            super.getScene().getStylesheets()
+                    .add(getClass().getResource("/scenes/newLoad/load/style.css").toExternalForm());
         } catch (Exception e) {
-            System.out.println("Error loading LoadMenuScene.fxml");
+            // System.out.println("Error loading LoadMenuScene.fxml");
             sm.getPrimaryStage().close();
         }
 

@@ -130,7 +130,8 @@ public class GameSceneController {
         }
 
         this.size = game.getConfig().getGridSize();
-        System.out.println("GameSceneController initialized with grid size: " + size);
+        // System.out.println("GameSceneController initialized with grid size: " +
+        // size);
     }
 
     @FXML
@@ -141,7 +142,7 @@ public class GameSceneController {
             setupTimers();
             setupHintControls();
             updateHintUI();
-            System.out.println("Game scene initialized");
+            // System.out.println("Game scene initialized");
             initializeProgress();
             updatePlayerLabels();
             redTeamSpymaster.getParent().getStyleClass().add("current-play");
@@ -183,17 +184,17 @@ public class GameSceneController {
         if (!game.hasStarted()) {
             game.initGrid();
         }
-        System.out.println("Game grid loaded with cards");
+        // System.out.println("Game grid loaded with cards");
 
         // Testing purposes
         // for (int i = 0; i < size; i++){
-        //     for (int j = 0; j < size; j++){
-        //         if ((i + j) % 4 == 0 ) {
-        //             game.getGrid().get(i).get(j).setCardUrl("./src/main/resources/imgs/icons/check-0.png");
-        //         }
-        //     }
-        // }       
-         
+        // for (int j = 0; j < size; j++){
+        // if ((i + j) % 4 == 0 ) {
+        // game.getGrid().get(i).get(j).setCardUrl("./src/main/resources/imgs/icons/check-0.png");
+        // }
+        // }
+        // }
+
         updateGrid();
         updateTurnLabel();
     }
@@ -377,9 +378,10 @@ public class GameSceneController {
 
     }
 
-    //Update toujours l'UI dans le cas normal, et gère le cas operative -> spymaster dans le cas duo
+    // Update toujours l'UI dans le cas normal, et gère le cas operative ->
+    // spymaster dans le cas duo
     private void updateTeamUI(boolean isDuo) {
-        if(!isDuo){
+        if (!isDuo) {
             if (redTeamOperators.getParent().getStyleClass().contains("current-play")) {
                 redTeamOperators.getParent().getStyleClass().remove("current-play");
                 blueTeamSpymaster.getParent().getStyleClass().add("current-play");
@@ -387,9 +389,8 @@ public class GameSceneController {
                 blueTeamOperators.getParent().getStyleClass().remove("current-play");
                 redTeamSpymaster.getParent().getStyleClass().add("current-play");
             }
-        }
-        else {
-            if(game.getBooleanCurrentTeam()){
+        } else {
+            if (game.getBooleanCurrentTeam()) {
                 redTeamSpymaster.getParent().getStyleClass().add("current-play");
                 redTeamOperators.getParent().getStyleClass().remove("current-play");
             } else {
@@ -398,7 +399,6 @@ public class GameSceneController {
             }
         }
     }
-    
 
     /*
      * Handle a card click event.
@@ -414,18 +414,18 @@ public class GameSceneController {
             game.revealCard(card);
 
             game.getStats().updateStats(game.getBooleanCurrentTeam(), card.getColor());
-            
+
             Button revealedCard = (Button) gameGrid.getChildren().get(row * size + col);
             animate(revealedCard, card.getColor());
             if (game.hasBlueTeamWon()) {
-                System.out.println("Blue team has won!");
+                // System.out.println("Blue team has won!");
                 try {
                     sm.pushScene(new EndGameScene(sm, "bleue"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             } else if (game.hasRedTeamWon()) {
-                System.out.println("Red team has won!");
+                // System.out.println("Red team has won!");
                 try {
                     sm.pushScene(new EndGameScene(sm, "rouge"));
                 } catch (IOException e) {
@@ -433,7 +433,8 @@ public class GameSceneController {
                 }
             } else {
                 boolean isRedCard = card.getColor() == Color.RED;
-                if (card.getColor() == Color.WHITE || (isRedCard && !game.getBooleanCurrentTeam()) || (!isRedCard && game.getBooleanCurrentTeam())) {
+                if (card.getColor() == Color.WHITE || (isRedCard && !game.getBooleanCurrentTeam())
+                        || (!isRedCard && game.getBooleanCurrentTeam())) {
 
                     endTurn();
                 }
@@ -465,7 +466,6 @@ public class GameSceneController {
         }
     }
 
-
     @FXML
     private void endTurn() {
         boolean isDuo = game.getConfig().isDuo();
@@ -473,7 +473,7 @@ public class GameSceneController {
         if (!isDuo) {
             game.switchTeam();
         }
-        
+
         game.setRemainingGuesses(0);
         game.setBonusGuess(1);
         hintField.setText("");
@@ -503,11 +503,11 @@ public class GameSceneController {
         teamTurnLabel.setText(teamName);
         teamTurnLabel.setStyle(String.format(
                 "-fx-font-size: 24px; "
-                + "-fx-font-weight: bold; "
-                + "-fx-background-color: %s; "
-                + "-fx-text-fill: %s; "
-                + "-fx-padding: 5px 15px; "
-                + "-fx-background-radius: 5px;",
+                        + "-fx-font-weight: bold; "
+                        + "-fx-background-color: %s; "
+                        + "-fx-text-fill: %s; "
+                        + "-fx-padding: 5px 15px; "
+                        + "-fx-background-radius: 5px;",
                 bgColor, color));
     }
 
@@ -526,17 +526,17 @@ public class GameSceneController {
             hintInputBox.setVisible(false);
             hintDisplayBox.setVisible(true);
 
-        if (!game.getConfig().isDuo()) {
-            updateHintUI();
-        } else {
-            if(game.getBooleanCurrentTeam()){
-                redTeamSpymaster.getParent().getStyleClass().remove("current-play");
-                redTeamOperators.getParent().getStyleClass().add("current-play");
+            if (!game.getConfig().isDuo()) {
+                updateHintUI();
             } else {
-                blueTeamSpymaster.getParent().getStyleClass().remove("current-play");
-                blueTeamOperators.getParent().getStyleClass().add("current-play");
+                if (game.getBooleanCurrentTeam()) {
+                    redTeamSpymaster.getParent().getStyleClass().remove("current-play");
+                    redTeamOperators.getParent().getStyleClass().add("current-play");
+                } else {
+                    blueTeamSpymaster.getParent().getStyleClass().remove("current-play");
+                    blueTeamOperators.getParent().getStyleClass().add("current-play");
+                }
             }
-        }
             hintTimer.stop();
             guessTimer.start();
         } catch (NumberFormatException e) {
@@ -545,7 +545,7 @@ public class GameSceneController {
     }
 
     private void updateProgress() {
-        System.out.println("Updating progress bars");
+        // System.out.println("Updating progress bars");
         int redFound = (int) game.getGrid().stream()
                 .flatMap(ArrayList::stream)
                 .filter(c -> c.isFound() && c.getColor() == Color.RED)
@@ -623,7 +623,7 @@ public class GameSceneController {
 
         hintTimerLabel.textProperty().bind(hintTimerProperty.asString("Temps restant : %.1f s"));
 
-        System.out.println(game.getConfig().getLimitedTime());
+        // System.out.println(game.getConfig().getLimitedTime());
         if (game.getConfig().getLimitedTime() <= 0) { // Standard mode, guess time is a stopwatch
             this.guessTimer = new AnimationTimer() {
                 private long lastUpdate = 0;
@@ -707,7 +707,7 @@ public class GameSceneController {
         showSaveDialog(() -> {
             try {
                 sm.getModel().setGame(new Game());
-                if(!sm.goToPreviousSceneType(LobbyScene.class)){
+                if (!sm.goToPreviousSceneType(LobbyScene.class)) {
                     sm.pushScene(new LobbyScene(sm));
                 }
             } catch (IOException e) {
@@ -762,7 +762,7 @@ public class GameSceneController {
     private void showSaveDialog(Runnable afterSaveAction) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Sauvegarder la partie :");
-        alert.setHeaderText("Voulez-vous sauvegarder la partie avant avant de quitter ?");
+        alert.setHeaderText("Voulez-vous sauvegarder la partie avant de quitter ?");
         alert.setContentText("Choisissez une des trois options :");
 
         ButtonType buttonTypeSave = new ButtonType("Sauvegarder et quitter");
@@ -796,7 +796,7 @@ public class GameSceneController {
         int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(),
                 "src/main/resources/imgs/qrcode_resized.png");
         if (res == 0) {
-            System.out.println("QR Code generated successfully");
+            // System.out.println("QR Code generated successfully");
             File fileImg = new File("src/main/resources/imgs/qrcode_resized.png");
             Image img = new Image(fileImg.toURI().toString());
             double width = img.getWidth();
@@ -810,7 +810,7 @@ public class GameSceneController {
     }
 
     public void animate(Button button, Color color) {
-        System.out.println("Animating button with color: " + color);
+        // System.out.println("Animating button with color: " + color);
         Paint fillColor;
         fillColor = switch (color) {
             case RED -> Paint.valueOf("#8c0b0b");
@@ -819,7 +819,7 @@ public class GameSceneController {
             default -> Paint.valueOf("#ffffdd");
         };
 
-        System.out.println("Transitioning button color");
+        // System.out.println("Transitioning button color");
 
         Timeline timeline = new Timeline();
         timeline.setCycleCount(1);
@@ -841,16 +841,18 @@ public class GameSceneController {
         final KeyFrame kf2 = new KeyFrame(Duration.millis(500), scaleKey2);
         timeline.getKeyFrames().addAll(kf1, kf2);
 
-        System.out.println("Playing animation");
+        // System.out.println("Playing animation");
         timeline.play();
     }
 
-    private void printGrid() {
-        for (ArrayList<Card> row : game.getGrid()) {
-            for (Card card : row) {
-                System.out.print(card.getName() + "(" + card.getColor() + ")[" + card.getCardUrl() + "] ");
-            }
-            System.out.println();
-        }
-    }
+    // DEBUGGING METHODS
+    // private void printGrid() {
+    // for (ArrayList<Card> row : game.getGrid()) {
+    // for (Card card : row) {
+    // System.out.print(card.getName() + "(" + card.getColor() + ")[" +
+    // card.getCardUrl() + "] ");
+    // }
+    // // System.out.println();
+    // }
+    // }
 }

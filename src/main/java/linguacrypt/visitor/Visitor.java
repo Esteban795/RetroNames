@@ -10,8 +10,12 @@ import linguacrypt.model.Player;
 // les différents composants du jeu si besoin
 public interface Visitor {
     void visit(Game game);
+
     void visit(Player player);
+
     void visit(GameConfiguration gameConfiguration);
+
     void visit(Deck deck);
+
     void visit(DeckManager deckManager);
 }

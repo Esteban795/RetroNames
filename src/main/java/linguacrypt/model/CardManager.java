@@ -18,7 +18,7 @@ public class CardManager {
         this.cards.add(card);
         if (this.cardDeckMap.containsKey(card)) {
             this.cardDeckMap.get(card).add(deck);
-            System.out.println("Card already exists");
+            // System.out.println("Card already exists");
         } else {
             ArrayList<Deck> decks = new ArrayList<>();
             decks.add(deck);
@@ -29,7 +29,7 @@ public class CardManager {
     public void deleteCard(Card card, Deck deck) {
         this.cards.remove(card);
         this.deletedCards.add(card);
-        this.cardDeckMap.get(card).remove(deck);        
+        this.cardDeckMap.get(card).remove(deck);
     }
 
     public void restoreCard(Card card, Deck deck) {
@@ -45,7 +45,7 @@ public class CardManager {
     public ArrayList<Card> getDeletedCards() {
         return this.deletedCards;
     }
-    
+
     public HashMap<Card, ArrayList<Deck>> getCardDeckMap() {
         return this.cardDeckMap;
     }
@@ -63,11 +63,11 @@ public class CardManager {
         return null;
     }
 
-    public String toString(ArrayList<Deck> deck){
-        System.out.println("toString");
+    public String toString(ArrayList<Deck> deck) {
+        // System.out.println("toString");
         String deckNames = "";
         for (Deck d : deck) {
-            System.out.println(d.getName());
+            // System.out.println(d.getName());
             deckNames += d.getName() + ", ";
         }
         if (!deckNames.isEmpty()) {
@@ -76,7 +76,7 @@ public class CardManager {
         return deckNames;
     }
 
-	public Card getCard(String cardName) {
+    public Card getCard(String cardName) {
         for (Card card : this.cards) {
             if (card.getName().equals(cardName)) {
                 return card;
@@ -88,6 +88,6 @@ public class CardManager {
             }
         }
         return null;
-	}
+    }
 
 }

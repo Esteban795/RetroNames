@@ -99,27 +99,6 @@ public class NewLoadSceneController {
         List<Deck> decks = deckManager.getDeckList();
         int randomIndex = (int) (Math.random() * decks.size());
         Deck randomDeck = decks.get(randomIndex);
-    @FXML
-    public void quickPlay() throws IOException {
-        // Create lobby scene but don't show it
-        LobbyScene lobbyScene = new LobbyScene(sm);
-        LobbySceneController lobbyController = lobbyScene.getController();
-
-        // Add default players
-        lobbyController.quickAddPlayers();
-
-        // Select random deck
-        DeckManager deckManager = sm.getModel().getDeckManager();
-        List<Deck> decks = deckManager.getDeckList();
-        int randomIndex = (int) (Math.random() * decks.size());
-        Deck randomDeck = decks.get(randomIndex);
-
-        lobbyController.setSelectedDeck(randomDeck.getName());
-
-        // Setup game with random deck
-        System.out.println("Try to setup game with random deck: " + randomDeck.getName());
-        lobbyController.lobbyDone();
-    }
 
         lobbyController.setSelectedDeck(randomDeck.getName());
 
@@ -133,6 +112,7 @@ public class NewLoadSceneController {
         System.out.println("Load Game button clicked!");
         sm.pushScene(new LoadMenuScene(sm));
     }
+
 
     private void createParticleSystem() {
         for (int i = 0; i < 500; i++) {

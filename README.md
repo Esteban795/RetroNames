@@ -11,7 +11,7 @@ Groupe :
 
 ## Remarque
 
-Etant donné que JavaFX n'est plus dans la librairie standard de Java depuis un certain temps, il est maintenant nécessaire linker les modules JavaFX lors de l'exécution du .jar
+Etant donné que JavaFX n'est plus dans la librairie standard de Java depuis un certain temps, il est maintenant nécessaire de linker les modules JavaFX lors de l'exécution du .jar
 
 ## Lancer le projet 
 En étant à la racine du projet,
@@ -24,9 +24,6 @@ $ ./gradlew run
 $ ./gradlew jar
 ```
 Le jar se trouve alors dans build/libs/
-
-\
-Ou bien d'une autre manière.
 
 ## Exécuter le jar 
 ```bash

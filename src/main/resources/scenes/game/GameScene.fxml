@@ -63,6 +63,8 @@
             </rowConstraints>
          </GridPane>
          <Label fx:id="teamTurnLabel" alignment="CENTER" />
+         <Label fx:id="hintTimerLabel" alignment="CENTER" />
+         <Label fx:id="guessTimerLabel" alignment="CENTER" />
       </VBox>
    </center>
 
@@ -156,6 +158,7 @@
                         </image>
                      </ImageView>
                   </graphic></Button>
+                  <Button fx:id="hintTimerButton" mnemonicParsing="false" onAction="#startHintCountdown" text="VITE VITE" />
                <Region prefHeight="24.0" prefWidth="120.0" />
                <Button fx:id="qrCodeButton" maxHeight="75.0" maxWidth="75.0" minHeight="75.0" minWidth="75.0" mnemonicParsing="false" onAction="#openQRCode" prefHeight="75.0" prefWidth="75.0" />
             </children>
@@ -171,6 +174,7 @@
             <children>
                <Label fx:id="hintLabel" style="-fx-font-size: 16px;" />
                <Label fx:id="remainingGuessesLabel" style="-fx-font-size: 16px;" />
+               <Button fx:id="endTurnButton" disable="true" mnemonicParsing="false" onAction="#endTurn" text="Terminer tour" />
             </children>
          </HBox>
          <BorderPane.margin>

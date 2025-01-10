@@ -45,11 +45,11 @@ public class GameStatistics {
         }
     }
 
-    public void updateAvgTimeToAnswer(boolean blueTeam, double time) {
-        if (blueTeam) {
-            blueTeamAvgTimeToAnswer = (blueTeamAvgTimeToAnswer * nbRounds + time) / (nbRounds + 1);
-        } else {
+    public void updateAvgTimeToAnswer(boolean redTeam, double time) {
+        if (redTeam) {
             redTeamAvgTimeToAnswer = (redTeamAvgTimeToAnswer * nbRounds + time) / (nbRounds + 1);
+        } else {
+            blueTeamAvgTimeToAnswer = (blueTeamAvgTimeToAnswer * nbRounds + time) / (nbRounds + 1);
         }
     }
 

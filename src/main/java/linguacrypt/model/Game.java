@@ -138,6 +138,10 @@ public class Game implements Visitable {
     public void switchTeam() {
         currentTeam = !currentTeam;
     }
+ 
+    public boolean getBooleanCurrentTeam() {
+        return currentTeam;
+    }
 
     // Getters and Setters
     public ArrayList<ArrayList<Card>> getGrid() {

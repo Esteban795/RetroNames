@@ -34,17 +34,17 @@
 }
 
 .delete-deck-button, .delete-card-button {
-    -fx-background-color: #c0c0c0;
+    -fx-background-color: #c41e1e;
     -fx-border-color: #ffffff #808080 #808080 #ffffff;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
 }
 
 .delete-deck-button:hover, .delete-card-button:hover {
-    -fx-background-color: #d4d4d4;
+    -fx-background-color: #c41e1e;
 }
 
 .delete-deck-button:pressed, .delete-card-button:pressed {
-    -fx-background-color: #c0c0c0;
+    -fx-background-color: #9e0e0e;
     -fx-border-color: #808080 #ffffff #ffffff #808080;
 }
 

@@ -2,6 +2,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
 
 
 <VBox xmlns:fx="http://javafx.com/fxml"
@@ -89,13 +91,36 @@
                 </VBox>
             </items>
         </SplitPane>
-        <VBox>
-            <!-- Bottom content -->
-            <HBox alignment="CENTER_RIGHT" styleClass="panel">
-                <Button text="Retour"
-                    onAction="#goBack"
-                    styleClass="menu-button" />
-            </HBox>
-        </VBox>
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="panel">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10" />
+            </padding>
+
+            <Button alignment="CENTER" cancelButton="true" graphicTextGap="25.0"
+                mnemonicParsing="false" onAction="#goBack" prefHeight="40.0"
+                style="-fx-font-size: 20;" text="Retour au menu"
+                styleClass="menu-button">
+                <graphic>
+                    <ImageView fitHeight="48.0" fitWidth="48.0"
+                        pickOnBounds="true"
+                        preserveRatio="true">
+                        <Image url="@../../imgs/icons/msg_error-0.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+        </HBox>
+
+        <fx:define>
+            <Dialog fx:id="newDeckDialog">
+                <dialogPane>
+                    <DialogPane>
+                        <buttonTypes>
+                            <ButtonType fx:constant="OK" />
+                            <ButtonType fx:constant="CANCEL" />
+                        </buttonTypes>
+                    </DialogPane>
+                </dialogPane>
+            </Dialog>
+        </fx:define>
     </children>
 </VBox>

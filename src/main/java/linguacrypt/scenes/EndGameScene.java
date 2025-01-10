@@ -12,17 +12,17 @@ public class EndGameScene extends ManagedScene {
 
     private EndGameSceneController controller;
 
-    public EndGameScene(SceneManager sm) throws IOException {
+    public EndGameScene(SceneManager sm,String winningTeam) throws IOException {
         super(sm);
         super.setFXMLPath("/scenes/end/EndGameScene.fxml");
-        controller = new EndGameSceneController(sm);
+        controller = new EndGameSceneController(sm,winningTeam);
         FXMLLoader loader = new FXMLLoader();
         URL fxmlURL = getClass().getResource(super.getFXMLPath());
         loader.setLocation(fxmlURL);
         loader.setController(controller);
         try {
             Parent root = loader.load();
-            super.setScene(new Scene(root, 1280, 800));
+            super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
         } catch (Exception e) {
             System.out.println("Error loading EndGameScene.fxml");
             sm.getPrimaryStage().close();

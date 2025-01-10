@@ -1,12 +1,14 @@
 package linguacrypt.model;
 
-import linguacrypt.visitor.Visitable;
-import linguacrypt.visitor.Visitor;
+import java.util.ArrayList;
+import java.util.Collections;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import java.util.Collections;
+
+import linguacrypt.visitor.Visitable;
+import linguacrypt.visitor.Visitor;
 
 /**
  * Represents a deck of cards in the game.
@@ -37,6 +39,7 @@ public class Deck implements Visitable {
         this.cardList = cardList != null ? cardList : new ArrayList<>();
     }
 
+    @JsonIgnore
     // Getters and Setters
     public String getName() {
         return deckName;
@@ -110,5 +113,13 @@ public class Deck implements Visitable {
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    public ArrayList<Card> deepCopyCards() {
+        ArrayList<Card> copy = new ArrayList<>();
+        for (Card card : cardList) {
+            copy.add(new Card(card.getName(),card.getCardUrl()));
+        }
+        return copy;
     }
 }

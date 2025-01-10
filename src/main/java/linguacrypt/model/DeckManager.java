@@ -1,6 +1,8 @@
 package linguacrypt.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -73,4 +75,10 @@ public class DeckManager implements Visitable {
         this.accept(visitor); // This will save the deckManager to a JSON file
     }
 
+
+    public ArrayList<Card> shuffleDeck(Deck deck) {
+        ArrayList<Card> cards = new ArrayList<>(deck.getCardList());
+        Collections.shuffle(cards);
+        return cards;
+    }
 }

@@ -67,13 +67,12 @@ public class DeserializationVisitor implements Visitor {
         try {
             System.out.println("On charge : " + filePath);
             game = objectMapper.readValue(new File(filePath), Game.class);
-            if(game == null || game.getGrid().isEmpty()) {
-                if(game == null || game.getGrid() == null || game.getGrid().isEmpty()) {
+            if(game == null || game.getGrid() == null || game.getGrid().isEmpty()) {
                     String errorMsg = "Corrupted save file: " + filePath + " - Missing or invalid grid data";
                     log(errorMsg);
                     throw new CorruptedSaveException(errorMsg);
-                }
             }
+            log("Loaded game successfully from: " + filePath);
             return game;
             } catch (IOException e) {
                 throw new CorruptedSaveException("Failed to read save file: " + e.getMessage());

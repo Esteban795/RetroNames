@@ -75,6 +75,11 @@ public class GameConfiguration implements Visitable {
         this.teamManager = teamManager;
     }
 
+    public void resetConfig(){
+        this.teamManager.clearTeams();
+
+    }
+
     // Getters and Setters
     public int getGridSize() {
         return gridSize;

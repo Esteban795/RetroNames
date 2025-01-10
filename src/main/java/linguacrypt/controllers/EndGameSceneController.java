@@ -23,11 +23,11 @@ public class EndGameSceneController {
     @FXML
     private Label labelVictor;
 
-    @FXML
-    private GridPane keyGrid;
+    // @FXML
+    // private GridPane keyGrid;
 
-    @FXML
-    private GridPane expectedMapGrid;
+    // @FXML
+    // private GridPane expectedMapGrid;
 
     @FXML
     private Label blueTeamStatsLabel;
@@ -57,6 +57,8 @@ public class EndGameSceneController {
         int size = sm.getModel().getGame().getGrid().size();
         ArrayList<ArrayList<Card>> expectedMap = sm.getModel().getGame().getGrid();
 
+        GridPane expectedMapGrid = new GridPane();
+        GridPane keyGrid = new GridPane();
         int cellSize = 75 - 5 * (size - 3);
         expectedMapGrid.setStyle(
                 "-fx-max-width:" + (cellSize) * (size + 1) + "; -fx-max-height:" + (cellSize) * (size + 1) + ";");
@@ -82,6 +84,11 @@ public class EndGameSceneController {
         expectedMapBox.setAlignment(Pos.BASELINE_CENTER);
         keyBox.setAlignment(Pos.BASELINE_CENTER);
 
+        expectedMapGrid.setAlignment(Pos.CENTER);
+        keyGrid.setAlignment(Pos.CENTER);
+
+        expectedMapBox.getChildren().add(expectedMapGrid);
+        keyBox.getChildren().add(keyGrid);
     }
 
     public void displayStats() {

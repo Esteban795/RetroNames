@@ -140,6 +140,7 @@ public class GameSceneController {
             setupGameGrid();
             setupTimers();
             setupHintControls();
+            updateHintUI();
             System.out.println("Game scene initialized");
             initializeProgress();
             updatePlayerLabels();
@@ -311,6 +312,23 @@ public class GameSceneController {
                 final int col = j;
                 cardButton.setOnAction(e -> handleCardClick(row, col));
                 gameGrid.add(cardButton, j, i);
+            }
+        }
+    }
+
+    private void updateHintUI() {
+        if (game.getCurrentHint() != null && !game.getCurrentHint().isEmpty()) {
+            hintLabel.setText(game.getCurrentHint());
+            if (game.getRemainingGuesses() > 0) {
+                hintLabel.setText("Indice : " + game.getCurrentHint());
+                remainingGuessesLabel.setText("Essais restants : " + game.getRemainingGuesses());
+
+                hintInputBox.setVisible(false);
+                hintDisplayBox.setVisible(true);
+            } else {
+                hintInputBox.setVisible(true);
+                hintDisplayBox.setVisible(false);
+                endTurnButton.setDisable(true);
             }
         }
     }

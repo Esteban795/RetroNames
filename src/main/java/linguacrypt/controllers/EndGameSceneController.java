@@ -96,20 +96,23 @@ public class EndGameSceneController {
         int[] blueTeamStats = sm.getModel().getGame().getStats().getBlueTeamStats();
         int[] redTeamStats = sm.getModel().getGame().getStats().getRedTeamStats();
 
+        String blueTeamAvgTimeAnswer = String.format("%.2f", sm.getModel().getGame().getStats().getBlueTeamAvgTimeToAnswer());
         blueTeamStatsLabel.setText("Statistiques de l'équipe bleue :\n"
                 + "   - Carte bleues découvertes : " + blueTeamStats[0] + "\n"
                 + "   - Carte rouges découvertes : " + blueTeamStats[1] + "\n"
                 + "   - Carte noires découvertes : " + blueTeamStats[2] + "\n"
                 + "   - Carte blanches découvertes : " + blueTeamStats[3] + "\n"
-                + "   - Temps moyen pour répondre : " + sm.getModel().getGame().getStats().getBlueTeamAvgTimeToAnswer()
+                + "   - Temps moyen pour répondre : " + blueTeamAvgTimeAnswer
                 + "s");
+
+        String redTeamAvgTimeAnswer = String.format("%.2f", sm.getModel().getGame().getStats().getRedTeamAvgTimeToAnswer());
 
         redTeamStatsLabel.setText("Statistiques de l'équipe rouge :\n"
                 + "   - Carte bleues découvertes : " + redTeamStats[0] + "\n"
                 + "   - Carte rouges découvertes : " + redTeamStats[1] + "\n"
                 + "   - Carte noires découvertes : " + redTeamStats[2] + "\n"
                 + "   - Carte blanches découvertes : " + redTeamStats[3] + "\n"
-                + "   - Temps moyen pour répondre : " + sm.getModel().getGame().getStats().getRedTeamAvgTimeToAnswer()
+                + "   - Temps moyen pour répondre : " + redTeamAvgTimeAnswer
                 + "s");
     }
 

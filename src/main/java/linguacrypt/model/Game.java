@@ -16,7 +16,7 @@ import linguacrypt.visitor.Visitor;
  * jeu, gérant : - La grille de jeu (matrice de cartes) - La configuration de la
  * partie (GameConfiguration)
  */
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Game implements Visitable {
 
     @JsonProperty("grid")
@@ -37,6 +37,18 @@ public class Game implements Visitable {
     @JsonProperty("hasStarted")
     private boolean hasStarted;
 
+    @JsonProperty("gamemode")
+    private boolean gamemode; // true = duo, false = multi
+
+    @JsonProperty("currentHint")
+    private String currentHint;
+
+    @JsonProperty("remainingGuesses")
+    private int remainingGuesses;
+
+    @JsonProperty("bonusGuess")
+    private int bonusGuess;
+
     /**
      * Constructeur par défaut. Initialise une nouvelle partie avec : - Une
      * grille vide - Une configuration par défaut
@@ -49,6 +61,10 @@ public class Game implements Visitable {
         this.nbTurn = 0;
         this.currentTeam = true;
         this.hasStarted = false;
+        this.gamemode = false;
+        this.currentHint = "";
+        this.remainingGuesses = 0;
+        this.bonusGuess = 1;
     }
 
     /**
@@ -65,34 +81,21 @@ public class Game implements Visitable {
             @JsonProperty("nbTurn") int nbTurn,
             @JsonProperty("currentTeam") boolean currentTeam,
             @JsonProperty("stats") GameStatistics stats,
-            @JsonProperty("hasStarted") boolean hasStarted) {
+            @JsonProperty("hasStarted") boolean hasStarted,
+            @JsonProperty("gamemode") boolean gamemode,
+            @JsonProperty("currentHint") String currentHint,
+            @JsonProperty("remainingGuesses") int remainingGuesses,
+            @JsonProperty("bonusGuess") int bonusGuess){
         this.grid = grid;
         this.config = config;
         this.nbTurn = nbTurn;
         this.currentTeam = currentTeam;
         this.stats = stats;
         this.hasStarted = hasStarted;
-    }
-
-    /**
-     * Initialise une nouvelle grille vide avec la taille définie dans la
-     * configuration. La grille est une matrice carrée (ex: 5x5).
-     */
-    public void initGrid() {
-        int size = config.getGridSize();
-        grid = new ArrayList<>();
-
-        for (int i = 0; i < size; i++) {
-            ArrayList<Card> row = new ArrayList<>();
-            for (int j = 0; j < size; j++) {
-                row.add(null);
-            }
-            grid.add(row);
-        }
-        if (this.config.getCurrentDeck() != null) {
-            // System.out.println("On charge la grille");
-            loadGrid();
-        }
+        this.gamemode = gamemode;
+        this.currentHint = currentHint;
+        this.remainingGuesses = remainingGuesses;
+        this.bonusGuess = bonusGuess;
     }
 
     private void fillRange(List<Card> cards, int start, int end, Color color) {
@@ -101,12 +104,15 @@ public class Game implements Visitable {
         }
     }
 
-    /**
+/**
+     * 
+     * Initialise une nouvelle grille vide avec la taille définie dans la
+     * configuration. La grille est une matrice carrée (ex: 5x5).
      * Charge les cartes du deck dans la grille. Les cartes sont placées
      * séquentiellement dans la grille, de gauche à droite et de haut en bas.
-     * Cette méthode est appelée après initGrid().
+     * Les cartes sont mélangées avant d'être placées dans la grille.
      */
-    public void loadGrid() {
+    public void initGrid() {
         Deck deck = config.getCurrentDeck();
         if (grid == null || deck == null) {
             System.err.println("Grid or deck is null");
@@ -135,43 +141,13 @@ public class Game implements Visitable {
         hasStarted = true;
     }
 
+
     public void switchTeam() {
         currentTeam = !currentTeam;
     }
-
-    // Getters and Setters
-    public ArrayList<ArrayList<Card>> getGrid() {
-        return grid;
-    }
-
-    public GameConfiguration getConfig() {
-        return config;
-    }
-
-    @JsonIgnore
-    public Team getCurrentTeam() {
-        return (currentTeam ? config.getTeamManager().getRedTeam() : config.getTeamManager().getBlueTeam());
-    }
-
-    public Team getOppositeTeam() {
-        return (currentTeam ? config.getTeamManager().getBlueTeam() : config.getTeamManager().getRedTeam());
-    }
-
-    @JsonIgnore
-    public int getBlueTeamFoundCards() {
-        return config.getTeamManager().getBlueTeam().getNbFoundCards();
-    }
-
-    public int getRedTeamFoundCards() {
-        return config.getTeamManager().getRedTeam().getNbFoundCards();
-    }
-
-    public int getNbTurn() {
-        return nbTurn;
-    }
-
-    public GameStatistics getStats() {
-        return stats;
+ 
+    public boolean getBooleanCurrentTeam() {
+        return currentTeam;
     }
 
     public void setGrid(List<Card> key) {
@@ -222,7 +198,77 @@ public class Game implements Visitable {
         visitor.visit(this);
     }
 
-    public void resetGame() {
-        
+    // Getters and Setters
+    public ArrayList<ArrayList<Card>> getGrid() {
+        return grid;
+    }
+
+    public GameConfiguration getConfig() {
+        return config;
+    }
+
+    @JsonIgnore
+    public Team getCurrentTeam() {
+        return (currentTeam ? config.getTeamManager().getRedTeam() : config.getTeamManager().getBlueTeam());
+    }
+
+    public Team getOppositeTeam() {
+        return (currentTeam ? config.getTeamManager().getBlueTeam() : config.getTeamManager().getRedTeam());
+    }
+
+    @JsonIgnore
+    public int getBlueTeamFoundCards() {
+        return config.getTeamManager().getBlueTeam().getNbFoundCards();
+    }
+
+    public int getRedTeamFoundCards() {
+        return config.getTeamManager().getRedTeam().getNbFoundCards();
+    }
+
+    public int getNbTurn() {
+        return nbTurn;
+    }
+
+    public GameStatistics getStats() {
+        return stats;
+    }
+
+    public boolean hasStarted() {
+        return hasStarted;
+    }
+
+    @JsonIgnore
+    public boolean isDuo() {
+        return gamemode;
+    }
+
+    public String getCurrentHint() {
+        return currentHint;
+    }
+
+    public int getRemainingGuesses() {
+        return remainingGuesses;
+    }
+
+    public int getBonusGuess() {
+        return bonusGuess;
+    }
+
+    public int setRemainingGuesses(int remainingGuesses) {
+        this.remainingGuesses = remainingGuesses;
+        return this.remainingGuesses;
+    }
+
+    public int setBonusGuess(int bonusGuess) {
+        this.bonusGuess = bonusGuess;
+        return this.bonusGuess;
+    }
+
+    public void setCurrentHint(String currentHint) {
+        this.currentHint = currentHint;
+    }
+
+    public void setHasStarted(boolean hasStarted) {
+        this.hasStarted = hasStarted;
     }
 }

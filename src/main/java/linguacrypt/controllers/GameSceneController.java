@@ -5,7 +5,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import javafx.animation.AnimationTimer;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -15,22 +22,27 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 import linguacrypt.QRCode.QRCodeGenerator;
 import linguacrypt.exception.CorruptedSaveException;
 import linguacrypt.model.Card;
@@ -51,9 +63,9 @@ public class GameSceneController {
     private final SceneManager sm;
     private Game game;
     private final int size;
-    private String currentHint = "";
-    private int remainingGuesses = 0;
-    private int bonusGuess = 1;
+
+    @FXML
+    private BorderPane mainBorderPane;
 
     // FXML attributes for the game grid
     @FXML
@@ -61,9 +73,12 @@ public class GameSceneController {
     @FXML
     private Label teamTurnLabel;
     @FXML
-    private ProgressBar redTeamProgress;
+    private Pane redTeamPanel;
     @FXML
-    private ProgressBar blueTeamProgress;
+    private Pane blueTeamPanel;
+
+    private final DoubleProperty redTeamProgress = new SimpleDoubleProperty(0);
+    private final DoubleProperty blueTeamProgress = new SimpleDoubleProperty(0);
     @FXML
     private Label redTeamSpymaster;
     @FXML
@@ -89,8 +104,23 @@ public class GameSceneController {
 
     @FXML
     private Button qrCodeButton;
+    @FXML
+    private Button hintTimerButton;
+    @FXML
+    private Button endTurnButton;
 
-    public GameSceneController(SceneManager sm) {
+    // Timer attributes
+    @FXML
+    private Label hintTimerLabel;
+    private AnimationTimer hintTimer;
+    SimpleDoubleProperty hintTimerProperty = new SimpleDoubleProperty(0);
+    @FXML
+    private Label guessTimerLabel;
+    private AnimationTimer guessTimer;
+    SimpleDoubleProperty guessTimerProperty = new SimpleDoubleProperty(0);
+
+    public GameSceneController(
+            SceneManager sm) {
         this.sm = sm;
         this.game = sm.getModel().getGame();
 
@@ -108,9 +138,12 @@ public class GameSceneController {
         // Initialize game scene elements
         try {
             setupGameGrid();
+            setupTimers();
             setupHintControls();
+            System.out.println("Game scene initialized");
             initializeProgress();
             updatePlayerLabels();
+            redTeamSpymaster.getParent().getStyleClass().add("current-play");
             // Permet de gérer l'appui sur la touche entrée pour valider l'indice
             hintField.setOnKeyPressed(event -> {
                 if (event.getCode() == KeyCode.ENTER) {
@@ -136,17 +169,19 @@ public class GameSceneController {
      * Initialize the grid with the cards of the game's deck.
      */
     private void setupGameGrid() {
-        game.loadGrid();
+        if (!game.hasStarted()) {
+            game.initGrid();
+        }
         System.out.println("Game grid loaded with cards");
 
         // Testing purposes
-        // for (int i = 0; i < size; i++){
-        //     for (int j = 0; j < size; j++){
-        //         if ((i + j) % 4 == 0 ) {
-        //             game.getGrid().get(i).get(j).setCardUrl("./src/main/resources/imgs/test.jpg");
-        //         }
-        //     }
-        // }       
+        for (int i = 0; i < size; i++){
+            for (int j = 0; j < size; j++){
+                if ((i + j) % 4 == 0 ) {
+                    game.getGrid().get(i).get(j).setCardUrl("./src/main/resources/imgs/icons/check-0.png");
+                }
+            }
+        }       
          
         updateGrid();
         updateTurnLabel();
@@ -167,12 +202,6 @@ public class GameSceneController {
         hintDisplayBox.setVisible(false);
     }
 
-    private void initializeProgress() {
-        if (redTeamProgress != null && blueTeamProgress != null) {
-            updateProgress();
-        }
-    }
-
     private void updatePlayerLabels() {
         Team redTeam = game.getConfig().getTeamManager().getRedTeam();
         Team blueTeam = game.getConfig().getTeamManager().getBlueTeam();
@@ -187,7 +216,7 @@ public class GameSceneController {
                 redTeamSpymaster.setText(p.getName());
             } else {
                 Label operatorLabel = new Label(p.getName());
-                operatorLabel.setStyle("-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5); -fx-padding: 5;");
+                operatorLabel.setStyle("-fx-text-fill: black; -fx-padding: 5;");
                 redTeamOperators.getChildren().add(operatorLabel);
             }
         }
@@ -198,7 +227,7 @@ public class GameSceneController {
                 blueTeamSpymaster.setText(p.getName());
             } else {
                 Label operatorLabel = new Label(p.getName());
-                operatorLabel.setStyle("-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5); -fx-padding: 5;");
+                operatorLabel.setStyle("-fx-text-fill: black; -fx-padding: 5;");
                 blueTeamOperators.getChildren().add(operatorLabel);
             }
         }
@@ -222,6 +251,30 @@ public class GameSceneController {
         }
     }
 
+    private void initializeProgress() {
+        if (redTeamPanel != null && blueTeamPanel != null) {
+            Rectangle rectangle = new Rectangle();
+            rectangle.setFill(javafx.scene.paint.Color.valueOf("#0A246A"));
+            rectangle.getStyleClass().add("progress-bar");
+
+            rectangle.widthProperty().bind(blueTeamPanel.widthProperty()); // Full width
+            rectangle.setStyle("-fx-padding: 10; -fx-margin: 5;");
+            rectangle.heightProperty().bind(blueTeamPanel.heightProperty().multiply(blueTeamProgress));
+            rectangle.layoutYProperty().bind(blueTeamPanel.heightProperty().subtract(rectangle.heightProperty()));
+            blueTeamPanel.getChildren().add(rectangle);
+
+            Rectangle rectangle2 = new Rectangle();
+            rectangle2.setFill(javafx.scene.paint.Color.valueOf("#8c0b0b"));
+            rectangle2.getStyleClass().add("progress-bar");
+
+            rectangle2.widthProperty().bind(redTeamPanel.widthProperty()); // Full width
+            rectangle2.heightProperty().bind(redTeamPanel.heightProperty().multiply(redTeamProgress));
+            rectangle2.layoutYProperty().bind(redTeamPanel.heightProperty().subtract(rectangle2.heightProperty()));
+            redTeamPanel.getChildren().add(rectangle2);
+            updateProgress();
+        }
+    }
+
     // END INITIALIZATION METHODS
     /*
      * Update the grid with the current state of the game.
@@ -233,6 +286,8 @@ public class GameSceneController {
         // Set fixed column constraints to have a regular grid
         gameGrid.getRowConstraints().clear();
         gameGrid.getColumnConstraints().clear();
+        gameGrid.setVgap(10);
+        gameGrid.setHgap(10);
         for (int i = 0; i < size; i++) {
             ColumnConstraints column = new ColumnConstraints();
             column.setPrefWidth(100); // Fixed width for each column
@@ -244,7 +299,8 @@ public class GameSceneController {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 Button cardButton = new Button();
-                cardButton.setPrefSize(100, 100);
+                cardButton.getStyleClass().add("card-button");
+                cardButton.setPrefSize(150, 100);
                 cardButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
                 Card card = game.getGrid().get(i).get(j);
@@ -266,18 +322,10 @@ public class GameSceneController {
                 // Set button style based on card state
                 if (card.isFound()) {
                     switch (card.getColor()) {
-                        case RED:
-                            cardButton.setStyle("-fx-background-color: #ffcccc; -fx-text-fill: #cc0000;");
-                            break;
-                        case BLUE:
-                            cardButton.setStyle("-fx-background-color: #ccccff; -fx-text-fill: #0000cc;");
-                            break;
-                        case WHITE:
-                            cardButton.setStyle("-fx-background-color: #e6e6e6; -fx-text-fill: #666666;");
-                            break;
-                        case BLACK:
-                            cardButton.setStyle("-fx-background-color: #000000; -fx-text-fill: #ffffff;");
-                            break;
+                        case RED -> cardButton.setStyle("-fx-background-color: #ffcccc; -fx-text-fill: #cc0000;");
+                        case BLUE -> cardButton.setStyle("-fx-background-color: #ccccff; -fx-text-fill: #0000cc;");
+                        case WHITE -> cardButton.setStyle("-fx-background-color: #e6e6e6; -fx-text-fill: #666666;");
+                        case BLACK -> cardButton.setStyle("-fx-background-color: #000000; -fx-text-fill: #ffffff;");
                     }
                 }
 
@@ -290,13 +338,22 @@ public class GameSceneController {
         }
     }
 
+    @SuppressWarnings("unused")
     private void switchTeam() {
         game.switchTeam();
-        bonusGuess = 1;
+        game.setBonusGuess(1);
         hintLabel.setText("");
         remainingGuessesLabel.setText("");
         hintInputBox.setVisible(true);
         hintDisplayBox.setVisible(false);
+
+        if (redTeamOperators.getParent().getStyleClass().contains("current-play")) {
+            redTeamOperators.getParent().getStyleClass().remove("current-play");
+            blueTeamSpymaster.getParent().getStyleClass().add("current-play");
+        } else {
+            blueTeamOperators.getParent().getStyleClass().remove("current-play");
+            redTeamSpymaster.getParent().getStyleClass().add("current-play");
+        }
     }
 
     /*
@@ -304,9 +361,15 @@ public class GameSceneController {
      * Reveals the card and updates the game state.
      */
     private void handleCardClick(int row, int col) {
-        if (remainingGuesses > 0 && !game.getGrid().get(row).get(col).isFound()) {
+        if (game.getRemainingGuesses() > 0 && !game.getGrid().get(row).get(col).isFound()) {
+            if (endTurnButton.isDisabled()) {
+                endTurnButton.setDisable(false);
+            }
+
             Card card = game.getGrid().get(row).get(col);
             game.revealCard(card);
+            Button revealedCard = (Button) gameGrid.getChildren().get(row * size + col);
+            animate(revealedCard, card.getColor());
             if (game.hasBlueTeamWon()) {
                 System.out.println("Blue team has won!");
                 try {
@@ -322,8 +385,8 @@ public class GameSceneController {
                     e.printStackTrace();
                 }
             } else {
-                remainingGuesses--;
-                remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
+                game.setRemainingGuesses(game.getRemainingGuesses() - 1);
+                remainingGuessesLabel.setText("Essais restants : " + game.getRemainingGuesses());
                 if (card.getColor() == Color.BLACK) { // game is lost
                     try {
                         sm.pushScene(new EndGameScene(sm, game.getOppositeTeam().getName()));
@@ -332,21 +395,45 @@ public class GameSceneController {
                     }
                 }
 
-                if (remainingGuesses == 0) {
-                    if (bonusGuess > 0) {
-                        remainingGuesses = bonusGuess;
-                        bonusGuess = 0;
-                        remainingGuessesLabel.setText("Essais Bonus : " + remainingGuesses);
+                if (game.getRemainingGuesses() == 0) {
+                    if (game.getBonusGuess() > 0) {
+                        game.setRemainingGuesses(game.getBonusGuess());
+                        game.setBonusGuess(0);
+                        remainingGuessesLabel.setText("Essais Bonus : " + game.getRemainingGuesses());
                     } else {
-                        switchTeam();
+                        endTurn();
                     }
                 }
 
-                updateGrid();
+                // updateGrid();
                 updateTurnLabel();
                 updateProgress();
             }
 
+        }
+    }
+
+    @FXML
+    private void endTurn() {
+
+        game.switchTeam();
+        game.setRemainingGuesses(0);
+        game.setBonusGuess(1);
+        hintField.setText("");
+        remainingGuessesLabel.setText("");
+        hintInputBox.setVisible(true);
+        hintDisplayBox.setVisible(false);
+        endTurnButton.setDisable(true);
+        updateTurnLabel();
+        guessTimer.stop();
+        hintTimerButton.setVisible(true);
+
+        if (redTeamOperators.getParent().getStyleClass().contains("current-play")) {
+            redTeamOperators.getParent().getStyleClass().remove("current-play");
+            blueTeamSpymaster.getParent().getStyleClass().add("current-play");
+        } else {
+            blueTeamOperators.getParent().getStyleClass().remove("current-play");
+            redTeamSpymaster.getParent().getStyleClass().add("current-play");
         }
     }
 
@@ -357,6 +444,12 @@ public class GameSceneController {
         String color = isRedTeam ? "#cc0000" : "#0000cc";
         String bgColor = isRedTeam ? "#ffcccc" : "#ccccff";
 
+        if (isRedTeam) {
+            mainBorderPane
+                    .setStyle("-fx-background-color: radial-gradient(center 20% 50%, radius 120%, #ff9696, #8c0b0b);");
+        } else {
+            mainBorderPane.setStyle("radial-gradient(center 50% 20%, radius 120%, #A8CAEE, #0A246A)");
+        }
         teamTurnLabel.setText(teamName);
         teamTurnLabel.setStyle(String.format(
                 "-fx-font-size: 24px; "
@@ -374,20 +467,31 @@ public class GameSceneController {
             return;
         }
 
-        currentHint = hintField.getText();
+        game.setCurrentHint(hintField.getText());
         try {
-            remainingGuesses = Integer.parseInt(numberChoice.getText());
-            hintLabel.setText("Indice : " + currentHint);
-            remainingGuessesLabel.setText("Essais restants : " + remainingGuesses);
+            game.setRemainingGuesses(Integer.parseInt(numberChoice.getText()));
+            hintLabel.setText("Indice : " + game.getCurrentHint());
+            remainingGuessesLabel.setText("Essais restants : " + game.getRemainingGuesses());
 
             hintInputBox.setVisible(false);
             hintDisplayBox.setVisible(true);
+
+            if (redTeamSpymaster.getParent().getStyleClass().contains("current-play")) {
+                redTeamSpymaster.getParent().getStyleClass().remove("current-play");
+                redTeamOperators.getParent().getStyleClass().add("current-play");
+            } else {
+                blueTeamSpymaster.getParent().getStyleClass().remove("current-play");
+                blueTeamOperators.getParent().getStyleClass().add("current-play");
+            }
+            hintTimer.stop();
+            guessTimer.start();
         } catch (NumberFormatException e) {
             System.err.println("Invalid number choice");
         }
     }
 
     private void updateProgress() {
+        System.out.println("Updating progress bars");
         int redFound = (int) game.getGrid().stream()
                 .flatMap(ArrayList::stream)
                 .filter(c -> c.isFound() && c.getColor() == Color.RED)
@@ -408,8 +512,18 @@ public class GameSceneController {
                 .filter(c -> c.getColor() == Color.BLUE)
                 .count();
 
-        redTeamProgress.setProgress((double) redFound / redTotal);
-        blueTeamProgress.setProgress((double) blueFound / blueTotal);
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(redTeamProgress, redTeamProgress.getValue()),
+                        new KeyValue(blueTeamProgress, blueTeamProgress.getValue())), // Start at 0
+                new KeyFrame(Duration.seconds(0.5),
+                        new KeyValue(redTeamProgress, (double) redFound / redTotal, Interpolator.EASE_OUT),
+                        new KeyValue(blueTeamProgress, (double) blueFound / blueTotal, Interpolator.EASE_OUT)) // Fill
+                                                                                                               // to
+                                                                                                               // 100%
+                                                                                                               // in 3
+                                                                                                               // seconds
+        );
+        timeline.play();
     }
 
     @FXML
@@ -417,6 +531,121 @@ public class GameSceneController {
         showSaveDialog(() -> {
             sm.popAllButFirst();
         });
+    }
+
+    private void setupTimers() {
+        hintTimer = new AnimationTimer() {
+            private long lastUpdate = 0;
+            private long maxHintTime = 10;
+
+            @Override
+            public void handle(long now) {
+                if (lastUpdate == 0) {
+                    lastUpdate = now;
+                }
+                hintTimerProperty.set(maxHintTime - (now - lastUpdate) / 1000000000.0);
+                if (hintTimerProperty.doubleValue() < 0) {
+                    lastUpdate = 0;
+                    numberChoice.setText("10");
+                    hintField.setText("");
+                    submitHint();
+                    return;
+                }
+            }
+
+            @Override
+            public void stop() {
+                super.stop();
+                hintTimerProperty.set(10);
+            }
+
+            @Override
+            public void start() {
+                super.start();
+                hintTimerProperty.set(10);
+                lastUpdate = 0;
+            }
+        };
+
+        hintTimerLabel.textProperty().bind(hintTimerProperty.asString("Temps restant : %.1f s"));
+
+        System.out.println(game.getConfig().getLimitedTime());
+        if (game.getConfig().getLimitedTime() <= 0) { // Standard mode, guess time is a stopwatch
+            this.guessTimer = new AnimationTimer() {
+                private long lastUpdate = 0;
+
+                @Override
+                public void handle(long now) {
+                    if (lastUpdate == 0) {
+                        lastUpdate = now;
+                    }
+                    guessTimerProperty.set((now - lastUpdate) / 1000000000.0);
+                }
+
+                @Override
+                public void stop() {
+                    super.stop();
+                    Game game = sm.getModel().getGame();
+                    game.getStats().updateAvgTimeToAnswer(game.getBooleanCurrentTeam(), guessTimerProperty.get());
+                    guessTimerProperty.set(0);
+                    lastUpdate = 0;
+                }
+
+                @Override
+                public void start() {
+                    super.start();
+                    guessTimerProperty.set(0);
+                    lastUpdate = 0;
+                }
+            };
+            guessTimerLabel.textProperty().bind(guessTimerProperty.asString("Temps écoulé : %.1f s"));
+
+        } else { // Blitz mode, guess time is a countdown too
+            long maxGuessTime = game.getConfig().getLimitedTime();
+            this.guessTimer = new AnimationTimer() {
+                private long lastUpdate = 0;
+
+                @Override
+                public void handle(long now) {
+                    if (lastUpdate == 0) {
+                        lastUpdate = now;
+                    }
+                    guessTimerProperty.set(maxGuessTime - (now - lastUpdate) / 1000000000.0);
+                    if (maxGuessTime - (now - lastUpdate) / 1000000000.0 <= 0) {
+                        stop();
+                        lastUpdate = 0;
+                        endTurn();
+                    }
+                }
+
+                @Override
+                public void stop() {
+                    super.stop();
+                    // TODO : update guess time stats (average time to answer)
+                    // guessTimerProperty is remaining time, so you have to save maxGuessTime
+                    // - guessTimerProperty
+                    Game game = sm.getModel().getGame();
+                    game.getStats().updateAvgTimeToAnswer(game.getBooleanCurrentTeam(),
+                            maxGuessTime - guessTimerProperty.get());
+                    guessTimerProperty.set(maxGuessTime);
+                    lastUpdate = 0;
+                }
+
+                @Override
+                public void start() {
+                    super.start();
+                    guessTimerProperty.set(maxGuessTime);
+                    lastUpdate = 0;
+                }
+            };
+            guessTimerLabel.textProperty().bind(guessTimerProperty.asString("Temps restant : %.1f s"));
+        }
+    }
+
+    @FXML
+    private void startHintCountdown() {
+        hintTimer.start();
+        hintTimerButton.setVisible(false);
     }
 
     @FXML
@@ -507,7 +736,8 @@ public class GameSceneController {
         Dialog<ImageView> dialog = new Dialog<>();
         dialog.setTitle("Scannez ce QR Code pour accéder à la clé de la partie.");
         dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE);
-        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(), "src/main/resources/imgs/qrcode_resized.png");
+        int res = QRCodeGenerator.generateQRCodeImage(sm.getModel().getGame().getGrid(),
+                "src/main/resources/imgs/qrcode_resized.png");
         if (res == 0) {
             System.out.println("QR Code generated successfully");
             File fileImg = new File("src/main/resources/imgs/qrcode_resized.png");
@@ -520,6 +750,42 @@ public class GameSceneController {
             dialog.getDialogPane().setMinHeight(height);
             dialog.show();
         }
+    }
+
+    public void animate(Button button, Color color) {
+        System.out.println("Animating button with color: " + color);
+        Paint fillColor;
+        fillColor = switch (color) {
+            case RED -> Paint.valueOf("#8c0b0b");
+            case BLUE -> Paint.valueOf("#0A246A");
+            case BLACK -> Paint.valueOf("#000000");
+            default -> Paint.valueOf("#ffffdd");
+        };
+
+        System.out.println("Transitioning button color");
+
+        Timeline timeline = new Timeline();
+        timeline.setCycleCount(1);
+
+        final javafx.animation.KeyValue scaleKey = new javafx.animation.KeyValue(button.scaleYProperty(), 0,
+                Interpolator.EASE_OUT);
+        final javafx.animation.KeyValue scaleKey2 = new javafx.animation.KeyValue(button.scaleYProperty(), 1,
+                Interpolator.EASE_IN);
+
+        BackgroundFill bgcolor = button.backgroundProperty().get().getFills().get(0);
+        BackgroundFill newFill = new BackgroundFill(fillColor, bgcolor.getRadii(), bgcolor.getInsets());
+        Background newBackground = new Background(newFill);
+
+        final javafx.animation.KeyValue colorKey = new javafx.animation.KeyValue(button.backgroundProperty(),
+                newBackground, Interpolator.DISCRETE);
+
+        final KeyFrame kf1 = new KeyFrame(Duration.millis(250), scaleKey, colorKey);
+
+        final KeyFrame kf2 = new KeyFrame(Duration.millis(500), scaleKey2);
+        timeline.getKeyFrames().addAll(kf1, kf2);
+
+        System.out.println("Playing animation");
+        timeline.play();
     }
 
     private void printGrid() {

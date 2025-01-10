@@ -4,7 +4,9 @@ import java.io.File;
 import java.util.Random;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -62,12 +64,13 @@ public class Card {
         createCardView();
     }
 
-    @JsonIgnore
+    @JsonProperty("cardName")
     public String getName() {
         return cardName;
     }
 
     @JsonIgnore
+
     public Color getColor() {
         return cardColor;
     }

@@ -23,6 +23,7 @@ public class GameScene extends ManagedScene {
         try {
             Parent root = loader.load();
             super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
+            super.getScene().getStylesheets().add(getClass().getResource("/scenes/game/GameScene.css").toExternalForm());
         } catch (Exception e) {
             System.out.println("Error loading GameScene.fxm            System.out.println(\"Red card\");l");
             sm.getPrimaryStage().close();

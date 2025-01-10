@@ -114,9 +114,8 @@ public class EndGameSceneController {
 
     @FXML
     public void goToLobby() throws IOException {
+        sm.getModel().setGame(new Game());
         if(!sm.goToPreviousSceneType(LobbyScene.class)){
-            sm.getModel().getGame().getConfig().getTeamManager().getBlueTeam().setNbFoundCards(0);
-            sm.getModel().getGame().getConfig().getTeamManager().getRedTeam().setNbFoundCards(0);
             sm.pushScene(new LobbyScene(sm));
         }
     }

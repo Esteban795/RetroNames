@@ -7,6 +7,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import linguacrypt.model.Model;
 import linguacrypt.scenes.ManagedScene;
@@ -50,6 +52,10 @@ public class Main extends Application {
         primaryStage.setScene(scene);
 
         // Actual Initial Scene
+        Media sound = new Media(getClass().getResource("/sounds/98_Startup_Sound.mp3").toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer.setVolume(0.1);
+        mediaPlayer.play();
         ManagedScene MenuScene = new MenuScene(sm);
         sm.pushScene(MenuScene);
         primaryStage.show();

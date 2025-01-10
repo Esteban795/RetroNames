@@ -7,6 +7,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import linguacrypt.model.Model;
 import linguacrypt.scenes.ManagedScene;
@@ -20,18 +22,40 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         this.model = new Model(true);
+        // // Create test deck with 25 cards
+        // Deck testDeck = new Deck();
+        // String[] testWords = {
+        //         "CHAT", "CHIEN", "OISEAU", "POISSON", "LAPIN",
+        //         "VOITURE", "VELO", "MOTO", "AVION", "TRAIN",
+        //         "POMME", "POIRE", "ORANGE", "BANANE", "FRAISE",
+        //         "MAISON", "JARDIN", "ROUTE", "ARBRE", "FLEUR",
+        //         "SOLEIL", "LUNE", "ETOILE", "NUAGE", "PLUIE"
+        // };
+
+        // for (String word : testWords) {
+        //     Card card = new Card(word);
+        //     testDeck.addCard(card);
+        // }
+        // model.getDeckManager().addDeck(testDeck);
+        // model.getGame().getConfig().setCurrentDeck(testDeck);
+        
         SceneManager sm = SceneManager.getInstance(primaryStage, model);
 
-        // Fake scene that shouldn't be used. It is used to initialize the SceneManager to correct values
+        // Fake scene that shouldn't be used. It is used to initialize the SceneManager
+        // to correct values
         URL fxmlURL = getClass().getResource("/Init.fxml");
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(fxmlURL);
 
         Parent root = loader.load();
-        Scene scene = new Scene(root, 1600,900);
+        Scene scene = new Scene(root, sm.getWidth(), sm.getHeight());
         primaryStage.setScene(scene);
 
         // Actual Initial Scene
+        Media sound = new Media(getClass().getResource("/sounds/98_Startup_Sound.mp3").toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer.setVolume(0.1);
+        mediaPlayer.play();
         ManagedScene MenuScene = new MenuScene(sm);
         sm.pushScene(MenuScene);
         primaryStage.show();

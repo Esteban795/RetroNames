@@ -1,32 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<StackPane xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml">
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-       <VBox alignment="CENTER" spacing="20" layoutX="150" layoutY="100">
-         <Button fx:id="buttonNew" 
-                onAction="#newGame" 
-                styleClass="menu-button"
-                text="New Game"
-                prefWidth="300"
-                prefHeight="50"/>
-         
-         <Button fx:id="buttonLoad" 
-                onAction="#loadGame" 
-                styleClass="menu-button"
-                text="Load Game"
-                prefWidth="300"
-                prefHeight="50"/>
-         
-         <Button fx:id="buttonBack" 
-                onAction="#goBack" 
-                styleClass="menu-button"
-                text="Back"
-                prefWidth="300"
-                prefHeight="50"/>
-      </VBox>
-   </children>
-</Pane>
+    <BorderPane
+        styleClass="menu-background"
+    >
+
+        <top>
+            <Label fx:id="gameTitle" text="RetroNames" styleClass="game-title"
+                BorderPane.alignment="TOP_LEFT">
+                <padding>
+                    <Insets top="20.0" bottom="20.0" left="50.0" />
+                </padding>
+                <BorderPane.margin>
+                    <Insets top="20.0" left="30.0" />
+                </BorderPane.margin>
+            </Label>
+        </top>
+
+        <padding>
+            <Insets top="20.0" right="20.0" bottom="20.0" left="20.0" />
+        </padding>
+        <center>
+            <VBox BorderPane.alignment="CENTER_LEFT"
+                alignment="TOP_LEFT"
+                spacing="20.0">
+                <padding>
+                    <Insets top="100.0" right="20.0" bottom="20.0" left="180.0" />
+                </padding>
+
+                <Button fx:id="buttonNew"
+                    onAction="#newGame"
+                    styleClass="menu-button-long"
+                    text="Nouvelle Partie"
+                    focusTraversable="true"
+                    onMouseEntered="#requestFocus"
+                />
+
+                <Button fx:id="buttonLoad"
+                    onAction="#loadGame"
+                    styleClass="menu-button"
+                    text="Charger Partie"
+                    focusTraversable="true"
+                    onMouseEntered="#requestFocus"
+                />
+
+                <Button fx:id="buttonQuickPlay"
+                    onAction="#quickPlay"
+                    styleClass="menu-button"
+                    text="Partie Rapide"
+                    focusTraversable="true"
+                    onMouseEntered="#requestFocus"
+                />
+
+                <Button fx:id="buttonBack"
+                    onAction="#goBack"
+                    styleClass="menu-button"
+                    text="Retour"
+                    focusTraversable="true"
+                    onMouseEntered="#requestFocus"
+                />
+            </VBox>
+        </center>
+
+    </BorderPane>
+    <Pane fx:id="particlePane" mouseTransparent="true" />
+</StackPane>

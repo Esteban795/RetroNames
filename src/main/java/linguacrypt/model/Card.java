@@ -3,7 +3,9 @@ package linguacrypt.model;
 import java.io.File;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Random;
@@ -85,6 +87,7 @@ public class Card {
         return cardUrl;
     }
 
+    @JsonIgnore
     public Node getCardView() {
         if (cardUrl != null) {
             File file = new File(cardUrl);

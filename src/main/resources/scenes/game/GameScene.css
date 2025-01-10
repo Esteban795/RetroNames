@@ -1,0 +1,70 @@
+@font-face {
+    font-family: 'Pixel Operator Mono';
+    src: url('file:src/main/resources/fonts/PixelOperatorMono-Bold.ttf');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'Pixel Operator Mono';
+    src: url('file:src/main/resources/fonts/PixelOperatorMono.ttf');
+    font-weight: normal;
+}
+
+
+* {
+    -fx-font-family: 'Pixel Operator Mono';
+    -fx-font-size: 20px;
+}
+
+.main {
+    -fx-background-color: radial-gradient(center 20% 50%, radius 120%, #ff9696, #8c0b0b);
+    -fx-background-color: radial-gradient(center 50% 20%, radius 120%, #A8CAEE, #0A246A);
+}
+/* Panel */
+.panel {
+    -fx-background-color: #e6e6e6;
+    -fx-border-color: #ffffff #808080 #808080 #ffffff;
+    -fx-border-width: 2;
+}
+/* Text Field */
+
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #808080 #ffffff #ffffff #808080;
+    -fx-border-width: 2;
+    -fx-text-fill: black;
+}
+
+.progress-bar {
+    -fx-border-color: #ffffff #808080 #808080 #ffffff; /* 3D bevel border */
+    -fx-border-width: 5;
+    -fx-margin: 10;
+}
+
+.red-title{
+    -fx-background-color: linear-gradient(to right, #8c0b0b , #ff9696);
+}
+
+.blue-title{
+    -fx-background-color: linear-gradient(to right, #0A246A , #A8CAEE);
+}
+
+/* Button */
+.button {
+    -fx-border-color: #ffffff #808080 #808080 #ffffff; /* 3D bevel border */
+    -fx-border-width: 2;
+    -fx-text-fill: black;
+    -fx-font-size: 25px;
+    -fx-padding: 4 8 4 8;
+}
+
+.current-play {
+    -fx-background-color: #ffff00;
+}
+
+.card-button{
+    -fx-font-size: 27px;
+}
+
+
+

@@ -1,9 +1,10 @@
 package linguacrypt.model;
 
-import linguacrypt.visitor.Visitable;
-import linguacrypt.visitor.Visitor;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import linguacrypt.visitor.Visitable;
+import linguacrypt.visitor.Visitor;
 
 /**
  * Configuration d'une partie de LinguaCrypt.
@@ -46,7 +47,7 @@ public class GameConfiguration implements Visitable {
         maxNbSpy = 1;
         maxNbOperative = 1;
         limitedTime = -1;
-        this.nbCardsGoal = 9;
+        this.nbCardsGoal = 8;
         this.firstTeam = true;
         currentDeck = new Deck();
         teamManager = new TeamManager();

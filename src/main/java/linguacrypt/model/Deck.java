@@ -7,8 +7,9 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import java.util.Collections;
+
+import linguacrypt.visitor.Visitable;
+import linguacrypt.visitor.Visitor;
 
 /**
  * Represents a deck of cards in the game.
@@ -40,6 +41,7 @@ public class Deck implements Visitable {
         this.cardList = cardList != null ? cardList : new ArrayList<>();
     }
 
+    @JsonIgnore
     // Getters and Setters
     @JsonProperty("deckName")
     public String getName() {

@@ -1,43 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   
+<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" styleClass="main" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
+      <MenuBar style="-fx-background-color: #c0c0c0" BorderPane.alignment="CENTER">
+         <menus>
+            <Menu mnemonicParsing="false" text="Jeu">
+               <items>
+                  <MenuItem fx:id="menuItemMainMenu" mnemonicParsing="false" onAction="#handleMainMenu" text="Menu" />
+                  <MenuItem fx:id="menuItemTeamSelect" mnemonicParsing="false" onAction="#handleTeamSelect" text="Nouveau" />
+                  <MenuItem fx:id="menuItemLoadGame" mnemonicParsing="false" onAction="#handleLoadGame" text="Charger" />
+                  <MenuItem fx:id="menuItemSettings" mnemonicParsing="false" onAction="#handleSettings" text="Paramètres" />
+                  <SeparatorMenuItem />
+                  <MenuItem fx:id="menuItemQuit" mnemonicParsing="false" onAction="#handleQuit" text="Quitter" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Aide">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="About" />
+               </items>
+            </Menu>
+         </menus>
       </MenuBar>
    </top>
 
@@ -62,68 +67,181 @@
    </center>
 
    <right>
-      <StackPane prefWidth="150" BorderPane.alignment="CENTER">
-         <padding><Insets bottom="10" left="5" right="10" top="10" /></padding>
-      <children>
-         <ProgressBar fx:id="blueTeamProgress" 
-                     maxHeight="Infinity" 
-                     maxWidth="Infinity" 
-                     prefHeight="Infinity" 
-                     prefWidth="200" 
-                     style="-fx-accent: #0000cc; -fx-control-inner-background: #ccccff;"
-                     VBox.vgrow="ALWAYS"
-                     scaleX="-1" />
-            <VBox alignment="CENTER" scaleX="-1.0" spacing="10">
-               <Label scaleX="-1.0" style="-fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
-                         -fx-padding: 5;" text="Équipe Bleue" />
-               <Label fx:id="blueTeamPlayers" style="-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
-                         -fx-padding: 5;" />
-            </VBox>
-         </children>
-      </StackPane>
+      <VBox alignment="CENTER" prefWidth="200.0" styleClass="panel">
+         <Label alignment="CENTER" prefHeight="36.0" prefWidth="355.0" style="-fx-font-weight: bold;" styleClass="blue-title" text="Équipe Bleue" textFill="WHITE">
+            <font>
+               <Font name="Pixel Operator Mono Bold" size="24.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="5.0" />
+            </VBox.margin>
+         </Label>
+         <VBox alignment="TOP_CENTER" styleClass="panel" style="-fx-stroke: blue; -fx-stroke-width: 0;">
+            <children>
+               <Label contentDisplay="BOTTOM" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-padding: 5;" text="Maître-espion">
+                  <font>
+                     <Font name="Pixel Operator Mono" size="14.0" />
+                  </font>
+               </Label>
+               <ImageView disable="true" fitHeight="100.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" scaleX="-1" smooth="false">
+                  <image>
+                     <Image url="@../../imgs/icons/msagent-4.png" />
+                  </image>
+                  <viewport>
+                     <Rectangle2D />
+                  </viewport>
+               </ImageView>
+               <Label fx:id="blueTeamSpymaster" style="-fx-text-fill: black; -fx-padding: 5;" />
+            </children>
+            <VBox.margin>
+               <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
+            </VBox.margin>
+         </VBox>
+         <VBox alignment="TOP_CENTER" styleClass="panel" style="-fx-stroke: blue; -fx-stroke-width: 0;">
+            <children>
+               <Label contentDisplay="BOTTOM" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-padding: 5;" text="Opérateurs">
+                  <font>
+                     <Font name="Pixel Operator Mono" size="14.0" />
+                  </font>
+               </Label>
+               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" scaleX="-1">
+                  <image>
+                     <Image url="@../../imgs/icons/users-2.png" />
+                  </image>
+               </ImageView>
+               <VBox fx:id="blueTeamOperators" alignment="CENTER" spacing="5" />
+            </children>
+            <VBox.margin>
+               <Insets left="5.0" right="5.0" />
+            </VBox.margin>
+         </VBox>
+         <Pane fx:id="blueTeamPanel" prefHeight="500.0" prefWidth="200.0" style="-fx-background-color: #ccccff" styleClass="text-field">
+            <VBox.margin>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+            </VBox.margin>
+            <padding>
+               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding></Pane>
+         <BorderPane.margin>
+            <Insets bottom="10.0" right="10.0" top="10.0" />
+         </BorderPane.margin>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" />
+         </padding>
+      </VBox>
    </right>
-   
-<bottom>
-   <VBox alignment="CENTER" spacing="10">
-      <HBox fx:id="hintInputBox" alignment="CENTER" spacing="10">
-         <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
-         <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" prefWidth="135.0" text="Indice à donner :" />
-            <TextField fx:id="hintField" />
-            <MenuButton fx:id="numberChoice" mnemonicParsing="false" text="Nombre" />
-            <Button mnemonicParsing="false" text="Valider" onAction="#submitHint" />
-         </children>
-      </HBox>
-      
-      <HBox fx:id="hintDisplayBox" alignment="CENTER" spacing="20">
-         <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
-         <children>
-            <Label fx:id="hintLabel" style="-fx-font-size: 16px;" />
-            <Label fx:id="remainingGuessesLabel" style="-fx-font-size: 16px;" />
-         </children>
-      </HBox>
-   </VBox>
-</bottom>
+
+   <bottom>
+      <VBox alignment="CENTER" prefHeight="109.0" prefWidth="1280.0" spacing="10" styleClass="panel">
+         <HBox fx:id="hintInputBox" alignment="CENTER_LEFT" prefHeight="84.0" prefWidth="1280.0" spacing="10">
+            <padding>
+               <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+            <children>
+               <Region prefHeight="24.0" prefWidth="340.0" />
+               <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="Indice à donner :">
+                  <font>
+                     <Font size="18.0" />
+                  </font></Label>
+               <TextField fx:id="hintField" maxWidth="1.7976931348623157E308" minWidth="200.0" prefHeight="45.0" />
+               <MenuButton styleClass="panel" fx:id="numberChoice" mnemonicParsing="false" text="Nombre">
+                  <font>
+                     <Font size="20.0" />
+                  </font></MenuButton>
+               <Button mnemonicParsing="false" onAction="#submitHint" style="-fx-background-color: rgba(0,0,0,0);">
+                  <graphic>
+                     <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                        <image>
+                           <Image url="@../../imgs/icons/check-0.png" />
+                        </image>
+                     </ImageView>
+                  </graphic></Button>
+               <Region prefHeight="24.0" prefWidth="120.0" />
+               <Button fx:id="qrCodeButton" maxHeight="75.0" maxWidth="75.0" minHeight="75.0" minWidth="75.0" mnemonicParsing="false" onAction="#openQRCode" prefHeight="75.0" prefWidth="75.0" />
+            </children>
+            <VBox.margin>
+               <Insets />
+            </VBox.margin>
+         </HBox>
+
+         <HBox fx:id="hintDisplayBox" alignment="CENTER" spacing="20">
+            <padding>
+               <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+            <children>
+               <Label fx:id="hintLabel" style="-fx-font-size: 16px;" />
+               <Label fx:id="remainingGuessesLabel" style="-fx-font-size: 16px;" />
+            </children>
+         </HBox>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </VBox>
+   </bottom>
 
    <left>
-      <StackPane prefWidth="150" BorderPane.alignment="CENTER">
-         <padding><Insets bottom="10" left="10" right="5" top="10" /></padding>
-         <children>
-            <ProgressBar fx:id="redTeamProgress" 
-                     maxHeight="Infinity" 
-                     maxWidth="Infinity" 
-                     prefHeight="Infinity" 
-                     prefWidth="200" 
-                     style="-fx-accent: #cc0000; -fx-control-inner-background: #ffcccc;"
-                     VBox.vgrow="ALWAYS" />
-            <VBox alignment="CENTER" spacing="10">
-               <Label style="-fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
-                         -fx-padding: 5;" text="Équipe Rouge" />
-               <Label fx:id="redTeamPlayers" style="-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.5);
-                         -fx-padding: 5;" />
-            </VBox>
-         </children>
-      </StackPane>
+      <VBox alignment="CENTER" prefWidth="200.0" styleClass="panel">
+         <Label alignment="CENTER" prefHeight="36.0" prefWidth="355.0" style="-fx-font-weight: bold;" styleClass="red-title" text="Équipe Rouge" textFill="WHITE">
+            <font>
+               <Font name="Pixel Operator Mono Bold" size="24.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="5.0" />
+            </VBox.margin>
+         </Label>
+         <VBox alignment="TOP_CENTER" styleClass="panel" style="-fx-stroke: red; -fx-stroke-width: 0;">
+            <children>
+               <Label contentDisplay="BOTTOM" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-padding: 5;" text="Maître-espion">
+                  <font>
+                     <Font name="Pixel Operator Mono" size="14.0" />
+                  </font>
+               </Label>
+               <ImageView disable="true" fitHeight="100.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                  <image>
+                     <Image url="@../../imgs/icons/msagent-4.png" />
+                  </image>
+                  <viewport>
+                     <Rectangle2D />
+                  </viewport>
+               </ImageView>
+               <Label fx:id="redTeamSpymaster" style="-fx-text-fill: black; -fx-padding: 5;" />
+            </children>
+            <VBox.margin>
+               <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
+            </VBox.margin>
+         </VBox>
+         <VBox alignment="TOP_CENTER" styleClass="panel" style="-fx-stroke: red; -fx-stroke-width: 0;">
+            <children>
+               <Label contentDisplay="BOTTOM" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-padding: 5;" text="Opérateurs">
+                  <font>
+                     <Font name="Pixel Operator Mono" size="14.0" />
+                  </font>
+               </Label>
+               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../../imgs/icons/users-2.png" />
+                  </image>
+               </ImageView>
+               <VBox fx:id="redTeamOperators" alignment="CENTER" spacing="5" />
+            </children>
+            <VBox.margin>
+               <Insets left="5.0" right="5.0" />
+            </VBox.margin>
+         </VBox>
+         <Pane fx:id="redTeamPanel" prefHeight="500.0" prefWidth="200.0" style="-fx-background-color: #ffcccc" styleClass="text-field">
+            <VBox.margin>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+            </VBox.margin>
+            <padding>
+               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding></Pane>
+         <BorderPane.margin>
+            <Insets bottom="10.0" left="10.0" top="10.0" />
+         </BorderPane.margin>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" />
+         </padding>
+      </VBox>
    </left>
 
 </BorderPane>

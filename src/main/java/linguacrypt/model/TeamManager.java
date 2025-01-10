@@ -1,8 +1,9 @@
 package linguacrypt.model;
 
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
 
 public class TeamManager {
     @JsonProperty("blueTeam")

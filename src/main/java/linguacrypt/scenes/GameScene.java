@@ -3,11 +3,10 @@ package linguacrypt.scenes;
 import java.io.IOException;
 import java.net.URL;
 
-import linguacrypt.controllers.GameSceneController;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import linguacrypt.controllers.GameSceneController;
 public class GameScene extends ManagedScene { 
 
     private GameSceneController controller;
@@ -23,7 +22,8 @@ public class GameScene extends ManagedScene {
         //System.out.println("FXML Path : " + super.getFXMLPath());
         try {
             Parent root = loader.load();
-            super.setScene(new Scene(root, 800, 600));
+            super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
+            super.getScene().getStylesheets().add(getClass().getResource("/scenes/game/GameScene.css").toExternalForm());
         } catch (Exception e) {
             System.out.println("Error loading GameScene.fxm            System.out.println(\"Red card\");l");
             sm.getPrimaryStage().close();

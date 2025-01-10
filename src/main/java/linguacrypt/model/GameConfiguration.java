@@ -1,5 +1,6 @@
 package linguacrypt.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,7 +11,7 @@ import linguacrypt.visitor.Visitor;
  * Configuration d'une partie de LinguaCrypt.
  * Gère les paramètres comme la taille de la grille, nombre de joueurs, etc.
  */
-
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 public class GameConfiguration implements Visitable {
     @JsonProperty("gridSize")
     private int gridSize;
@@ -32,13 +33,16 @@ public class GameConfiguration implements Visitable {
 
     @JsonProperty("firstTeam")
     private boolean firstTeam; // Utile pour savoir quelle équipe commence, et donc le nombre de carte à
-                               // deviner
+                               // deviner, true = red, false = blue
 
     @JsonProperty("currentDeck")
     private Deck currentDeck;
 
     @JsonProperty("teamManager")
     private TeamManager teamManager;
+
+    @JsonProperty("gamemode")
+    private boolean gamemode; // true = duo, false = multi
 
     public GameConfiguration() {
         // Valeurs par défaut
@@ -51,6 +55,7 @@ public class GameConfiguration implements Visitable {
         this.firstTeam = true;
         currentDeck = new Deck();
         teamManager = new TeamManager();
+        gamemode = false;
     }
 
     @JsonCreator
@@ -63,7 +68,8 @@ public class GameConfiguration implements Visitable {
             @JsonProperty("currentDeck") Deck currentDeck,
             @JsonProperty("teamManager") TeamManager teamManager,
             @JsonProperty("nbCardsGoal") int nbCardsGoal,
-            @JsonProperty("firstTeam") boolean firstTeam) {
+            @JsonProperty("firstTeam") boolean firstTeam,
+            @JsonProperty("gamemode") boolean gamemode) {
         this.gridSize = gridSize;
         this.nbPlayers = nbPlayers;
         this.maxNbSpy = maxNbSpy;
@@ -73,6 +79,7 @@ public class GameConfiguration implements Visitable {
         this.firstTeam = firstTeam;
         this.currentDeck = currentDeck;
         this.teamManager = teamManager;
+        this.gamemode = gamemode;
     }
 
     public void resetConfig(){
@@ -152,6 +159,15 @@ public class GameConfiguration implements Visitable {
     public void setTeamManager(TeamManager teamManager) {
         this.teamManager = teamManager;
     }
+
+    public boolean isDuo(){
+        return gamemode;
+    }
+
+    public void setGameMode(boolean gamemode){
+        this.gamemode = gamemode;
+    }
+
 
     @Override
     public void accept(Visitor visitor) {

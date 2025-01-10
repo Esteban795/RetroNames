@@ -37,9 +37,6 @@ public class Game implements Visitable {
     @JsonProperty("hasStarted")
     private boolean hasStarted;
 
-    @JsonProperty("gamemode")
-    private boolean gamemode; // true = duo, false = multi
-
     @JsonProperty("currentHint")
     private String currentHint;
 
@@ -61,7 +58,6 @@ public class Game implements Visitable {
         this.nbTurn = 0;
         this.currentTeam = true;
         this.hasStarted = false;
-        this.gamemode = false;
         this.currentHint = "";
         this.remainingGuesses = 0;
         this.bonusGuess = 1;
@@ -82,7 +78,6 @@ public class Game implements Visitable {
             @JsonProperty("currentTeam") boolean currentTeam,
             @JsonProperty("stats") GameStatistics stats,
             @JsonProperty("hasStarted") boolean hasStarted,
-            @JsonProperty("gamemode") boolean gamemode,
             @JsonProperty("currentHint") String currentHint,
             @JsonProperty("remainingGuesses") int remainingGuesses,
             @JsonProperty("bonusGuess") int bonusGuess){
@@ -92,7 +87,6 @@ public class Game implements Visitable {
         this.currentTeam = currentTeam;
         this.stats = stats;
         this.hasStarted = hasStarted;
-        this.gamemode = gamemode;
         this.currentHint = currentHint;
         this.remainingGuesses = remainingGuesses;
         this.bonusGuess = bonusGuess;
@@ -215,6 +209,7 @@ public class Game implements Visitable {
     public Team getOppositeTeam() {
         return (currentTeam ? config.getTeamManager().getBlueTeam() : config.getTeamManager().getRedTeam());
     }
+    
 
     @JsonIgnore
     public int getBlueTeamFoundCards() {
@@ -235,11 +230,6 @@ public class Game implements Visitable {
 
     public boolean hasStarted() {
         return hasStarted;
-    }
-
-    @JsonIgnore
-    public boolean isDuo() {
-        return gamemode;
     }
 
     public String getCurrentHint() {

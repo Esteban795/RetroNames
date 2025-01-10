@@ -272,12 +272,16 @@ public class EditDecksSceneController {
     @FXML
     private void showAddToAnotherDeckDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("dialog-pane"); // Added style class
         dialog.setTitle("Add to Another Deck");
         dialog.setHeaderText("Select a deck to add the card to:");
 
         VBox content = new VBox(10);
+        content.getStyleClass().add("panel"); // Added style class
         ComboBox<String> deckComboBox = new ComboBox<>();
         deckComboBox.setPromptText("Select a deck");
+        deckComboBox.getStyleClass().add("combo-box"); // Added style class
         for (Deck deck : model.getDeckManager().getDeckList()) {
             if (deck != selectedDeck && !model.getCardManager().getDecks(selectedCard).contains(deck)) {
                 deckComboBox.getItems().add(deck.getName());

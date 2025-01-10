@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -106,8 +107,23 @@ public class GameSceneController {
 
     @FXML
     private Button qrCodeButton;
+    @FXML
+    private Button hintTimerButton;
+    @FXML
+    private Button endTurnButton;
 
-    public GameSceneController(SceneManager sm) {
+    // Timer attributes
+    @FXML
+    private Label hintTimerLabel;
+    private AnimationTimer hintTimer;
+    SimpleDoubleProperty hintTimerProperty = new SimpleDoubleProperty(0);
+    @FXML
+    private Label guessTimerLabel;
+    private AnimationTimer guessTimer;
+    SimpleDoubleProperty guessTimerProperty = new SimpleDoubleProperty(0);
+
+    public GameSceneController(
+            SceneManager sm) {
         this.sm = sm;
         this.game = sm.getModel().getGame();
 
@@ -125,6 +141,7 @@ public class GameSceneController {
         // Initialize game scene elements
         try {
             setupGameGrid();
+            setupTimers();
             setupHintControls();
             System.out.println("Game scene initialized");
             initializeProgress();
@@ -301,29 +318,16 @@ public class GameSceneController {
         }
     }
 
-    private void switchTeam() {
-        game.switchTeam();
-        bonusGuess = 1;
-        hintLabel.setText("");
-        remainingGuessesLabel.setText("");
-        hintInputBox.setVisible(true);
-        hintDisplayBox.setVisible(false);
-
-        if (redTeamOperators.getParent().getStyleClass().contains("current-play")) {
-            redTeamOperators.getParent().getStyleClass().remove("current-play");
-            blueTeamSpymaster.getParent().getStyleClass().add("current-play");
-        } else {
-            blueTeamOperators.getParent().getStyleClass().remove("current-play");
-            redTeamSpymaster.getParent().getStyleClass().add("current-play");
-        }
-    }
-
     /*
      * Handle a card click event.
      * Reveals the card and updates the game state.
      */
     private void handleCardClick(int row, int col) {
         if (remainingGuesses > 0 && !game.getGrid().get(row).get(col).isFound()) {
+            if (endTurnButton.isDisabled()) {
+                endTurnButton.setDisable(false);
+            }
+
             Card card = game.getGrid().get(row).get(col);
             game.revealCard(card);
             Button revealedCard = (Button) gameGrid.getChildren().get(row * size + col);
@@ -359,7 +363,7 @@ public class GameSceneController {
                         bonusGuess = 0;
                         remainingGuessesLabel.setText("Essais Bonus : " + remainingGuesses);
                     } else {
-                        switchTeam();
+                        endTurn();
                     }
                 }
 
@@ -368,6 +372,30 @@ public class GameSceneController {
                 updateProgress();
             }
 
+        }
+    }
+
+    @FXML
+    private void endTurn() {
+
+        game.switchTeam();
+        remainingGuesses = 0;
+        bonusGuess = 1;
+        hintField.setText("");
+        remainingGuessesLabel.setText("");
+        hintInputBox.setVisible(true);
+        hintDisplayBox.setVisible(false);
+        endTurnButton.setDisable(true);
+        updateTurnLabel();
+        guessTimer.stop();
+        hintTimerButton.setVisible(true);
+
+        if (redTeamOperators.getParent().getStyleClass().contains("current-play")) {
+            redTeamOperators.getParent().getStyleClass().remove("current-play");
+            blueTeamSpymaster.getParent().getStyleClass().add("current-play");
+        } else {
+            blueTeamOperators.getParent().getStyleClass().remove("current-play");
+            redTeamSpymaster.getParent().getStyleClass().add("current-play");
         }
     }
 
@@ -415,6 +443,8 @@ public class GameSceneController {
                 blueTeamSpymaster.getParent().getStyleClass().remove("current-play");
                 blueTeamOperators.getParent().getStyleClass().add("current-play");
             }
+            hintTimer.stop();
+            guessTimer.start();
         } catch (NumberFormatException e) {
             System.err.println("Invalid number choice");
         }
@@ -455,6 +485,120 @@ public class GameSceneController {
         showSaveDialog(() -> {
             sm.popAllButFirst();
         });
+    }
+
+    private void setupTimers() {
+        hintTimer = new AnimationTimer() {
+            private long lastUpdate = 0;
+            private long maxHintTime = 10;
+
+            @Override
+            public void handle(long now) {
+                if (lastUpdate == 0) {
+                    lastUpdate = now;
+                }
+                hintTimerProperty.set(maxHintTime - (now - lastUpdate) / 1000000000.0);
+                if (hintTimerProperty.doubleValue() < 0) {
+                    lastUpdate = 0;
+                    numberChoice.setText("10");
+                    hintField.setText("");
+                    submitHint();
+                    return;
+                }
+            }
+
+            @Override
+            public void stop() {
+                super.stop();
+                hintTimerProperty.set(10);
+            }
+
+            @Override
+            public void start() {
+                super.start();
+                hintTimerProperty.set(10);
+                lastUpdate = 0;
+            }
+        };
+
+        hintTimerLabel.textProperty().bind(hintTimerProperty.asString("Temps restant : %.1f s"));
+
+        System.out.println(game.getConfig().getLimitedTime());
+        if (game.getConfig().getLimitedTime() <= 0) { // Standard mode, guess time is a stopwatch
+            this.guessTimer = new AnimationTimer() {
+                private long lastUpdate = 0;
+
+                @Override
+                public void handle(long now) {
+                    if (lastUpdate == 0) {
+                        lastUpdate = now;
+                    }
+                    guessTimerProperty.set((now - lastUpdate) / 1000000000.0);
+                }
+
+                @Override
+                public void stop() {
+                    super.stop();
+                    Game game = sm.getModel().getGame();
+                    game.getStats().updateAvgTimeToAnswer(game.getBooleanCurrentTeam(), guessTimerProperty.get());
+                    guessTimerProperty.set(0);
+                    lastUpdate = 0;
+                }
+
+                @Override
+                public void start() {
+                    super.start();
+                    guessTimerProperty.set(0);
+                    lastUpdate = 0;
+                }
+            };
+            guessTimerLabel.textProperty().bind(guessTimerProperty.asString("Temps écoulé : %.1f s"));
+
+        } else { // Blitz mode, guess time is a countdown too
+            long maxGuessTime = game.getConfig().getLimitedTime();
+            this.guessTimer = new AnimationTimer() {
+                private long lastUpdate = 0;
+
+                @Override
+                public void handle(long now) {
+                    if (lastUpdate == 0) {
+                        lastUpdate = now;
+                    }
+                    guessTimerProperty.set(maxGuessTime - (now - lastUpdate) / 1000000000.0);
+                    if (maxGuessTime - (now - lastUpdate) / 1000000000.0 <= 0) {
+                        stop();
+                        lastUpdate = 0;
+                        endTurn();
+                    }
+                }
+
+                @Override
+                public void stop() {
+                    super.stop();
+                    // TODO : update guess time stats (average time to answer)
+                    // guessTimerProperty is remaining time, so you have to save maxGuessTime
+                    // - guessTimerProperty
+                    Game game = sm.getModel().getGame();
+                    game.getStats().updateAvgTimeToAnswer(game.getBooleanCurrentTeam(), maxGuessTime - guessTimerProperty.get());
+                    guessTimerProperty.set(maxGuessTime);
+                    lastUpdate = 0;
+                }
+
+                @Override
+                public void start() {
+                    super.start();
+                    guessTimerProperty.set(maxGuessTime);
+                    lastUpdate = 0;
+                }
+            };
+            guessTimerLabel.textProperty().bind(guessTimerProperty.asString("Temps restant : %.1f s"));
+        }
+    }
+
+    @FXML
+    private void startHintCountdown() {
+        hintTimer.start();
+        hintTimerButton.setVisible(false);
     }
 
     @FXML

@@ -33,6 +33,8 @@ public class MenuSceneController {
 
     @FXML
     private Label gameTitle;
+    @FXML
+    private Label subtitleLabel;
 
     @FXML
     private Pane particlePane;
@@ -45,6 +47,30 @@ public class MenuSceneController {
     private Button button2;
     @FXML
     private Button button3;
+
+    private final String[] subtitles = {
+            "Tu connais le jeu \n de la patate chaude ?",
+            "Absolute cinema",
+            "Baptiste ne pas casser \n le git challenge",
+            "C'est Tom ou Claude \n qui l'a écrit ?",
+            "On commence pas une \n journée avant 10h...",
+            "Que ça veut",
+            "Esteban, la merge request !!!!",
+            "Va falloir merge...",
+            "Baptiste a cloné le repo 52 fois \n (chiffre non contractuel)",
+            "T'as save avant de run ?",
+            "Merde, j'ai dev sur main, \n je push quand même",
+            "Dev toute la nuit sur main \n et s'en rend compte le matin",
+            "Baptiste Push sans commit",
+            "Baptiste commit sans push",
+            "Baptiste dev sans pull",
+            "Baptiste pull sans dev",
+            "Esteban, RENDS MA GRILLE !!! ",
+            "Baptiste, RENDS MES TESTS !!!",
+            "Baptiste quand les test ne passent pas : \n supprime les test",
+            "On aurai dû prendre la voiture",
+
+    };
 
     public MenuSceneController(SceneManager sm) {
         this.sm = sm;
@@ -88,6 +114,10 @@ public class MenuSceneController {
     @FXML
     private void initialize() {
         // Called after FXML is loaded
+        // subtitle
+        Random random = new Random();
+        subtitleLabel.setText(subtitles[random.nextInt(subtitles.length)]);
+
         // Create fire effect
         Glow glow = new Glow(0.0);
         gameTitle.setEffect(glow);
@@ -108,6 +138,32 @@ public class MenuSceneController {
 
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+
+        Timeline subtitleFade = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(subtitleLabel.opacityProperty(), 1.0)),
+                new KeyFrame(Duration.seconds(2),
+                        new KeyValue(subtitleLabel.opacityProperty(), 0.1)),
+                new KeyFrame(Duration.seconds(4),
+                        new KeyValue(subtitleLabel.opacityProperty(), 1.0)));
+        subtitleFade.setCycleCount(Timeline.INDEFINITE);
+        subtitleFade.play();
+
+        Random random2 = new Random();
+
+        Timeline subtitleAnimation = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(subtitleLabel.opacityProperty(), 1.0)),
+                new KeyFrame(Duration.seconds(2),
+                        new KeyValue(subtitleLabel.opacityProperty(), 0.0)),
+                new KeyFrame(Duration.seconds(2), event -> {
+                    subtitleLabel.setText(subtitles[random2.nextInt(subtitles.length)]);
+                }),
+                new KeyFrame(Duration.seconds(4),
+                        new KeyValue(subtitleLabel.opacityProperty(), 1.0)));
+
+        subtitleAnimation.setCycleCount(Timeline.INDEFINITE);
+        subtitleAnimation.play();
 
         // glitter effect
         createParticleSystem();
@@ -154,10 +210,10 @@ public class MenuSceneController {
     }
 
     @FXML
-private void requestFocus(MouseEvent event) {
-    Node source = (Node) event.getSource();
-    if (source instanceof Button) {
-        ((Button) source).requestFocus();
+    private void requestFocus(MouseEvent event) {
+        Node source = (Node) event.getSource();
+        if (source instanceof Button) {
+            ((Button) source).requestFocus();
+        }
     }
-}
 }

@@ -17,15 +17,25 @@
         >
 
                 <top>
-                        <Label fx:id="gameTitle" text="LynguaCrypt" styleClass="game-title"
+                        <VBox>
+                                <Label fx:id="gameTitle" text="RetroNames" styleClass="game-title"
                                 BorderPane.alignment="TOP_LEFT">
                                 <padding>
                                         <Insets top="20.0" bottom="20.0" left="50.0" />
                                 </padding>
-                                <BorderPane.margin>
-                                        <Insets top="20.0" left="30.0" />
-                                </BorderPane.margin>
-                        </Label>
+                                        <BorderPane.margin>
+                                                <Insets top="20.0" left="30.0" />
+                                        </BorderPane.margin>
+                                </Label>
+                                <VBox rotate="-15">
+                                <Label fx:id="subtitleLabel" styleClass="subtitle-text" >
+                                        
+                                </Label>
+                                <padding>
+                                                <Insets top="-95.0" bottom="20.0" left="350.0" />
+                                        </padding>
+                                </VBox>
+                        </VBox>
                 </top>
 
                 <padding>
@@ -75,4 +85,11 @@
 
         </BorderPane>
         <Pane fx:id="particlePane" mouseTransparent="true" />
+        <Label text="Fait par WHJFX"
+                StackPane.alignment="BOTTOM_RIGHT"
+                styleClass="credits-label">
+                <padding>
+                        <Insets bottom="10.0" right="20.0" />
+                </padding>
+        </Label>
 </StackPane>

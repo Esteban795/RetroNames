@@ -11,7 +11,7 @@
     >
 
         <top>
-            <Label fx:id="gameTitle" text="LynguaCrypt" styleClass="game-title"
+            <Label fx:id="gameTitle" text="RetroNames" styleClass="game-title"
                 BorderPane.alignment="TOP_LEFT">
                 <padding>
                     <Insets top="20.0" bottom="20.0" left="50.0" />

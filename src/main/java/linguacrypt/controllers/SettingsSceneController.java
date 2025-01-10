@@ -15,6 +15,13 @@ public class SettingsSceneController {
     @FXML
     private Slider volumeSlider;
 
+    @FXML
+    private CheckBox fisheyeCheckbox;
+
+    @FXML 
+    private CheckBox skylineCheckbox;
+
+
     public SettingsSceneController(SceneManager sm) {
         this.sm = sm;
     }
@@ -22,11 +29,6 @@ public class SettingsSceneController {
     @FXML
     public void initialize() {
         audioCheckbox.setSelected(true);
-    }
-
-    @FXML
-    public void goBack() {
-        sm.popScene();
     }
 
     @FXML
@@ -38,4 +40,28 @@ public class SettingsSceneController {
             volumeSlider.setDisable(false);
         }
     }
+
+    @FXML
+    public void handleFisheyeCheckbox() {
+        if (fisheyeCheckbox.isSelected()) {
+            
+        } else {
+
+        }
+    }
+
+    @FXML
+    public void handleSkylineCheckbox() {
+        if (skylineCheckbox.isSelected()) {
+            
+        } else {
+
+        }
+    }
+
+    @FXML
+    public void goBack() {
+        sm.popScene();
+    }
+    
 }

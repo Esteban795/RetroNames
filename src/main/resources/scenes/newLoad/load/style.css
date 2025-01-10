@@ -62,7 +62,7 @@
     -fx-border-width: 2px;
     -fx-border-color: #ffffff #808080 #808080 #ffffff;
     -fx-pref-width: 300px;
-    -fx-pref-height: 120px;
+    -fx-min-height: 120px;
     -fx-effect: none;
     -fx-wrap-text: true;
     -fx-text-alignment: center;

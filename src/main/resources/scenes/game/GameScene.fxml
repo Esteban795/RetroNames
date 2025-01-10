@@ -78,7 +78,7 @@
                <Insets top="5.0" />
             </VBox.margin>
          </Label>
-         <VBox alignment="TOP_CENTER" styleClass="panel" style="-fx-stroke: blue; -fx-stroke-width: 0;">
+         <VBox alignment="TOP_CENTER" style="-fx-stroke: blue; -fx-stroke-width: 0;" styleClass="panel">
             <children>
                <Label contentDisplay="BOTTOM" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-padding: 5;" text="Maître-espion">
                   <font>
@@ -99,7 +99,7 @@
                <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
             </VBox.margin>
          </VBox>
-         <VBox alignment="TOP_CENTER" styleClass="panel" style="-fx-stroke: blue; -fx-stroke-width: 0;">
+         <VBox alignment="TOP_CENTER" style="-fx-stroke: blue; -fx-stroke-width: 0;" styleClass="panel">
             <children>
                <Label contentDisplay="BOTTOM" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-padding: 5;" text="Opérateurs">
                   <font>
@@ -140,13 +140,13 @@
                <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
             <children>
-               <Region prefHeight="24.0" prefWidth="340.0" />
+               <Region prefHeight="75.0" prefWidth="287.0" />
                <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="Indice à donner :">
                   <font>
                      <Font size="18.0" />
                   </font></Label>
                <TextField fx:id="hintField" maxWidth="1.7976931348623157E308" minWidth="200.0" prefHeight="45.0" />
-               <MenuButton styleClass="panel" fx:id="numberChoice" mnemonicParsing="false" text="Nombre">
+               <MenuButton fx:id="numberChoice" mnemonicParsing="false" styleClass="panel" text="Nombre">
                   <font>
                      <Font size="20.0" />
                   </font></MenuButton>
@@ -159,7 +159,7 @@
                      </ImageView>
                   </graphic></Button>
                   <Button fx:id="hintTimerButton" mnemonicParsing="false" onAction="#startHintCountdown" text="VITE VITE" />
-               <Region prefHeight="24.0" prefWidth="120.0" />
+               <Region prefHeight="75.0" prefWidth="167.0" />
                <Button fx:id="qrCodeButton" maxHeight="75.0" maxWidth="75.0" minHeight="75.0" minWidth="75.0" mnemonicParsing="false" onAction="#openQRCode" prefHeight="75.0" prefWidth="75.0" />
             </children>
             <VBox.margin>
@@ -193,7 +193,7 @@
                <Insets top="5.0" />
             </VBox.margin>
          </Label>
-         <VBox alignment="TOP_CENTER" styleClass="panel" style="-fx-stroke: red; -fx-stroke-width: 0;">
+         <VBox alignment="TOP_CENTER" style="-fx-stroke: red; -fx-stroke-width: 0;" styleClass="panel">
             <children>
                <Label contentDisplay="BOTTOM" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-padding: 5;" text="Maître-espion">
                   <font>
@@ -214,7 +214,7 @@
                <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
             </VBox.margin>
          </VBox>
-         <VBox alignment="TOP_CENTER" styleClass="panel" style="-fx-stroke: red; -fx-stroke-width: 0;">
+         <VBox alignment="TOP_CENTER" style="-fx-stroke: red; -fx-stroke-width: 0;" styleClass="panel">
             <children>
                <Label contentDisplay="BOTTOM" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-padding: 5;" text="Opérateurs">
                   <font>

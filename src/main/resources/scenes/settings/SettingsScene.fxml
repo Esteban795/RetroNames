@@ -55,6 +55,6 @@
             <CheckBox fx:id="skylineCheckbox" mnemonicParsing="false" onAction="#handleSkylineCheckbox" prefHeight="29.0" prefWidth="19.0" />
          </children>
       </HBox>
-      <Button alignment="CENTER" mnemonicParsing="false" onAction="#goBack" text="Retour" />
+      <Button fx:id="goBackButton" alignment="CENTER" mnemonicParsing="false" onAction="#goBack" text="Retour" />
    </children>
 </VBox>

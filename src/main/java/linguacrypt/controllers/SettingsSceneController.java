@@ -1,6 +1,7 @@
 package linguacrypt.controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import linguacrypt.scenes.SceneManager;
@@ -21,7 +22,9 @@ public class SettingsSceneController {
     @FXML 
     private CheckBox skylineCheckbox;
 
-
+    @FXML
+    private Button goBackButton;
+    
     public SettingsSceneController(SceneManager sm) {
         this.sm = sm;
     }

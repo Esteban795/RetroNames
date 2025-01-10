@@ -20,7 +20,6 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
 import javafx.util.Duration;
 import javafx.scene.layout.Pane;
 
@@ -77,19 +76,19 @@ public class MenuSceneController {
 
     @FXML
     public void handleSettings() {
-        System.out.println("Settings button clicked!");
+        // System.out.println("Settings button clicked!");
         sm.pushScene(new SettingsScene(sm));
     }
 
     @FXML
     public void handleEditDecks() throws IOException {
-        System.out.println("Edit Decks button clicked!");
+        // System.out.println("Edit Decks button clicked!");
         sm.pushScene(new EditDecksScene(sm));
     }
 
     @FXML
     public void handleSaveGame() {
-        System.out.println("Save Game button clicked!");
+        // System.out.println("Save Game button clicked!");
     }
 
     @FXML
@@ -100,7 +99,7 @@ public class MenuSceneController {
 
     public void saveDecks() {
         // Save decks to file
-        System.out.println("Saving decks to file...");
+        // System.out.println("Saving decks to file...");
         this.sm.getModel().getDeckManager().saveDeckManager();
     }
 
@@ -162,7 +161,7 @@ public class MenuSceneController {
         createParticleSystem();
         startParticleAnimation();
         // Initialize your buttons here
-        System.out.println(this.sm.getModel());
+        // System.out.println(this.sm.getModel());
     }
 
     private void createParticleSystem() {
@@ -190,7 +189,7 @@ public class MenuSceneController {
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(50), e -> {
             particles.forEach(particle -> {
                 particle.setCenterY(particle.getCenterY() - random.nextDouble() * 2);
-                particle.setCenterX(particle.getCenterX() + (random.nextDouble() - 0.5) * 2);
+                particle.setCenterX(particle.getCenterX() + (random.nextDouble() ) * 2);
                 particle.setOpacity(particle.getOpacity() - 0.01);
 
                 if (particle.getOpacity() <= 0) {

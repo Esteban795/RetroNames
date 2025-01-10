@@ -27,7 +27,7 @@ public class LobbyScene extends ManagedScene {
                     .add(getClass().getResource("/scenes/lobby/LobbyScene.css").toExternalForm());
 
         } catch (Exception e) {
-            System.out.println("Error loading LobbyScene.fxml");
+            // System.out.println("Error loading LobbyScene.fxml");
             sm.getPrimaryStage().close();
         }
     }

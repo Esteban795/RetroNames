@@ -26,7 +26,7 @@ public class EndGameScene extends ManagedScene {
             super.getScene().getStylesheets()
                     .add(getClass().getResource("/scenes/end/EndGameScene.css").toExternalForm());
         } catch (Exception e) {
-            System.out.println("Error loading EndGameScene.fxml");
+            // System.out.println("Error loading EndGameScene.fxml");
             sm.getPrimaryStage().close();
         }
     }

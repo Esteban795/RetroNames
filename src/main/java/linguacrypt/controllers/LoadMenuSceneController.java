@@ -90,7 +90,7 @@ public class LoadMenuSceneController {
 
     private void openFileChooser() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Save File");
+        fileChooser.setTitle("Sélectionnez une sauvegarde");
         fileChooser.setInitialDirectory(new File("src/main/resources/saves/"));
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("JSON Files", "*.json"));
@@ -99,7 +99,7 @@ public class LoadMenuSceneController {
         if (selectedFile != null && !isCorruptedSave(selectedFile)) {
             loadSpecificGame(selectedFile.getPath());
         } else if (selectedFile != null) {
-            errorLabel.setText("Selected save file is corrupted");
+            errorLabel.setText("Le fichier sélectionné est corrompu");
             errorLabel.setVisible(true);
         }
     }
@@ -142,7 +142,7 @@ public class LoadMenuSceneController {
         }
 
         if (!corruptedFiles.isEmpty()) {
-            String errorMsg = String.format("Warning: Found %d corrupted save(s):%n%s at %s",
+            String errorMsg = String.format("Attention : %d sauvegarde(s) corrompue(s) trouvée(s) : %s dans %s",
                     corruptedFiles.size(),
                     String.join(", ", corruptedFiles),
                     directory.getPath());
@@ -172,7 +172,7 @@ public class LoadMenuSceneController {
         if (latestValid != null) {
             loadSpecificGame(latestValid.getPath());
         } else {
-            errorLabel.setText("No valid save files found");
+            errorLabel.setText("Pas de sauvegarde valide trouvée");
             errorLabel.setVisible(true);
         }
     }
@@ -190,7 +190,7 @@ public class LoadMenuSceneController {
         try {
             sm.pushScene(new GameScene(sm));
         } catch (IOException e) {
-            System.err.println("Error loading game scene: " + e.getMessage());
+            // System.err.println("Error loading game scene: " + e.getMessage());
         }
     }
 
@@ -224,7 +224,7 @@ public class LoadMenuSceneController {
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(50), e -> {
             particles.forEach(particle -> {
                 particle.setCenterY(particle.getCenterY() - random.nextDouble() * 2);
-                particle.setCenterX(particle.getCenterX() + (random.nextDouble() - 0.5) * 2);
+                particle.setCenterX(particle.getCenterX() + (random.nextDouble()) * 2);
                 particle.setOpacity(particle.getOpacity() - 0.01);
 
                 if (particle.getOpacity() <= 0) {

@@ -83,3 +83,10 @@
     -fx-translate-y: 1px;
     -fx-translate-x: 1px;
 }
+
+.credits-label {
+    -fx-font-family: 'Doto', sans-serif;
+    -fx-font-size: 40px;
+    -fx-text-fill: black;
+    -fx-font-style: italic;
+}

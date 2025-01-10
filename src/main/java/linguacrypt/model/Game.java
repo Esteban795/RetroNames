@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import linguacrypt.visitor.Visitable;
 import linguacrypt.visitor.Visitor;
+
 /**
  * Représente une partie de LinguaCrypt. Cette classe est le point central du
  * jeu, gérant : - La grille de jeu (matrice de cartes) - La configuration de la
@@ -37,9 +38,6 @@ public class Game implements Visitable {
     @JsonProperty("hasStarted")
     private boolean hasStarted;
 
-    @JsonProperty("gamemode")
-    private boolean gamemode; // true = duo, false = multi
-
     @JsonProperty("currentHint")
     private String currentHint;
 
@@ -52,7 +50,7 @@ public class Game implements Visitable {
     /**
      * Constructeur par défaut. Initialise une nouvelle partie avec : - Une
      * grille vide - Une configuration par défaut
-     * currentTeam = true --> red team is playing 
+     * currentTeam = true --> red team is playing
      */
     public Game() {
         this.grid = new ArrayList<>();
@@ -61,7 +59,6 @@ public class Game implements Visitable {
         this.nbTurn = 0;
         this.currentTeam = true;
         this.hasStarted = false;
-        this.gamemode = false;
         this.currentHint = "";
         this.remainingGuesses = 0;
         this.bonusGuess = 1;
@@ -70,7 +67,7 @@ public class Game implements Visitable {
     /**
      * Constructeur pour la désérialisation JSON.
      *
-     * @param grid La grille de jeu
+     * @param grid   La grille de jeu
      * @param config La configuration
      * @param nbTurn Le nombre de tours joués
      */
@@ -82,17 +79,15 @@ public class Game implements Visitable {
             @JsonProperty("currentTeam") boolean currentTeam,
             @JsonProperty("stats") GameStatistics stats,
             @JsonProperty("hasStarted") boolean hasStarted,
-            @JsonProperty("gamemode") boolean gamemode,
             @JsonProperty("currentHint") String currentHint,
             @JsonProperty("remainingGuesses") int remainingGuesses,
-            @JsonProperty("bonusGuess") int bonusGuess){
+            @JsonProperty("bonusGuess") int bonusGuess) {
         this.grid = grid;
         this.config = config;
         this.nbTurn = nbTurn;
         this.currentTeam = currentTeam;
         this.stats = stats;
         this.hasStarted = hasStarted;
-        this.gamemode = gamemode;
         this.currentHint = currentHint;
         this.remainingGuesses = remainingGuesses;
         this.bonusGuess = bonusGuess;
@@ -104,7 +99,7 @@ public class Game implements Visitable {
         }
     }
 
-/**
+    /**
      * 
      * Initialise une nouvelle grille vide avec la taille définie dans la
      * configuration. La grille est une matrice carrée (ex: 5x5).
@@ -141,11 +136,10 @@ public class Game implements Visitable {
         hasStarted = true;
     }
 
-
     public void switchTeam() {
         currentTeam = !currentTeam;
     }
- 
+
     public boolean getBooleanCurrentTeam() {
         return currentTeam;
     }
@@ -169,10 +163,10 @@ public class Game implements Visitable {
         card.reveal();
         Team redTeam = config.getTeamManager().getRedTeam();
         Team blueTeam = config.getTeamManager().getBlueTeam();
-        
+
         if (card.getColor() == Color.RED) {
             redTeam.setNbFoundCards(redTeam.getNbFoundCards() + 1);
-            System.out.println("Red team found " + redTeam.getNbFoundCards() + " cards");
+            // System.out.println("Red team found " + redTeam.getNbFoundCards() + " cards");
             return 0;
         } else if (card.getColor() == Color.BLUE) {
             blueTeam.setNbFoundCards(blueTeam.getNbFoundCards() + 1);
@@ -182,7 +176,7 @@ public class Game implements Visitable {
         } else {
             return 1;
         }
-        
+
     }
 
     public boolean hasBlueTeamWon() {
@@ -235,11 +229,6 @@ public class Game implements Visitable {
 
     public boolean hasStarted() {
         return hasStarted;
-    }
-
-    @JsonIgnore
-    public boolean isDuo() {
-        return gamemode;
     }
 
     public String getCurrentHint() {

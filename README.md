@@ -37,4 +37,4 @@ $ java -jar --module-path  <path_to_your_javafx_repo>/lib --add-modules=javafx.b
 
 ## Astuces et raccourcis
 Dans le menu pour choisir son équipe, il est possible de presser entrée pour ajouter le pseudo actuel ou de presser <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd>  pour directement ajouter 4 joueurs par défaut, et <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Enter</kbd> pour tenter de valider. Attention à bien choisir le deck avant de valider cependant.
-De même, durant la partie, il est possible de presser <kbd>Enter</kbd>  en ayant le champ indice ou le menu déroulant avec le nombre de tentatives séléctionné pour valider l'indice.
+De même, durant la partie, il est possible de presser <kbd>Enter</kbd>  en ayant le champ indice ou le menu déroulant avec le nombre de tentatives sélectionné pour valider l'indice.

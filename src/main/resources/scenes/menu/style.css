@@ -9,6 +9,7 @@
     font-family: 'Pixel Operator Mono';
     src: url('file:src/main/resources/fonts/PixelOperatorMono.ttf');
 }
+
 /* MENU STYLE */
 .menu-background {
     -fx-background-image: url("/scenes/menu/background.png");
@@ -28,7 +29,8 @@
 
 .game-title {
     -fx-font-family: "Tiny5", serif;
-    -fx-font-size: 96px;-fx-font-weight: bold;
+    -fx-font-size: 96px;
+    -fx-font-weight: bold;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
 }
 
@@ -47,7 +49,8 @@
     -fx-effect: none;
 }
 
-.menu-button:hover,.menu-button:focused {
+.menu-button:hover,
+.menu-button:focused {
     -fx-background-color: #d4d4d4;
     -fx-border-color: #808080;
     -fx-border-width: 2px;
@@ -197,4 +200,5 @@
     -fx-text-wrap: true;
     -fx-text-alignment: center;
 }
+
 /* This is a test */

@@ -3,20 +3,20 @@ package linguacrypt.controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javafx.animation.RotateTransition;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import linguacrypt.model.Card;
 import linguacrypt.model.Game;
 import linguacrypt.scenes.LobbyScene;
 import linguacrypt.scenes.MenuScene;
 import linguacrypt.scenes.SceneManager;
-import javafx.animation.RotateTransition;
-import javafx.animation.TranslateTransition;
-import javafx.util.Duration;
 
 public class EndGameSceneController {
 
@@ -47,7 +47,7 @@ public class EndGameSceneController {
     @FXML
     private VBox mainVBox;
 
-    public EndGameSceneController(SceneManager sm, String winningTeam) {
+    public EndGameSceneController(SceneManager sm,  String winningTeam) {
         this.sm = sm;
         this.winningTeam = winningTeam;
     }
@@ -95,8 +95,9 @@ public class EndGameSceneController {
                     color = "beige";
                 }
                 pane.setStyle("-fx-max-width:70;-fx-max-height:70;-fx-background-color: " + color
+                       
                         + "; -fx-border-color: black;");
-                expectedMapGrid.add(pane, j, i);
+                expectedMapGrid.add(pane, j,  i);
 
                 Pane paneExpected = new Pane();
                 paneExpected.setPrefSize(cellSize, cellSize); // Set fixed size
@@ -114,11 +115,12 @@ public class EndGameSceneController {
     }
 
     public void displayStats() {
-        System.out.println("Displaying stats");
+        // System.out.println("Displaying stats");
         int[] blueTeamStats = sm.getModel().getGame().getStats().getBlueTeamStats();
         int[] redTeamStats = sm.getModel().getGame().getStats().getRedTeamStats();
 
         String blueTeamAvgTimeAnswer = String.format("%.2f",
+               
                 sm.getModel().getGame().getStats().getBlueTeamAvgTimeToAnswer());
         blueTeamStatsLabel.setText("   - Carte bleues découvertes : " + blueTeamStats[0] + "\n"
                 + "   - Carte rouges découvertes : " + blueTeamStats[1] + "\n"

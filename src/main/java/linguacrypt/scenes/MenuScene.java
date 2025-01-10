@@ -22,12 +22,12 @@ public class MenuScene extends ManagedScene {
         loader.setLocation(fxmlURL);
         loader.setController(controller);
         // try {
-            Parent root = loader.load();
-            super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
-            super.getScene().getStylesheets().add(getClass().getResource("/scenes/menu/style.css").toExternalForm());
+        Parent root = loader.load();
+        super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
+        super.getScene().getStylesheets().add(getClass().getResource("/scenes/menu/style.css").toExternalForm());
         // } catch (Exception e) {
-            System.out.println("Error loading MenuScene.fxml");
-            sm.getPrimaryStage().close();
+        // System.out.println("Error loading MenuScene.fxml");
+        sm.getPrimaryStage().close();
         // }
 
     }

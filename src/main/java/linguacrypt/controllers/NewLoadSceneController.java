@@ -103,13 +103,13 @@ public class NewLoadSceneController {
         lobbyController.setSelectedDeck(randomDeck.getName());
 
         // Setup game with random deck
-        System.out.println("Try to setup game with random deck: " + randomDeck.getName());
+        //System.out.println("Try to setup game with random deck: " + randomDeck.getName());
         lobbyController.lobbyDone();
     }
 
     @FXML
     public void loadGame() throws IOException {
-        System.out.println("Load Game button clicked!");
+        //System.out.println("Load Game button clicked!");
         sm.pushScene(new LoadMenuScene(sm));
     }
 
@@ -139,7 +139,7 @@ public class NewLoadSceneController {
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(50), e -> {
             particles.forEach(particle -> {
                 particle.setCenterY(particle.getCenterY() - random.nextDouble() * 2);
-                particle.setCenterX(particle.getCenterX() + (random.nextDouble() - 0.5) * 2);
+                particle.setCenterX(particle.getCenterX() + (random.nextDouble()) * 2);
                 particle.setOpacity(particle.getOpacity() - 0.01);
 
                 if (particle.getOpacity() <= 0) {

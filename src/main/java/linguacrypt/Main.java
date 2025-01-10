@@ -22,22 +22,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         this.model = new Model(true);
-        // // Create test deck with 25 cards
-        // Deck testDeck = new Deck();
-        // String[] testWords = {
-        // "CHAT", "CHIEN", "OISEAU", "POISSON", "LAPIN",
-        // "VOITURE", "VELO", "MOTO", "AVION", "TRAIN",
-        // "POMME", "POIRE", "ORANGE", "BANANE", "FRAISE",
-        // "MAISON", "JARDIN", "ROUTE", "ARBRE", "FLEUR",
-        // "SOLEIL", "LUNE", "ETOILE", "NUAGE", "PLUIE"
-        // };
-
-        // for (String word : testWords) {
-        // Card card = new Card(word);
-        // testDeck.addCard(card);
-        // }
-        // model.getDeckManager().addDeck(testDeck);
-        // model.getGame().getConfig().setCurrentDeck(testDeck);
 
         SceneManager sm = SceneManager.getInstance(primaryStage, model);
 

@@ -17,7 +17,7 @@
             <items>
                 <VBox>
                     <!-- Left side content -->
-                    <Button text="New Deck" onAction="#showNewDeckPopup" styleClass="deck-button" />
+                    <Button text="Nouveau Deck" onAction="#showNewDeckPopup" styleClass="deck-button" />
 
                     <ScrollPane VBox.vgrow="ALWAYS" styleClass="scroll-pane">
                         <VBox fx:id="deckList" styleClass="panel">
@@ -29,11 +29,11 @@
                 <VBox styleClass="panel">
                     <!-- Right side content -->
                     <HBox spacing="10">
-                        <Button fx:id="newCardButton" text="New Card" onAction="#showNewCardPopup"
+                        <Button fx:id="newCardButton" text="Nouvelle Carte" onAction="#showNewCardPopup"
                             styleClass="card-button" />
-                        <Button fx:id="duplicateDeckButton" text="Duplicate Deck"
+                        <Button fx:id="duplicateDeckButton" text="Dupliquer le Deck"
                             onAction="#showDuplicateDeckPopup" styleClass="deck-button" />
-                        <Button fx:id="deleteDeckButton" text="Delete Deck" onAction="#deleteDeck"
+                        <Button fx:id="deleteDeckButton" text="Supprimer le Deck" onAction="#deleteDeck"
                             styleClass="delete-deck-button" />
                     </HBox>
 
@@ -54,12 +54,12 @@
                         </HBox>
                     </VBox>
                     <fx:define>
-                        <Dialog fx:id="newCardDialog" title="New Card">
+                        <Dialog fx:id="newCardDialog" title="Nouvelle Carte">
                             <dialogPane>
                                 <DialogPane>
                                     <content>
                                         <VBox spacing="10">
-                                            <Label text="Card Name:" />
+                                            <Label text="Nom de la carte :" />
                                             <TextField fx:id="cardNameField" />
                                         </VBox>
                                     </content>

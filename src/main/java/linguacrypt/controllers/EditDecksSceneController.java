@@ -223,18 +223,25 @@ public class EditDecksSceneController {
         selectedCard = card;
         cardInfoBox.setVisible(true);
         cardInfoBox.getChildren().clear();
-
+    
+        ArrayList<Deck> decks = model.getCardManager().getDecks(card);
+        String deckNames = decks != null ? 
+            String.join(", ", decks.stream().map(Deck::getName).toList()) :
+            "No decks";
+    
         VBox infoLabels = new VBox(5);
         infoLabels.getChildren().addAll(
                 new Label("Card Information:"),
                 new Label("Card Name: " + card.getName()),
-                new Label("Deck: " + selectedDeck.getName()));
+                new Label("Decks: " + deckNames));
+        
 
         HBox buttonBox = new HBox(10);
+        infoLabels.setPadding(new Insets(10));
+        buttonBox.setPadding(new Insets(10));
         Button deleteCardButton = new Button("Delete Card");
         deleteCardButton.getStyleClass().add("delete-card-button");
         deleteCardButton.setOnAction(e -> {
-            deleteCard(card);
             cardInfoBox.setVisible(false);
         });
 
@@ -244,6 +251,7 @@ public class EditDecksSceneController {
         buttonBox.getChildren().addAll(addToAnotherDeckButton, deleteCardButton);
         cardInfoBox.getChildren().addAll(infoLabels, buttonBox);
     }
+
 
     private void deleteCard(Card card) {
         if (selectedDeck != null) {

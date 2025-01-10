@@ -4,39 +4,65 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" 
-           xmlns:fx="http://javafx.com/fxml/1">
-    
-    <padding>
-        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
-    </padding>
-    
-    <center>
-        <VBox alignment="CENTER" spacing="20.0">
+<BorderPane xmlns="http://javafx.com/javafx/8"
+    xmlns:fx="http://javafx.com/fxml/1"
+    styleClass="menu-background"
+>
+
+    <top>
+        <Label fx:id="gameTitle" text="LynguaCrypt" styleClass="game-title"
+            BorderPane.alignment="TOP_LEFT">
             <padding>
-                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+                <Insets top="20.0" bottom="20.0" left="50.0" />
             </padding>
-            
-            <Button fx:id="latestGameBtn" 
-                    text="Latest Game" 
-                    styleClass="menu-button"/>
-                    
-            <VBox fx:id="savedGamesBox" 
-                  alignment="CENTER" 
-                  spacing="10"/>
-                  
+            <BorderPane.margin>
+                <Insets top="20.0" left="30.0" />
+            </BorderPane.margin>
+        </Label>
+    </top>
+
+    <padding>
+        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0" />
+    </padding>
+
+    <center>
+        <VBox BorderPane.alignment="CENTER_LEFT"
+            alignment="TOP_LEFT"
+            spacing="20.0">
+            <padding>
+                <Insets top="50.0" right="20.0" bottom="20.0" left="180.0" />
+            </padding>
+
+            <Button fx:id="latestGameBtn"
+                text="Dernière Partie"
+                styleClass="menu-button-long"
+                focusTraversable="true"
+                onMouseEntered="#requestFocus"
+            />
+
+            <VBox fx:id="savedGamesBox"
+                alignment="TOP_LEFT"
+                spacing="10" />
+
             <Button fx:id="browseSavesBtn"
-                    text="Browse Other Saves" 
-                    styleClass="menu-button"/>
-                    
-            <Button text="Back" 
-                    onAction="#goBack" 
-                    styleClass="menu-button"/>
-                    
-            <Label fx:id="errorLabel" 
-                   textFill="RED" 
-                   visible="false"/>
+                text="Sauvegardes Locales"
+                styleClass="menu-button-long"
+                focusTraversable="true"
+                onMouseEntered="#requestFocus"
+            />
+
+            <Button text="Retour"
+                onAction="#goBack"
+                styleClass="menu-button"
+                focusTraversable="true"
+                onMouseEntered="#requestFocus"
+            />
+
+            <Label fx:id="errorLabel"
+                textFill="RED"
+                visible="false"
+            />
         </VBox>
     </center>
-    
+
 </BorderPane>

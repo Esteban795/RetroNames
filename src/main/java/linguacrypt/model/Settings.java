@@ -26,7 +26,6 @@ public class Settings {
         this.fisheye = fisheye;
         this.scanlines = scanlines;
 
-
         this.transitionRectangle = new Rectangle(1280, 800);
         this.transitionRectangle.setFill(javafx.scene.paint.Color.BLACK);
         this.transitionRectangle.setOpacity(1);
@@ -157,6 +156,12 @@ public class Settings {
         fadeOut.play();
     }
 
+    public void playClickSound(){
+        javafx.scene.media.AudioClip clickSoundPlayer = new javafx.scene.media.AudioClip(getClass().getResource("/sounds/button" + (int) (Math.random() * 3 + 1) + ".mp3").toExternalForm());
+        clickSoundPlayer.setVolume(getSoundLevel() / 100.0);
+        clickSoundPlayer.setRate(0.8 + Math.random() * 0.4);
+        clickSoundPlayer.play();
+    }
 
     @Override
     public String toString() {

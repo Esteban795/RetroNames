@@ -40,6 +40,7 @@ public class SceneManager {
         double width = primaryStage.getScene().getWidth();
         double height = primaryStage.getScene().getHeight();
         Settings.getInstance().fadeInRectangle(() -> {
+            Settings.getInstance().playClickSound();
             primaryStage.setScene(scene.getScene());
             scenes.push(scene);
             Settings.getInstance().fadeOutRectangle();
@@ -59,6 +60,7 @@ public class SceneManager {
         ManagedScene scene = scenes.pop();
         if (scenes.isEmpty()) {
             Settings.getInstance().fadeInRectangle(() -> {
+                Settings.getInstance().playClickSound();
                 primaryStage.close();
             });
         } else {
@@ -67,6 +69,7 @@ public class SceneManager {
             double height = newScene.getScene().getHeight();
 
             Settings.getInstance().fadeInRectangle(() -> {
+                Settings.getInstance().playClickSound();
                 primaryStage.setScene(newScene.getScene());
             });
             

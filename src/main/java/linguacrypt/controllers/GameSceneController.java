@@ -42,6 +42,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -52,6 +54,7 @@ import linguacrypt.model.Card;
 import linguacrypt.model.Color;
 import linguacrypt.model.Game;
 import linguacrypt.model.Player;
+import linguacrypt.model.Settings;
 import linguacrypt.model.Team;
 import linguacrypt.scenes.EndGameScene;
 import linguacrypt.scenes.LobbyScene;
@@ -66,6 +69,7 @@ public class GameSceneController {
     private final SceneManager sm;
     private Game game;
     private final int size;
+    private MediaPlayer mediaPlayer;
 
     @FXML
     AnchorPane mainScreen;
@@ -153,6 +157,7 @@ public class GameSceneController {
             redTeamSpymaster.getParent().getStyleClass().add("current-play");
             // Permet de gérer l'appui sur la touche entrée pour valider l'indice
             hintField.setOnKeyPressed(event -> {
+                Settings.getInstance().playClickSound();
                 if (event.getCode() == KeyCode.ENTER) {
                     submitHint();
                 }
@@ -424,6 +429,8 @@ public class GameSceneController {
             animate(revealedCard, card.getColor());
             if (card.getColor() == Color.BLACK) { // game is lost
                 try {
+                    AudioClip sound = new javafx.scene.media.AudioClip(getClass().getResource("/sounds/explode.mp3").toExternalForm());
+                    sound.play();
                     sm.pushScene(new EndGameScene(sm, game.getOppositeTeam().getName()));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -449,6 +456,8 @@ public class GameSceneController {
                 if (card.getColor() == Color.WHITE || (isRedCard && !game.getBooleanCurrentTeam())
                         || (!isRedCard && game.getBooleanCurrentTeam())) {
 
+                    AudioClip sound = new javafx.scene.media.AudioClip(getClass().getResource("/sounds/incorrect.wav").toExternalForm());
+                    sound.play();
                     endTurn();
                 }
                 game.setRemainingGuesses(game.getRemainingGuesses() - 1);

@@ -6,11 +6,16 @@ import java.net.URL;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import linguacrypt.controllers.GameSceneController;
+import linguacrypt.model.Settings;
 
 public class GameScene extends ManagedScene {
 
     private GameSceneController controller;
+    MediaPlayer mediaPlayer;
 
     public GameScene(SceneManager sm) throws IOException {
         super(sm);
@@ -22,10 +27,36 @@ public class GameScene extends ManagedScene {
         loader.setController(controller);
         //// System.out.println("FXML Path : " + super.getFXMLPath());
         try {
-            Parent root = loader.load();
+            Settings settings = Settings.getInstance();
+            Parent content = loader.load();
+            AnchorPane root = new AnchorPane();
+            root.getChildren().add(content);
+            root.setStyle("-fx-background-color: #000000;");
+            root.getChildren().add(settings.getTransitionRectangle());
+
+            if (settings.isScanlines()) {
+                 root.getChildren().add(settings.getScanlines(sm.getWidth(), sm.getHeight()));
+            }
+            else {
+                if (root.getChildren().size() > 2)
+                root.getChildren().remove(2);
+            }
+            if (settings.isFisheye()) {
+                settings.applyFisheye(content);
+                if (settings.isScanlines()) {
+                    settings.applyFisheye(root.getChildren().get(1));
+                }
+            } else {
+                root.setEffect(null);
+            } 
             super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
             super.getScene().getStylesheets()
                     .add(getClass().getResource("/scenes/game/GameScene.css").toExternalForm());
+            mediaPlayer = new MediaPlayer(new Media(getClass().getResource("/sounds/old-laptop.mp3").toExternalForm()));
+            mediaPlayer.setVolume(settings.getSoundLevel() / 100.0);
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            mediaPlayer.play();
+
         } catch (Exception e) {
             // System.out.println("Error loading GameScene.fxm //System.out.println(\"Red
             // card\");l");

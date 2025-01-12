@@ -18,16 +18,16 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-import javafx.scene.layout.FlowPane;
-
 import linguacrypt.model.Card;
 import linguacrypt.model.Color;
 import linguacrypt.model.Deck;
 import linguacrypt.model.DeckManager;
 import linguacrypt.model.GameConfiguration;
 import linguacrypt.model.Player;
+import linguacrypt.model.Settings;
 import linguacrypt.model.Team;
 import linguacrypt.scenes.GameScene;
 import linguacrypt.scenes.SceneManager;
@@ -127,6 +127,7 @@ public class LobbySceneController {
     private void setupListeners() {
         // Permet de gérer l'ajout de pseudo avec la touche entrée
         pseudoTextField.setOnKeyPressed(event -> {
+            Settings.getInstance().playClickSound();
             if (event.getCode() == KeyCode.ENTER) {
                 validatePseudo();
             }

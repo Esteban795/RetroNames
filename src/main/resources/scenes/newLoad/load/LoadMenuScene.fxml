@@ -7,7 +7,7 @@
 <StackPane xmlns="http://javafx.com/javafx/8"
     xmlns:fx="http://javafx.com/fxml/1">
     <BorderPane
-        styleClass="menu-background"
+        styleClass="menu-background" prefHeight="800.0" prefWidth="1280.0"
     >
 
         <top>

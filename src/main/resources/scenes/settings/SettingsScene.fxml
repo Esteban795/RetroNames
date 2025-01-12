@@ -1,10 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: #088080;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button onAction="#goBack" fx:id="buttonBack" layoutX="269.0" layoutY="188.0" mnemonicParsing="false" text="retour" />
+      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="193.0" prefWidth="1280.0" text="Paramètres">
+         <font>
+            <Font size="30.0" />
+         </font>
+         <VBox.margin>
+            <Insets left="300.0" right="300.0" />
+         </VBox.margin>
+         <styleClass>
+            <String fx:value="title" />
+            <String fx:value="panel" />
+         </styleClass>
+      </Label>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0" styleClass="panel">
+         <children>
+            <Label prefHeight="100.0" prefWidth="79.0" styleClass="text-field" text="Son :">
+               <font>
+                  <Font size="29.0" />
+               </font>
+            </Label>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <CheckBox fx:id="audioCheckbox" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#handleAudioCheckbox" prefHeight="10.0" prefWidth="10.0" scaleX="2.0" scaleY="2.0" styleClass="hole">
+                     <VBox.margin>
+                        <Insets bottom="15.0" />
+                     </VBox.margin></CheckBox>
+                  <Label styleClass="text-field" text="Audio actif">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <Slider fx:id="volumeSlider" snapToTicks="true" />
+         </children>
+         <VBox.margin>
+            <Insets left="300.0" right="300.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="116.0" prefWidth="1280.0" spacing="30.0" styleClass="panel">
+         <children>
+            <Label styleClass="text-field" text="Effet &quot;Oeil de poisson&quot; :">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+            <CheckBox fx:id="fisheyeCheckbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#handleFisheyeCheckbox" prefHeight="10.0" prefWidth="10.0" scaleX="2.0" scaleY="2.0" styleClass="hole" />
+         </children>
+         <VBox.margin>
+            <Insets left="300.0" right="300.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="154.0" prefWidth="1280.0" spacing="30.0" styleClass="panel">
+         <children>
+            <Label styleClass="text-field" text="Effet &quot;Ecran Cathodique&quot; : ">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+            <CheckBox fx:id="skylineCheckbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#handleSkylineCheckbox" prefHeight="10.0" prefWidth="10.0" scaleX="2.0" scaleY="2.0" styleClass="hole" />
+         </children>
+         <VBox.margin>
+            <Insets left="300.0" right="300.0" />
+         </VBox.margin>
+      </HBox>
+      <Button fx:id="goBackButton" alignment="CENTER" cancelButton="true" graphicTextGap="25.0" mnemonicParsing="false" onAction="#goBack" prefHeight="40.0" style="-fx-font-size: 20;" styleClass="text-field" text="Retour au menu">
+         <graphic>
+            <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+               <image>
+                  <Image url="@../../imgs/icons/msg_error-0.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <VBox.margin>
+            <Insets top="50.0" />
+         </VBox.margin>
+      </Button>
    </children>
-</Pane>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>

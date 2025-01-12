@@ -14,6 +14,7 @@ import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -26,6 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -38,7 +40,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -49,6 +54,7 @@ import linguacrypt.model.Card;
 import linguacrypt.model.Color;
 import linguacrypt.model.Game;
 import linguacrypt.model.Player;
+import linguacrypt.model.Settings;
 import linguacrypt.model.Team;
 import linguacrypt.scenes.EndGameScene;
 import linguacrypt.scenes.LobbyScene;
@@ -63,7 +69,10 @@ public class GameSceneController {
     private final SceneManager sm;
     private Game game;
     private final int size;
+    private MediaPlayer mediaPlayer;
 
+    @FXML
+    AnchorPane mainScreen;
     @FXML
     private BorderPane mainBorderPane;
 
@@ -148,6 +157,7 @@ public class GameSceneController {
             redTeamSpymaster.getParent().getStyleClass().add("current-play");
             // Permet de gérer l'appui sur la touche entrée pour valider l'indice
             hintField.setOnKeyPressed(event -> {
+                Settings.getInstance().playClickSound();
                 if (event.getCode() == KeyCode.ENTER) {
                     submitHint();
                 }
@@ -419,6 +429,8 @@ public class GameSceneController {
             animate(revealedCard, card.getColor());
             if (card.getColor() == Color.BLACK) { // game is lost
                 try {
+                    AudioClip sound = new javafx.scene.media.AudioClip(getClass().getResource("/sounds/explode.mp3").toExternalForm());
+                    sound.play();
                     sm.pushScene(new EndGameScene(sm, game.getOppositeTeam().getName()));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -444,6 +456,8 @@ public class GameSceneController {
                 if (card.getColor() == Color.WHITE || (isRedCard && !game.getBooleanCurrentTeam())
                         || (!isRedCard && game.getBooleanCurrentTeam())) {
 
+                    AudioClip sound = new javafx.scene.media.AudioClip(getClass().getResource("/sounds/incorrect.wav").toExternalForm());
+                    sound.play();
                     endTurn();
                 }
                 game.setRemainingGuesses(game.getRemainingGuesses() - 1);
@@ -846,14 +860,29 @@ public class GameSceneController {
         timeline.play();
     }
 
-    // DEBUGGING METHODS
-    // private void printGrid() {
-    // for (ArrayList<Card> row : game.getGrid()) {
-    // for (Card card : row) {
-    // System.out.print(card.getName() + "(" + card.getColor() + ")[" +
-    // card.getCardUrl() + "] ");
-    // }
-    // // System.out.println();
-    // }
-    // }
+    @FXML
+    private void loadTutorial() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/scenes/tutorial/TutorialScene.fxml"));
+            StackPane tutorialPane = loader.load();
+            mainScreen.setId("tutorialPane");
+            mainScreen.getChildren().add(tutorialPane);
+
+            Button exitTutorialButton;
+            exitTutorialButton = (Button) tutorialPane.lookup("#exitTutorialButton");
+            if (exitTutorialButton == null) {
+                throw new NullPointerException(
+                        "Button with fx:id 'exitTutorialButton' not found in TutorialScene.fxml");
+            }
+            exitTutorialButton.setOnAction(e -> closeTutorial());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void closeTutorial() {
+        mainScreen.getChildren().remove(1);
+    }
+
 }

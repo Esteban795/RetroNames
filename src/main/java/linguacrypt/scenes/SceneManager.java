@@ -4,6 +4,7 @@ import java.util.Stack;
 
 import javafx.stage.Stage;
 import linguacrypt.model.Model;
+import linguacrypt.model.Settings;
 
 public class SceneManager {
 
@@ -38,8 +39,11 @@ public class SceneManager {
     public ManagedScene pushScene(ManagedScene scene, boolean resize) {
         double width = primaryStage.getScene().getWidth();
         double height = primaryStage.getScene().getHeight();
-        primaryStage.setScene(scene.getScene());
-        scenes.push(scene);
+        Settings.getInstance().fadeInRectangle(() -> {
+            primaryStage.setScene(scene.getScene());
+            scenes.push(scene);
+            Settings.getInstance().fadeOutRectangle();
+        });
         if (resize) {
             primaryStage.setWidth(width);
             primaryStage.setHeight(height);
@@ -54,12 +58,19 @@ public class SceneManager {
     public ManagedScene popScene(boolean resize) {
         ManagedScene scene = scenes.pop();
         if (scenes.isEmpty()) {
-            primaryStage.close();
+            Settings.getInstance().fadeInRectangle(() -> {
+                primaryStage.close();
+            });
         } else {
             ManagedScene newScene = scenes.peek();
             double width = newScene.getScene().getWidth();
             double height = newScene.getScene().getHeight();
-            primaryStage.setScene(newScene.getScene());
+
+            Settings.getInstance().fadeInRectangle(() -> {
+                primaryStage.setScene(newScene.getScene());
+            });
+            
+
             if (resize) {
                 primaryStage.setWidth(width);
                 primaryStage.setHeight(height);

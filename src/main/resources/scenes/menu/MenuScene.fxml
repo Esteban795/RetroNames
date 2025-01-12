@@ -13,7 +13,7 @@
         xmlns:fx="http://javafx.com/fxml">
 
         <BorderPane
-                styleClass="menu-background"
+                styleClass="menu-background" prefHeight="800.0" prefWidth="1280.0"
         >
 
                 <top>

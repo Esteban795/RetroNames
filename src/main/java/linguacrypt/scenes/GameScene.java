@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import linguacrypt.controllers.GameSceneController;
 import linguacrypt.model.Settings;
@@ -52,10 +51,6 @@ public class GameScene extends ManagedScene {
             super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
             super.getScene().getStylesheets()
                     .add(getClass().getResource("/scenes/game/GameScene.css").toExternalForm());
-            mediaPlayer = new MediaPlayer(new Media(getClass().getResource("/sounds/old-laptop.mp3").toExternalForm()));
-            mediaPlayer.setVolume(settings.getSoundLevel() / 100.0);
-            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-            mediaPlayer.play();
 
         } catch (Exception e) {
             // System.out.println("Error loading GameScene.fxm //System.out.println(\"Red

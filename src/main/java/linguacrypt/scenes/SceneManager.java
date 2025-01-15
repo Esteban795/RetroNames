@@ -39,6 +39,7 @@ public class SceneManager {
     public ManagedScene pushScene(ManagedScene scene, boolean resize) {
         double width = primaryStage.getScene().getWidth();
         double height = primaryStage.getScene().getHeight();
+        scene.updateVisuals();
         Settings.getInstance().fadeInRectangle(() -> {
             Settings.getInstance().playClickSound();
             primaryStage.setScene(scene.getScene());
@@ -65,6 +66,8 @@ public class SceneManager {
             });
         } else {
             ManagedScene newScene = scenes.peek();
+            System.out.println("Updating visuals of " + newScene.getClass().getName());
+            newScene.updateVisuals();
             double width = newScene.getScene().getWidth();
             double height = newScene.getScene().getHeight();
 

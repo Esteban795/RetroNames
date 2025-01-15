@@ -8,8 +8,10 @@ import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DisplacementMap;
 import javafx.scene.effect.DropShadow;
@@ -70,6 +72,15 @@ public class LobbySceneController {
     public LobbySceneController(SceneManager sm) {
         this.sm = sm;
     }
+
+    @FXML
+    private Slider timingSlider;
+
+    @FXML
+    private CheckBox blitzButton;
+
+    @FXML
+    private Label blitzLabel;
 
     @FXML
     public void initialize() {
@@ -158,6 +169,25 @@ public class LobbySceneController {
                         }
                     }
                 });
+            }
+        });
+
+        timingSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            GameConfiguration config = sm.getModel().getGame().getConfig();
+            config.setLimitedTime((int) timingSlider.getValue());
+            blitzLabel.setText("Temps de réponse : " + (int) timingSlider.getValue() + " secondes");
+
+        });
+
+        blitzButton.setOnAction(event -> {
+            GameConfiguration config = sm.getModel().getGame().getConfig();
+            if (blitzButton.isSelected()) {
+                timingSlider.setDisable(false);
+                config.setLimitedTime(60);
+                timingSlider.setValue(60);
+            } else {
+                timingSlider.setDisable(true);
+                config.setLimitedTime(-1);
             }
         });
 

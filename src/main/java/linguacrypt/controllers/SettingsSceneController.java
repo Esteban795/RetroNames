@@ -36,7 +36,7 @@ public class SettingsSceneController {
         Settings settings = Settings.getInstance();
         skylineCheckbox.setSelected(settings.isScanlines());
         fisheyeCheckbox.setSelected(settings.isFisheye());
-        volumeSlider.setValue(settings.getSoundLevel());
+        volumeSlider.valueProperty().bindBidirectional(settings.getSoundLevel());
         volumeSlider.setDisable(false);
     }
 

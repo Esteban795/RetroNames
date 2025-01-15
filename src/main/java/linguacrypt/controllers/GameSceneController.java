@@ -154,7 +154,6 @@ public class GameSceneController {
             // System.out.println("Game scene initialized");
             initializeProgress();
             updatePlayerLabels();
-            redTeamSpymaster.getParent().getStyleClass().add("current-play");
             // Permet de gérer l'appui sur la touche entrée pour valider l'indice
             hintField.setOnKeyPressed(event -> {
                 Settings.getInstance().playClickSound();
@@ -174,9 +173,10 @@ public class GameSceneController {
                 if (activeTeam.getColor() == Color.RED) {
                     redTeamSpymaster.getParent().getStyleClass().add("current-play");
                 } else {
-                    redTeamSpymaster.getParent().getStyleClass().remove("current-play");
                     blueTeamSpymaster.getParent().getStyleClass().add("current-play");
                 }
+            } else {
+                redTeamSpymaster.getParent().getStyleClass().add("current-play");
             }
 
         } catch (Exception e) {
@@ -430,6 +430,7 @@ public class GameSceneController {
             if (card.getColor() == Color.BLACK) { // game is lost
                 try {
                     AudioClip sound = new javafx.scene.media.AudioClip(getClass().getResource("/sounds/explode.mp3").toExternalForm());
+                    sound.setVolume(Settings.getInstance().getSoundLevel().getValue() / 100); 
                     sound.play();
                     sm.pushScene(new EndGameScene(sm, game.getOppositeTeam().getName()));
                 } catch (IOException e) {
@@ -453,13 +454,16 @@ public class GameSceneController {
                 }
             } else {
                 boolean isRedCard = card.getColor() == Color.RED;
+                AudioClip sound = new javafx.scene.media.AudioClip(getClass().getResource("/sounds/correct.wav").toExternalForm());
                 if (card.getColor() == Color.WHITE || (isRedCard && !game.getBooleanCurrentTeam())
                         || (!isRedCard && game.getBooleanCurrentTeam())) {
 
-                    AudioClip sound = new javafx.scene.media.AudioClip(getClass().getResource("/sounds/incorrect.wav").toExternalForm());
-                    sound.play();
+                    sound = new javafx.scene.media.AudioClip(getClass().getResource("/sounds/incorrect.wav").toExternalForm());
                     endTurn();
                 }
+                sound.setVolume(Settings.getInstance().getSoundLevel().getValue() / 100 * 0.5);
+                sound.play();
+
                 game.setRemainingGuesses(game.getRemainingGuesses() - 1);
                 remainingGuessesLabel.setText("Essais restants : " + game.getRemainingGuesses());
 
@@ -543,15 +547,15 @@ public class GameSceneController {
 
             if (!game.getConfig().isDuo()) {
                 updateHintUI();
-            } else {
-                if (game.getBooleanCurrentTeam()) {
-                    redTeamSpymaster.getParent().getStyleClass().remove("current-play");
-                    redTeamOperators.getParent().getStyleClass().add("current-play");
-                } else {
-                    blueTeamSpymaster.getParent().getStyleClass().remove("current-play");
-                    blueTeamOperators.getParent().getStyleClass().add("current-play");
-                }
             }
+            if (game.getBooleanCurrentTeam()) {
+                redTeamSpymaster.getParent().getStyleClass().remove("current-play");
+                redTeamOperators.getParent().getStyleClass().add("current-play");
+            } else {
+                blueTeamSpymaster.getParent().getStyleClass().remove("current-play");
+                blueTeamOperators.getParent().getStyleClass().add("current-play");
+            }
+
             hintTimer.stop();
             guessTimer.start();
         } catch (NumberFormatException e) {

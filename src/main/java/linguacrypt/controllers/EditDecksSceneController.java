@@ -121,33 +121,44 @@ public class EditDecksSceneController {
     }
 
     @FXML
-    public void showNewDeckPopup() {
-        deckNameField.setText("");
-        newDeckDialog.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
-        newDeckDialog.getDialogPane().getStyleClass().add("dialog-pane");
-        Optional<ButtonType> result = newDeckDialog.showAndWait();
+            public void showNewDeckPopup() {
+                Dialog<ButtonType> newDeckDialog = new Dialog<>();
+                newDeckDialog.setTitle("Nouveau deck");
+                newDeckDialog.setHeaderText("Entrez le nom du nouveau deck :");
 
-        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
-            String deckName = deckNameField.getText().trim();
-            if (!deckName.isEmpty()) {
-                Deck newDeck = new Deck();
-                newDeck.setDeckName(deckName);
+                TextField deckNameField = new TextField();
+                deckNameField.setPromptText("Nom du deck");
 
-                if (model.getDeckManager().getDeck(deckName) != null) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Nom du deck dupliqué");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Un deck" + deckName + "existe déjà !");
-                    alert.showAndWait();
-                    return;
+                VBox content = new VBox(10);
+                content.getChildren().add(deckNameField);
+                newDeckDialog.getDialogPane().setContent(content);
+
+                newDeckDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+                newDeckDialog.getDialogPane().getStylesheets().add(getClass().getResource("/scenes/editDecks/style.css").toExternalForm());
+                newDeckDialog.getDialogPane().getStyleClass().add("dialog-pane");
+
+                Optional<ButtonType> result = newDeckDialog.showAndWait();
+
+                if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+                    String deckName = deckNameField.getText().trim();
+                    if (!deckName.isEmpty()) {
+                        if (model.getDeckManager().getDeck(deckName) != null) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Nom du deck dupliqué");
+                            alert.setHeaderText(null);
+                            alert.setContentText("Un deck '" + deckName + "' existe déjà !");
+                            alert.showAndWait();
+                            return;
+                        }
+
+                        Deck newDeck = new Deck();
+                        newDeck.setDeckName(deckName);
+                        model.getDeckManager().addDeck(newDeck);
+                        reloadDeckList();
+                        cardOrDeckAddedOrRemovesViaUI = true;
+                    }
                 }
-
-                model.getDeckManager().addDeck(newDeck);
-                reloadDeckList();
-                cardOrDeckAddedOrRemovesViaUI = true;
             }
-        }
-    }
 
     private void reloadDeckList() {
         deckList.getChildren().clear();

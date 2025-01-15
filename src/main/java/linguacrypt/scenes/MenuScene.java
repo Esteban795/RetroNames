@@ -17,7 +17,6 @@ public class MenuScene extends ManagedScene {
     private MenuSceneController controller;
 
     MediaPlayer mediaPlayer;
-    MediaPlayer mediaPlayer2;
 
     public MenuScene(SceneManager sm) throws IOException {
         super(sm);
@@ -35,41 +34,23 @@ public class MenuScene extends ManagedScene {
         root.getChildren().add(content);
         root.setStyle("-fx-background-color: #000000;");
         root.getChildren().add(settings.getTransitionRectangle());
-        if (settings.isScanlines()) {
-            root.getChildren().add(settings.getScanlines(sm.getWidth(), sm.getHeight()));
-        } else {
-            if (root.getChildren().size() > 2)
-            root.getChildren().remove(2);
-        }
-        if (settings.isFisheye()) {
-            settings.applyFisheye(content);
-            if (settings.isScanlines()) {
-                settings.applyFisheye(root.getChildren().get(1));
-            }
-        } else {
-            root.setEffect(null);
-        } 
+        
         super.setScene(new Scene(root, sm.getWidth(), sm.getHeight()));
+        super.updateVisuals();
         super.getScene().getStylesheets().add(getClass().getResource("/scenes/menu/style.css").toExternalForm());
 
         URL mediaUrl = getClass().getResource("/sounds/startup.mp3");
-        URL mediaUrl2 = getClass().getResource("/sounds/old-laptop.mp3");
-        if (mediaUrl2 != null) {
-            mediaPlayer2 = new MediaPlayer(new Media(mediaUrl2.toExternalForm()));
-            mediaPlayer2.setVolume(0.3);
-            mediaPlayer2.setCycleCount(MediaPlayer.INDEFINITE);
-            mediaPlayer2.play();
-        } else {
-            System.err.println("Error: Media file not found!");
-        }
+
         if (mediaUrl != null) {
-            mediaPlayer = new MediaPlayer(new Media(mediaUrl.toExternalForm()));
+            mediaPlayer = new MediaPlayer(new Media(mediaUrl.toExternalForm()) );
             mediaPlayer.setVolume(0.3);
             mediaPlayer.play();
-            
         } else {
             System.err.println("Error: Media file not found!");
         }
+
+        // Add a listener to update the volume when the settings change
+        
         // } catch (Exception e) {
         // System.out.println("Error loading MenuScene.fxml");
         sm.getPrimaryStage().close();

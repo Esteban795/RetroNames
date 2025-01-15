@@ -7,7 +7,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import linguacrypt.model.Model;
 import linguacrypt.model.Settings;
@@ -18,6 +19,7 @@ import linguacrypt.scenes.SceneManager;
 public class Main extends Application {
 
     private Model model;
+    MediaPlayer mediaPlayer;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -31,39 +33,25 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(fxmlURL);
 
-        Parent root = loader.load();
-        Scene scene = new Scene(root, sm.getWidth(), sm.getHeight());
+        Parent temp_root = loader.load();
+        Scene scene = new Scene(temp_root, sm.getWidth(), sm.getHeight());
         primaryStage.setScene(scene);
 
         // Actual Initial Scene
-        Settings settings = Settings.getInstance();
-        
-
-        AnchorPane trueRoot = new AnchorPane();
-        trueRoot.getChildren().add(root);
-            if (settings.isScanlines()) {
-                trueRoot.getChildren().add(settings.getScanlines(sm.getWidth(), sm.getHeight()));
-            }
-            else {
-                if (trueRoot.getChildren().size() > 1)
-                trueRoot.getChildren().remove(1);
-            }
-            if (settings.isFisheye()) {
-                settings.applyFisheye(root);
-                if (settings.isScanlines()) {
-                    settings.applyFisheye(trueRoot.getChildren().get(1));
-                }
-            } else {
-                trueRoot.setEffect(null);
-            } 
-
-        Scene trueScene = new Scene(trueRoot, sm.getWidth(), sm.getHeight());
-        trueScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
-        primaryStage.setScene(trueScene);
-
         ManagedScene MenuScene = new MenuScene(sm);
         sm.pushScene(MenuScene);
         primaryStage.show();
+
+        URL mediaUrl = getClass().getResource("/sounds/old-laptop.mp3");
+        if (mediaUrl != null) {
+            mediaPlayer = new MediaPlayer(new Media(mediaUrl.toExternalForm()));
+            mediaPlayer.volumeProperty().bind(Settings.getInstance().getSoundLevel().divide(100.0).multiply(0.3));
+
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            mediaPlayer.play();
+        } else {
+            System.err.println("Error: Media file not found!");
+        }
     }
 
     public static void main(String[] args) {

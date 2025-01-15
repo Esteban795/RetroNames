@@ -1,6 +1,7 @@
 package linguacrypt.model;
 
 import javafx.animation.FadeTransition;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Node;
 import javafx.scene.effect.DisplacementMap;
 import javafx.scene.effect.FloatMap;
@@ -13,7 +14,7 @@ import javafx.util.Duration;
 
 public class Settings {
     private static Settings instance;
-    private int soundLevel;
+    private SimpleIntegerProperty soundLevel;
     private boolean fisheye;
     private boolean scanlines;
     private Rectangle transitionRectangle;
@@ -22,7 +23,7 @@ public class Settings {
     
 
     private Settings(int soundLevel, boolean fisheye, boolean scanlines) {
-        this.soundLevel = soundLevel;
+        this.soundLevel = new SimpleIntegerProperty(soundLevel);
         this.fisheye = fisheye;
         this.scanlines = scanlines;
 
@@ -50,12 +51,12 @@ public class Settings {
         return instance;
     }
 
-    public int getSoundLevel() {
-        return soundLevel;
+    public SimpleIntegerProperty getSoundLevel() {
+        return this.soundLevel;
     }
 
     public void setSoundLevel(int soundLevel) {
-        this.soundLevel = soundLevel;
+        this.soundLevel.set(soundLevel);
     }
 
     public boolean isFisheye() {
@@ -76,6 +77,7 @@ public class Settings {
 
     public Node getScanlines(float width, float  height) {
         Shape rectangle = new javafx.scene.shape.Rectangle(width, height);
+        rectangle.setId("scanlines");
         LinearGradient scanlineGradient = new LinearGradient(
                 0, 0, 0, 0.01, // Start and end points (vertical gradient, shorter cycle)
                 true, // Proportional to the Rectangle size
@@ -158,7 +160,7 @@ public class Settings {
 
     public void playClickSound(){
         javafx.scene.media.AudioClip clickSoundPlayer = new javafx.scene.media.AudioClip(getClass().getResource("/sounds/button" + (int) (Math.random() * 3 + 1) + ".mp3").toExternalForm());
-        clickSoundPlayer.setVolume(getSoundLevel() / 100.0);
+        clickSoundPlayer.setVolume(getSoundLevel().getValue() / 100.0);
         clickSoundPlayer.setRate(0.8 + Math.random() * 0.4);
         clickSoundPlayer.play();
     }

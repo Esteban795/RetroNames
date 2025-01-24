@@ -9,6 +9,16 @@ Groupe :
 - SIBELLAS Baptiste
 - TIGER Maelan
 
+
+# Introduction 
+
+RetroNames est un Codenames version Windows 95. On peut y retrouver deux options typiques de cette époque : 
+- l'effet oeil de poisson (Fisheye Effect) de l'écran
+- l'effet "scanlines".
+
+Une vidéo de démonstration est disponible sur youtube : 
+
+https://youtu.be/LNb_meM7E-c
 ## Remarque
 
 Etant donné que JavaFX n'est plus dans la librairie standard de Java depuis un certain temps, il est maintenant nécessaire de linker les modules JavaFX lors de l'exécution du .jar
